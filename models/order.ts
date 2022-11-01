@@ -6,6 +6,8 @@ export interface IOrder {
   orderTotal: number;
   subTotal: number;
   tax: number;
+  // using the interface instead of the class is important
+  // it enables serialization
   orderItems: IOrderItem[];
 }
 

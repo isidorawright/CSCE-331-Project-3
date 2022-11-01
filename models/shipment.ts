@@ -1,11 +1,13 @@
 // import { Serializable } from "./serializable";
 
-import { Product } from "./product";
+import { UrlWithStringQuery } from "url";
+import { IProduct, Product } from "./product";
 
 export interface IShipment {
   shipmentId: number;
-  shipmentDate: Date;
+  shipmentDate: Date | string;
   fulfilled: boolean;
+  products: IProduct[];
 }
 
 class Shipment implements IShipment {
@@ -14,27 +16,12 @@ class Shipment implements IShipment {
   fulfilled = false;
   products: Product[] = [];
 
-  static isoDatePattern = new RegExp(
-    /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/
-  );
-
-  constructor({ shipmentId, shipmentDate, fulfilled }: IShipment) {
-    Object.assign(this, { shipmentId, shipmentDate, fulfilled });
-  }
-
-  static fromJSON(json: string): Shipment {
-    // https://stackoverflow.com/questions/10286204/what-is-the-right-json-date-format
-    return new Shipment(
-      JSON.parse(json, (key, value) => {
-        if (key == "shipmentDate" && this.isoDatePattern.test(value)) {
-          return new Date(value);
-        }
-        if (key == "products") {
-          return (value as Product[]).map((p) => new Product(p));
-        }
-        return value;
-      })
-    );
+  constructor(shipment: IShipment) {
+    if (typeof shipment.shipmentDate === "string") {
+      shipment.shipmentDate = new Date(shipment.shipmentDate);
+    }
+    shipment.products = shipment.products.map((p) => new Product(p));
+    Object.assign(this, shipment);
   }
 
   insert() {

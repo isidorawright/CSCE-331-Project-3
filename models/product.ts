@@ -1,3 +1,5 @@
+import { PHASE_PRODUCTION_SERVER } from "next/dist/shared/lib/constants";
+
 export interface IProduct {
   productId: number;
   productName: string;
@@ -13,30 +15,8 @@ export class Product implements IProduct {
   conversionFactor = 0.0;
   productTypeId = -1;
 
-  constructor({
-    productId,
-    productName,
-    quantityInStock,
-    conversionFactor,
-    productTypeId,
-  }: IProduct) {
-    Object.assign(this, {
-      productId,
-      productName,
-      quantityInStock,
-      conversionFactor,
-      productTypeId,
-    });
-  }
-
-  static fromJSON(json: string): Product {
-    const data = JSON.parse(json) as IProduct;
-
-    return new Product(data);
-  }
-
-  toJSON(): string {
-    return JSON.stringify(this);
+  constructor(product: IProduct) {
+    Object.assign(this, product);
   }
 
   insert() {

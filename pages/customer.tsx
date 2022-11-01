@@ -1,22 +1,21 @@
 import axios from "axios";
 import React, { useEffect } from "react";
-import { Menu, MenuCategory } from "../models/menu";
-import { CollectionResponse } from "../models/response";
+import { api } from "../models/api";
+import { Menu } from "../models/menu";
 
 export default function CustomerPage() {
-  const [menu, setMenu] = React.useState<Menu>(new Menu());
+  const [menu, setMenu] = React.useState<Menu>(Menu.empty());
   const [loading, setLoading] = React.useState<boolean>(true);
 
   useEffect(() => {
-    axios
-      .get<CollectionResponse<MenuCategory>>("/api/menu/categories")
-      .then(({ data }) => {
-        menu.categories = data.items;
+    api
+      .getMenuCategories()
+      .then((categories) => {
+        menu.categories = categories;
         setMenu(menu);
         setLoading(false);
       })
       .catch((err) => {
-        console.log("is server: ", typeof window === "undefined");
         console.log(err);
       });
   });
