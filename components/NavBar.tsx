@@ -8,17 +8,20 @@ import { useRouter } from "next/router";
 
 const pages: { [key: string]: string } = {
   home: "/",
+  server: "/server",
   customer: "/customer",
+  manager: "/manager",
 };
 
 function ResponsiveAppBar() {
   const router = useRouter();
   // https://mui.com/material-ui/react-app-bar/
   return (
+    
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box sx={{ flexGrow: 1, display: { md: "flex" } }}>
             {Object.entries(pages).map(([name, route]) => (
               <Button
                 color="inherit"
