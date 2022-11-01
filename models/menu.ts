@@ -1,39 +1,49 @@
-import { Serializable } from "./serializable";
-
-interface IMenuCategory {
+export interface IMenuCategory {
   id: number;
   name: string;
 }
 
-export class MenuCategory extends Serializable implements IMenuCategory {
+export class MenuCategory implements IMenuCategory {
   id = -1;
   name = "";
-  constructor(data?: IMenuCategory) {
-    super(data);
+
+  constructor({ id, name }: IMenuCategory) {
+    Object.assign(this, { id, name });
   }
-  public fromJson(json: IMenuCategory) {
-    if (typeof json === undefined) {
-      return this;
-    }
-    this.id = json.id;
-    this.name = json.name;
-    return this;
+
+  static fromJSON(json: string): MenuCategory {
+    const data = JSON.parse(json) as IMenuCategory;
+
+    return new MenuCategory(data);
+  }
+
+  toJSON(): string {
+    return JSON.stringify(this);
   }
 }
 
-interface IMenu {
+export interface IMenu {
   categories: MenuCategory[];
 }
 
-export class Menu extends Serializable implements IMenu {
+export class Menu implements IMenu {
   categories: MenuCategory[] = [];
-  constructor(data?: IMenu) {
-    super(data);
+
+  constructor({ categories }: IMenu) {
+    Object.assign(this, { categories });
   }
-  public fromJson(json: IMenu): this {
-    if (json.categories) {
-      this.categories = json.categories.map((c) => MenuCategory.fromJson(c));
-    }
-    return this;
+
+  static fromJSON(json: string): Menu {
+    const data = JSON.parse(json, (key, value) => {
+      if (key == "categories") {
+        return (value as IMenuCategory[]).map((c) => new MenuCategory(c));
+      }
+      return value;
+    }) as IMenu;
+    return new Menu(data);
+  }
+
+  toJSON(): string {
+    return JSON.stringify(this);
   }
 }
