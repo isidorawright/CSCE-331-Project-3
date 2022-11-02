@@ -19,6 +19,7 @@ const HomePageBanner = styled(Box)(({ theme }) => {
   };
 }) as typeof Box;
 
+
 export default function Home() {
   let theme = useTheme();
 
@@ -44,8 +45,8 @@ export default function Home() {
           }}
         >
           <Typography variant="h4">
-            Here and spin and stone we make pizza and sell drinks. If that's
-            what you like then come on by. If not.. well too bad that's all
+            Here at Spin N' Stone, we make pizza and sell drinks. If that's
+            what you like then come on by! If not.. well too bad that's all
             we've got.
           </Typography>
         </Container>
