@@ -7,6 +7,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       {
         id: 1,
         name: "Pizza",
+        active: true,
       },
       {
         id: 2,

@@ -8,6 +8,7 @@ import theme from "../styles/theme";
 import createEmotionCache from "../util/createEmotionCache";
 import { AppProps } from "next/app";
 import NavBar from "../components/NavBar";
+import "../styles/globals.css";
 
 // Client-side cache shared for the whole session
 // of the user in the browser.

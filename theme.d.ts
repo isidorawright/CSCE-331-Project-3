@@ -1,12 +1,30 @@
-import { Theme as T, ThemeOptions } from "@mui/material/styles";
+import {
+  CustomPaletteOptions,
+  PaletteOptions,
+  Theme as T,
+  ThemeOptions,
+  Palette,
+} from "@mui/material/styles";
 
 declare module "@mui/material/styles" {
-  interface CustomTheme extends T {}
+  interface CustomPaletteOptions extends Palette {
+    navBarBackground: string;
+    borderColor: string;
+  }
+
+  interface CustomTheme extends T {
+    palette: CustomPaletteOptions;
+  }
+
   // allow configuration using `createTheme`
-  interface CustomThemeOptions extends ThemeOptions {}
+  interface CustomThemeOptions extends ThemeOptions {
+    palette: CustomPaletteOptions;
+  }
   export function createTheme(options?: CustomThemeOptions): CustomTheme;
 }
 
 declare module "@emotion/react/types" {
-  interface Theme extends T {}
+  interface Theme extends T {
+    palette: CustomPaletteOptions;
+  }
 }
