@@ -14,15 +14,8 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import styled from "@emotion/styled";
 import LocalPizzaIcon from "@mui/icons-material/LocalPizza";
-import css from "styled-jsx/css";
-
-const pages: { [key: string]: string } = {
-  Pizza: "/pizza",
-  Beverage: "/beverage",
-  Other: "/other",
-};
+import _ from "lodash";
 
 function MenuCategoryTile({
   category,
@@ -34,9 +27,9 @@ function MenuCategoryTile({
     <Grid
       item
       sx={{
-        backgroundColor: category.active ? theme.palette.success.main : "white",
+        backgroundColor: category.active ? theme.palette.primary.main : "white",
         border: `1px solid ${theme.palette.borderColor}`,
-        color: category.active ? theme.palette.success.contrastText : "black",
+        color: category.active ? theme.palette.primary.contrastText : "black",
       }}
     >
       <Box sx={{ padding: theme.spacing(1) }}>
@@ -63,18 +56,66 @@ function MenuCategories({ menu }: { menu: Menu }): JSX.Element {
         >
           Categories
         </Typography>
+        <Grid container spacing={2}>
+          {menu.categories.map((category) => (
+            <Grid item xs={12} sm={4} md={3} lg={2} key={category.id}>
+              <Paper
+                sx={{
+                  width: "100%",
+                  display: "inline-block",
+                  marginRight: "10px",
+                }}
+              >
+                <MenuCategoryTile category={category} />
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
+      </Paper>
+    </Container>
+  );
+}
 
-        {menu.categories.map((category) => (
-          <Box
-            sx={{
-              width: "100px",
-              display: "inline-block",
-              marginRight: "10px",
-            }}
-          >
-            <MenuCategoryTile category={category} />
-          </Box>
-        ))}
+function MenuItems({ menu }: { menu: Menu }): JSX.Element {
+  const theme = useTheme<CustomTheme>();
+
+  return (
+    <Container maxWidth="lg">
+      <Paper sx={{ padding: theme.spacing(3) }}>
+        <Typography
+          variant="h6"
+          fontWeight="bold"
+          sx={{ marginBottom: "12px" }}
+        >
+          Menu Items
+        </Typography>
+
+        <Grid container spacing={2}>
+          {_(menu.categories)
+            .filter((c) => c.active)
+            .first()
+            ?.menuItems.map((item) => (
+              <Grid item xs={12} sm={6} md={4} lg={3}>
+                <Paper
+                  sx={{
+                    padding: theme.spacing(2),
+                    border: `1px solid ${theme.palette.borderColor}`,
+                    background: item.active
+                      ? theme.palette.primary.main
+                      : "white",
+                    color: item.active
+                      ? theme.palette.primary.contrastText
+                      : "black",
+                  }}
+                >
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    {item.name}
+                  </Typography>
+                  <Typography variant="subtitle1">${item.price}</Typography>
+                </Paper>
+              </Grid>
+            ))}
+        </Grid>
       </Paper>
     </Container>
   );
@@ -86,9 +127,8 @@ export default function CustomerPage() {
 
   useEffect(() => {
     api
-      .getMenuCategories()
-      .then((categories) => {
-        menu.categories = categories;
+      .getMenu()
+      .then((menu) => {
         setMenu(menu);
         setLoading(false);
       })
@@ -106,7 +146,10 @@ export default function CustomerPage() {
       ) : (
         <>
           <div className="container" style={{ paddingTop: 24 }}>
-            <MenuCategories menu={menu} />
+            <Grid direction="column" container rowGap={2}>
+              <MenuCategories menu={menu} />
+              <MenuItems menu={menu} />
+            </Grid>
           </div>
         </>
       )}

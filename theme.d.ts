@@ -4,6 +4,7 @@ import {
   Theme as T,
   ThemeOptions,
   Palette,
+  TypeBackground,
 } from "@mui/material/styles";
 
 declare module "@mui/material/styles" {
@@ -19,6 +20,7 @@ declare module "@mui/material/styles" {
   // allow configuration using `createTheme`
   interface CustomThemeOptions extends ThemeOptions {
     palette: CustomPaletteOptions;
+    background: TypeBackground;
   }
   export function createTheme(options?: CustomThemeOptions): CustomTheme;
 }
