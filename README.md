@@ -1,3 +1,8 @@
+https://v4.mui.com/
+https://nextjs.org/docs
+https://reactjs.org/docs/getting-started.html
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started

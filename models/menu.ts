@@ -1,11 +1,16 @@
 export interface IMenuCategory {
   id: number;
   name: string;
+  active: boolean;
 }
 
 export class MenuCategory implements IMenuCategory {
   id = -1;
   name = "";
+
+  // local props
+  active = false;
+  menuItemCount = 0;
 
   constructor(data: IMenuCategory) {
     Object.assign(this, data);
