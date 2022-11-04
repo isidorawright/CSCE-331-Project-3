@@ -9,6 +9,7 @@ import createEmotionCache from "../util/createEmotionCache";
 import { AppProps } from "next/app";
 import NavBar, { TemporaryDrawer } from "../components/NavBar";
 import "../styles/globals.css";
+import { initializeStore, store } from "../models/store";
 
 // Client-side cache shared for the whole session
 // of the user in the browser.
@@ -17,7 +18,9 @@ const clientSideEmotionCache = createEmotionCache();
 
 export default function MyApp(props: any) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
-
+  React.useEffect(() => {
+    initializeStore(store);
+  });
   return (
     <CacheProvider value={emotionCache}>
       <Head>
