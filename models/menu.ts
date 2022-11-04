@@ -3,8 +3,10 @@ import { IMenuItem, MenuItem } from "./menuItem";
 export interface IMenuCategory {
   id: number;
   name: string;
-  active: boolean;
   menuItems: IMenuItem[];
+
+  active?: boolean;
+  menuItemCount?: number;
 }
 
 export class MenuCategory implements IMenuCategory {
@@ -17,6 +19,10 @@ export class MenuCategory implements IMenuCategory {
   active = false;
   menuItemCount = 0;
 
+  activeItem(): IMenuItem | undefined {
+    return this.menuItems.find((m) => m.active);
+  }
+
   constructor(data: IMenuCategory, omit?: string[]) {
     Object.assign(this, data);
     // potential recursive reference
@@ -28,10 +34,16 @@ export class MenuCategory implements IMenuCategory {
 
 export interface IMenu {
   categories: IMenuCategory[];
+  configuringPizza?: boolean;
 }
 
 export class Menu implements IMenu {
   categories: MenuCategory[] = [];
+  configuringPizza = false;
+
+  activeCategory(): MenuCategory | undefined {
+    return this.categories.find((c) => c.active);
+  }
 
   constructor(data: IMenu) {
     Object.assign(this, data);

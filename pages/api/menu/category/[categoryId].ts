@@ -6,9 +6,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   // real response
-  let category = database.query(
-    `SELECT * FROM categories WHERE id = ${req.query.categoryId}`
+  let category = await database.query(
+    `SELECT * FROM menu_item_category WHERE menu_item_category_id = ${req.query.categoryId}`
   );
-  console.log(category);
-  res.status(200).json(category);
+  res.status(200).json(category.rows);
 }

@@ -6,10 +6,10 @@ export interface IMenuItem {
   name: string;
   price: number;
   configurable: boolean;
-
   category: IMenuCategory;
   products: IProduct[];
-  active: boolean;
+
+  active?: boolean;
 }
 
 export class MenuItem implements IMenuItem {
