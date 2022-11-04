@@ -1,4 +1,4 @@
-import { IMenuCategory, MenuCategory } from "./menu";
+import { IMenuCategory, Menu, MenuCategory } from "./menu";
 import { Product, IProduct } from "./product";
 
 export namespace api {
@@ -11,6 +11,11 @@ export namespace api {
     const response = await fetch("/api/menu/products");
     const json = await response.json();
     return json.items.map((p: IProduct) => new Product(p));
+  }
+  export async function getMenu(): Promise<Menu> {
+    const response = await fetch("/api/menu");
+    const json = await response.json();
+    return new Menu(json);
   }
   export namespace category {
     async function find(id: number): Promise<MenuCategory> {
