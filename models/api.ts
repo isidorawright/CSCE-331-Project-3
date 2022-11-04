@@ -25,4 +25,9 @@ export namespace api {
       return new MenuCategory(json);
     }
   }
+  /*export async function getUser(): Promise<User> {
+    const response = await fetch("api/user");
+    const json = await response.json;
+    return json.items.map((u: ))
+  }*/
 }
