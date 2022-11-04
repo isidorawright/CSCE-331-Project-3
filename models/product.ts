@@ -6,6 +6,8 @@ export interface IProduct {
   quantityInStock: number;
   conversionFactor: number;
   productTypeId: number;
+
+  selected?: boolean;
 }
 
 export class Product implements IProduct {
@@ -14,6 +16,8 @@ export class Product implements IProduct {
   quantityInStock = 0;
   conversionFactor = 0.0;
   productTypeId = -1;
+
+  selected = false;
 
   constructor(product: IProduct) {
     Object.assign(this, product);

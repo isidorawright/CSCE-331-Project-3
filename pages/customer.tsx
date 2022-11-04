@@ -7,6 +7,7 @@ import { api } from "../models/api";
 import { Menu, MenuCategory } from "../models/menu";
 import { useRouter } from "next/router";
 import {
+  Card,
   Container,
   CustomTheme,
   Grid,
@@ -15,7 +16,10 @@ import {
   useTheme,
 } from "@mui/material";
 import LocalPizzaIcon from "@mui/icons-material/LocalPizza";
-import _ from "lodash";
+import _, { once } from "lodash";
+import { IProduct } from "../models/product";
+import store from "../models/store";
+import { Subscription } from "rxjs";
 
 function MenuCategoryTile({
   category,
@@ -121,38 +125,76 @@ function MenuItems({ menu }: { menu: Menu }): JSX.Element {
   );
 }
 
-export default function CustomerPage() {
-  const [menu, setMenu] = React.useState<Menu>(Menu.empty());
-  const [loading, setLoading] = React.useState<boolean>(true);
+function ConfigurePizza({ menu }: { menu: Menu }): JSX.Element {
+  const theme = useTheme<CustomTheme>();
 
-  useEffect(() => {
-    api
-      .getMenu()
-      .then((menu) => {
-        setMenu(menu);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  });
+  const category = menu.activeCategory();
+  const item = category?.activeItem();
 
-  const router = useRouter();
+  if (!item) return <></>;
 
   return (
-    <div>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <>
-          <div className="container" style={{ paddingTop: 24 }}>
-            <Grid direction="column" container rowGap={2}>
-              <MenuCategories menu={menu} />
-              <MenuItems menu={menu} />
+    <Container maxWidth="lg">
+      <Paper sx={{ padding: theme.spacing(3) }}>
+        <Typography
+          variant="h6"
+          fontWeight="bold"
+          sx={{ marginBottom: "12px" }}
+        >
+          Add Toppings
+        </Typography>
+        <Grid container spacing={2}>
+          {item.products.map((product) => (
+            <Grid item xs={12} sm={6} md={4} lg={3}>
+              <Card
+                sx={{
+                  padding: theme.spacing(2),
+                  border: `1px solid ${theme.palette.borderColor}`,
+                  background: product.selected
+                    ? theme.palette.primary.main
+                    : "white",
+                  color: product.selected
+                    ? theme.palette.primary.contrastText
+                    : "black",
+                }}
+                onClick={() => {
+                  product.selected = !product.selected;
+                  store.menu.next(menu);
+                }}
+              >
+                <Typography variant="subtitle1" fontWeight="bold">
+                  {product.productName}
+                </Typography>
+              </Card>
             </Grid>
-          </div>
-        </>
-      )}
-    </div>
+          ))}
+        </Grid>
+      </Paper>
+    </Container>
+  );
+}
+
+var menuSub: Subscription;
+
+export default function CustomerPage() {
+  const [menu, setMenu] = React.useState<Menu>(store.menu.value);
+
+  React.useEffect(() => {
+    if (menuSub) return;
+    menuSub = store.menu.subscribe((menu) => setMenu(new Menu(menu)));
+  });
+
+  menu.configuringPizza = true;
+
+  return (
+    <>
+      <div className="container" style={{ paddingTop: 24 }}>
+        <Grid direction="column" container rowGap={2}>
+          <MenuCategories menu={menu} />
+          <MenuItems menu={menu} />
+          {menu.configuringPizza && <ConfigurePizza menu={menu} />}
+        </Grid>
+      </div>
+    </>
   );
 }
