@@ -6,16 +6,18 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     items: [
       {
         id: 1,
-        name: "Pizza",
-        active: true,
+        name: "Original Cheese",
+        cost: 6.79,
       },
       {
         id: 2,
-        name: "Beverage",
+        name: "1 Topping",
+        cost: 7.79,
       },
       {
         id: 3,
-        name: "Other",
+        name: "2-4 Topping",
+        cost: 8.99,
       },
     ],
   });

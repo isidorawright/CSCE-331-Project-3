@@ -4,18 +4,21 @@ class Database extends Client {
   connected: boolean = false;
   constructor() {
     super({
-      user: "postgres",
+      user: "csce331_904_kevin",
       host: "csce-315-db.engr.tamu.edu",
       database: "csce331_904_52",
       password: "friendlyalpaca",
       port: 5432,
+      ssl: {
+        rejectUnauthorized: false,
+      },
     });
   }
   async connect() {
     if (this.connected) {
       return;
     }
-    await this.connect();
+    await super.connect();
 
     this.connected = true;
   }
