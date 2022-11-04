@@ -1,5 +1,7 @@
 import { IMenuCategory, MenuCategory } from "./menu";
+import { IShipment, Shipment } from "./shipment";
 import { Product, IProduct } from "./product";
+import { responseEncoding } from "axios";
 
 export namespace api {
   export async function getMenuCategories(): Promise<MenuCategory[]> {
@@ -12,12 +14,46 @@ export namespace api {
     const json = await response.json();
     return json.items.map((p: IProduct) => new Product(p));
   }
+
   export namespace category {
-    async function find(id: number): Promise<MenuCategory> {
+    export async function find(id: number): Promise<MenuCategory> {
       const response = await fetch(`/api/menu/category/${id}`);
       const json = await response.json();
       // it doesnt matter here but if a type contains other types then do it this way
       return new MenuCategory(json);
     }
   }
+
+  export namespace shipment {
+    export async function fulfil(shipment: Shipment): Promise<Response> {
+      const response = await fetch(`/api/shipment/fulfill/${shipment.shipmentId}`);
+      const json = await response.json();
+
+      return response;
+    }
+  }
 }
+
+
+/* 
+  Menu Item
+    • Get Menu Category
+    • Add a new menu item
+    • Get all menu items with given category
+    • Get products addable to given menu item (pass in menuitem object)
+  Order
+    • Calculate Order Total
+    • Place Order
+    • Add menu_item to order
+  Order_Item
+    • 
+  Product
+    • Add products to order_item
+    • Create product 
+    • Set quantity
+    • Decrement quantity
+  Shipment
+    • Finalize shipment
+    • Edit shipment quantity
+    • Add product to shipment
+*/

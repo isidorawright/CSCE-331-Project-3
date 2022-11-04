@@ -1,6 +1,7 @@
 // import { Serializable } from "./serializable";
 
 import { UrlWithStringQuery } from "url";
+import database from "./database";
 import { IProduct, Product } from "./product";
 
 export interface IShipment {
@@ -10,7 +11,7 @@ export interface IShipment {
   products: IProduct[];
 }
 
-class Shipment implements IShipment {
+export class Shipment implements IShipment {
   shipmentId = -1;
   shipmentDate = new Date();
   fulfilled = false;
@@ -31,7 +32,8 @@ class Shipment implements IShipment {
     // update the shipment with new values
   }
   delete() {
-    // delete the shipment
+    // delete the shipment from local shipmentId
   }
-  getQuantitySold(start: Date, end: Date) {}
+  //getQuantitySold(start: Date, end: Date) {} // on second sprint
+
 }
