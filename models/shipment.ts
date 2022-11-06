@@ -10,7 +10,7 @@ export interface IShipment {
   products: IProduct[];
 }
 
-class Shipment implements IShipment {
+export class Shipment implements IShipment {
   shipmentId = -1;
   shipmentDate = new Date();
   fulfilled = false;
