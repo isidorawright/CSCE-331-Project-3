@@ -83,6 +83,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         active: false,
         menuItems: [
           {
+            active: false,
             id: 3,
             name: "Coke",
             price: 1.99,
@@ -104,6 +105,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             ],
           },
           {
+            active: false,
             id: 4,
             name: "Sprite",
             price: 1.99,
