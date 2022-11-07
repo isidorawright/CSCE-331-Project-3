@@ -12,4 +12,18 @@ export interface IOrderItem {
   isDrink: boolean;
 }
 
+export class OrderItem implements IOrderItem {
+  id = -1;
+  orderId = -1;
+  menuItemId = -1;
+
+  products: Product[] = [];
+
+  quantity = -1;
+  isDrink = false;
+
+  
+
+}
+
 // todo

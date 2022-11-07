@@ -34,11 +34,8 @@ export namespace api {
   }*/
 
   export namespace shipment {
-    export async function fulfil(shipment: Shipment): Promise<Response> {
-      const response = await fetch(`/api/shipment/fulfill/${shipment.shipmentId}`);
-      const json = await response.json();
-
-      return response;
+    export async function fulfill(shipment: Shipment): Promise<Response> {
+      return await fetch(`/api/shipment/fulfill/${shipment.shipmentId}`);
     }
   }
 }
