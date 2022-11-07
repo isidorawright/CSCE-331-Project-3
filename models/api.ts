@@ -27,13 +27,11 @@ export namespace api {
       return new MenuCategory(json);
     }
   }
-<<<<<<< HEAD
   /*export async function getUser(): Promise<> {
     const response = await fetch("api/user");
     const json = await response.json;
     return json.items.map((u: ))
   }*/
-=======
 
   export namespace shipment {
     export async function fulfil(shipment: Shipment): Promise<Response> {
@@ -43,7 +41,6 @@ export namespace api {
       return response;
     }
   }
->>>>>>> 5289c5ba0fbfd7020da085d1fa409b0ee4327fbf
 }
 
 
