@@ -15,7 +15,7 @@ export namespace api {
     return json.items.map((p: IProduct) => new Product(p));
   }
   export async function getMenu(): Promise<Menu> {
-    const response = await fetch("/api/menu");
+    const response = await fetch("/api/menu.ts");
     const json = await response.json();
     return new Menu(json);
   }

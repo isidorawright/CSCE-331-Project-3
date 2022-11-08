@@ -16,6 +16,7 @@ import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
+//Inventory Table
 const Inventorycolumns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 70 },
   { field: 'productName', headerName: 'Product Name', width: 130 },
@@ -32,6 +33,22 @@ const Inventoryrows = [
   { id: 6, productName: 'cookie', category: 'other'},
 ];
 
+//Menu Item to Price Table
+const MenuToPricecolumns: GridColDef[] = [
+  { field: 'id', headerName: 'Menu Item ID', width: 70 },
+  { field: 'menuName', headerName: 'Menu Item Name', width: 130 },
+  { field: 'price', headerName: 'Price', width: 130 },
+];
+
+const MenuToPricerows = [
+    //mock data
+  { id: 1, menuName: 'Pepperoni Pizza', price: '$7.99' },
+  { id: 2, menuName: 'Fountain Drink', price: '$3.99' },
+  { id: 3, menuName: 'Cookie', price: '$2.99' },
+];
+
+
+//Shipment Table (collapsible)
 function createData(
     shipmentId: number,
     shipmentDate: string,
@@ -125,13 +142,23 @@ function createData(
   ];
   
 
-export default function InventoryTable() {
+export default function DataTables() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <h1>Inventory Table</h1>
         <DataGrid
             rows={Inventoryrows}
             columns={Inventorycolumns}
+            pageSize={10}
+            rowsPerPageOptions={[10]}
+            checkboxSelection
+        />
+      
+      <br />
+      <h1>Menu Item to Price Table</h1>
+        <DataGrid
+            rows={MenuToPricerows}
+            columns={MenuToPricecolumns}
             pageSize={10}
             rowsPerPageOptions={[10]}
             checkboxSelection
