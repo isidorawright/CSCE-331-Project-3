@@ -45,12 +45,10 @@ export class Menu implements IMenu {
     return this.categories.find((c) => c.active);
   }
 
-  constructor(data: IMenu) {
-    Object.assign(this, data);
-    this.categories = data.categories.map((c) => new MenuCategory(c));
-  }
-
-  static empty() {
-    return new Menu({ categories: [] });
+  constructor(data?: IMenu) {
+    if (data) {
+      Object.assign(this, data);
+      this.categories = data.categories.map((c) => new MenuCategory(c));
+    }
   }
 }

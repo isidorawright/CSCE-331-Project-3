@@ -1,4 +1,3 @@
-import { isGeneratorFunction } from "util/types";
 import { IOrderItem, OrderItem } from "./orderItem";
 
 export interface IOrder {
@@ -12,23 +11,20 @@ export interface IOrder {
   orderItems: IOrderItem[];
 }
 
+// todo
+
 export class Order implements IOrder {
   orderId = -1;
   orderDate = new Date();
-  orderTotal = -1;
-  subTotal = -1;
-  tax = -1;
+  orderTotal = 0;
+  subTotal = 0;
+  tax = 0;
+  orderItems: IOrderItem[] = [];
 
-  orderItems: OrderItem[] = [];
-
-  constructor (order: IOrder) {
-    
+  constructor(data?: IOrder) {
+    if (data) {
+      Object.assign(this, data);
+      this.orderItems = data.orderItems.map((o) => new OrderItem(o));
+    }
   }
-
-  insert() {
-    
-  }
-
 }
-
-// todo

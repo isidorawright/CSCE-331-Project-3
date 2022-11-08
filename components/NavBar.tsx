@@ -3,13 +3,9 @@ import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";
 import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import {
@@ -23,17 +19,13 @@ import {
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import MenuIcon from "@mui/icons-material/Menu";
-import { filter } from "rxjs";
 import Link from "next/link";
 import store from "../models/store";
 import theme from "../styles/theme";
-import { debounce } from "lodash";
 
 const pages: { [key: string]: string } = {
-  home: "/",
-  server: "/server",
-  customer: "/customer",
-  manager: "/manager",
+  Order: "/",
+  manage: "/manager",
 };
 
 export function TemporaryDrawer(): JSX.Element {
