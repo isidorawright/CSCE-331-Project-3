@@ -10,21 +10,21 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     fulfilled: true,
     products: [
       {
-        productId: 3,
+        id: 3,
         productName: "Pumpkin",
         quantityInStock: 5,
         conversionFactor: 1.0,
         productTypeId: 1,
       },
       {
-        productId: 2,
+        id: 2,
         productName: "Cabbage",
         quantityInStock: 430,
         conversionFactor: 1.0,
         productTypeId: 2,
       },
       {
-        productId: 1,
+        id: 1,
         productName: "Pepperoni",
         quantityInStock: 430,
         conversionFactor: 1.0,
