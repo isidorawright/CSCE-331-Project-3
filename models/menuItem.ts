@@ -21,13 +21,15 @@ export class MenuItem implements IMenuItem {
   products: IProduct[] = [];
   active = false;
 
-  constructor(data: IMenuItem, omit?: string[]) {
-    Object.assign(this, data);
-    if (!omit || !omit.includes("category")) {
-      this.category = new MenuCategory(data.category, ["menuItems"]);
-    }
-    if (!omit || !omit.includes("products")) {
-      this.products = data.products.map((p) => new Product(p));
+  constructor(data?: IMenuItem, omit?: string[]) {
+    if (data) {
+      Object.assign(this, data);
+      if (!omit || !omit.includes("category")) {
+        this.category = new MenuCategory(data.category, ["menuItems"]);
+      }
+      if (!omit || !omit.includes("products")) {
+        this.products = data.products.map((p) => new Product(p));
+      }
     }
   }
 }

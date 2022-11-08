@@ -1,7 +1,11 @@
 // import { Serializable } from "./serializable";
 
 import { UrlWithStringQuery } from "url";
+import database from "./database";
 import { IProduct, Product } from "./product";
+import { IMenuCategory, Menu, MenuCategory } from "./menu";
+import { responseEncoding } from "axios";
+import { api } from "./api";
 
 export interface IShipment {
   shipmentId: number;
@@ -10,7 +14,7 @@ export interface IShipment {
   products: IProduct[];
 }
 
-class Shipment implements IShipment {
+export class Shipment implements IShipment {
   shipmentId = -1;
   shipmentDate = new Date();
   fulfilled = false;
@@ -31,7 +35,11 @@ class Shipment implements IShipment {
     // update the shipment with new values
   }
   delete() {
-    // delete the shipment
+    // delete the shipment from local shipmentId
   }
-  getQuantitySold(start: Date, end: Date) {}
+  fulfull() {
+    api.shipment.fulfill(this);
+  }
+  //getQuantitySold(start: Date, end: Date) {} // on second sprint
+
 }

@@ -1,7 +1,7 @@
 import { PHASE_PRODUCTION_SERVER } from "next/dist/shared/lib/constants";
 
 export interface IProduct {
-  productId: number;
+  id: number;
   productName: string;
   quantityInStock: number;
   conversionFactor: number;
@@ -11,7 +11,7 @@ export interface IProduct {
 }
 
 export class Product implements IProduct {
-  productId = -1;
+  id = -1;
   productName = "";
   quantityInStock = 0;
   conversionFactor = 0.0;
@@ -33,5 +33,15 @@ export class Product implements IProduct {
 
   delete() {
     // optional
+  }
+
+  equals(other: IProduct): boolean {
+    return (
+      this.id === other.id &&
+      this.productName === other.productName &&
+      this.quantityInStock === other.quantityInStock &&
+      this.conversionFactor === other.conversionFactor &&
+      this.productTypeId === other.productTypeId
+    );
   }
 }
