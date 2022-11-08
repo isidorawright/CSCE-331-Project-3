@@ -101,8 +101,8 @@ function MenuItems({ menu, order }: { menu: Menu; order: Order }): JSX.Element {
       </Typography>
 
       <Grid container spacing={2}>
-        {activeCategory.menuItems.map((menuItem: IMenuItem, _, items) => (
-          <Grid item xs={12} sm={6} md={4} lg={3}>
+        {activeCategory.menuItems.map((menuItem: IMenuItem, index, items) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
             <Paper
               sx={{
                 padding: theme.spacing(2),
@@ -146,8 +146,15 @@ function Receipt({ order }: { order: Order }): JSX.Element {
         Receipt
       </Typography>
       <Grid container spacing={2} direction="column">
-        {order.orderItems.map((item) => (
-          <Grid container item spacing={2} alignItems="center" wrap="nowrap">
+        {order.orderItems.map((item, index) => (
+          <Grid
+            container
+            item
+            spacing={2}
+            alignItems="center"
+            wrap="nowrap"
+            key={index}
+          >
             <Grid container item flexGrow={1} flex={3} direction="column">
               <Grid item>
                 <Typography variant="subtitle1" fontWeight="bold">
@@ -226,8 +233,8 @@ function ConfigurePizza({
         Add Toppings
       </Typography>
       <Grid container spacing={2}>
-        {item.products.map((product) => (
-          <Grid item xs={12} sm={6} md={4} lg={3}>
+        {item.products.map((product, index) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
             <Card
               sx={{
                 padding: theme.spacing(2),
