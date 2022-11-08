@@ -38,4 +38,16 @@ export class OrderItem implements IOrderItem {
       this.menuItem = data.menuItem;
     }
   }
+
+  equals(other: IOrderItem): boolean {
+    return (
+      this.id === other.id &&
+      this.orderId === other.orderId &&
+      this.menuItemId === other.menuItemId &&
+      this.quantity === other.quantity &&
+      this.isDrink === other.isDrink &&
+      this.products.length === other.products.length &&
+      this.products.every((p, i) => p.equals(other.products[i]))
+    );
+  }
 }
