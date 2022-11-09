@@ -1,6 +1,6 @@
-import { Client } from "pg";
+import { Client, Pool } from "pg";
 
-class Database extends Client {
+class Database extends Pool {
   connected: boolean = false;
   constructor() {
     super({
@@ -13,25 +13,6 @@ class Database extends Client {
         rejectUnauthorized: false,
       },
     });
-  }
-  async connect() {
-    if (this.connected) {
-      return;
-    }
-    await super.connect();
-
-    this.connected = true;
-  }
-  async disconnect() {
-    if (!this.connected) {
-      return;
-    }
-    await this.end();
-    this.connected = false;
-  }
-  async query(queryStream: any) {
-    await this.connect();
-    return await super.query(queryStream);
   }
 }
 

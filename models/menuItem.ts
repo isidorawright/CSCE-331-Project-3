@@ -4,7 +4,7 @@ import { IProduct, Product } from "./product";
 export interface IMenuItem {
   id: number;
   name: string;
-  price: number;
+  price: string;
   configurable: boolean;
   category: IMenuCategory;
   products: IProduct[];
@@ -15,7 +15,7 @@ export interface IMenuItem {
 export class MenuItem implements IMenuItem {
   id = -1;
   name = "";
-  price = 0.0;
+  price = "$0.00";
   configurable = false;
   category: IMenuCategory = { id: -1, name: "", active: false, menuItems: [] };
   products: IProduct[] = [];
