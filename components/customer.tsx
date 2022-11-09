@@ -43,7 +43,7 @@ function MenuCategoryTile({
         <LocalPizzaIcon fontSize="small" />
         <Typography variant="subtitle1">{category.name}</Typography>
         <Typography variant="subtitle1" fontWeight="bold">
-          {category.menuItemCount} Items
+          {category.menuItems.length} Items
         </Typography>
       </Grid>
     </Grid>
@@ -127,7 +127,7 @@ function MenuItems({ menu, order }: { menu: Menu; order: Order }): JSX.Element {
                 <Typography variant="subtitle1" fontWeight="bold">
                   {menuItem.name}
                 </Typography>
-                <Typography variant="subtitle1">${menuItem.price}</Typography>
+                <Typography variant="subtitle1">{menuItem.price}</Typography>
               </Grid>
             </Paper>
           </Grid>
@@ -225,7 +225,7 @@ function ConfigurePizza({
   const category = menu.activeCategory();
   const item = category?.activeItem();
 
-  if (!item) return <></>;
+  if (!item || !item.products.length) return <></>;
 
   return (
     <Paper sx={{ padding: theme.spacing(3), height: "100%" }}>
