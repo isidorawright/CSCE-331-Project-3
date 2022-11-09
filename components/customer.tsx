@@ -18,6 +18,8 @@ import { Subscription } from "rxjs";
 import { IMenuItem, MenuItem } from "../models/menuItem";
 import { Order } from "../models/order";
 import { OrderItem } from "../models/orderItem";
+import { Product } from "../models/product";
+import { Money } from "../util/money";
 
 function MenuCategoryTile({
   category,
@@ -73,6 +75,7 @@ function MenuCategories({ menu }: { menu: Menu }): JSX.Element {
                 if (activeCategory) {
                   activeCategory.active = false;
                 }
+                ("");
                 category.active = true;
                 store.menu.next(new Menu(menu));
               }}
@@ -155,20 +158,41 @@ function Receipt({ order }: { order: Order }): JSX.Element {
             wrap="nowrap"
             key={index}
           >
-            <Grid container item flexGrow={1} flex={3} direction="column">
-              <Grid item>
-                <Typography variant="subtitle1" fontWeight="bold">
-                  {item.menuItem.name}
-                </Typography>
+            <Grid container item direction="column">
+              <Grid container item>
+                <Grid item flexGrow={1}>
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    {item.menuItem.name}
+                  </Typography>
+                </Grid>
+
+                <Grid item direction="column">
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    {Money.of(item.menuItem.price)
+                      .mul(item.quantity)
+                      .toString()}
+                  </Typography>
+                  <Typography variant="subtitle1">x{item.quantity}</Typography>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Typography variant="subtitle1">x{item.quantity}</Typography>
-              </Grid>
-            </Grid>
-            <Grid item flex={1}>
-              <Typography variant="subtitle1" fontWeight="bold">
-                ${item.menuItem.price * item.quantity}
-              </Typography>
+              {item.products.length ? (
+                <Grid item sx={{ cursor: "pointer" }} xs={12}>
+                  <ul>
+                    {item.products.map((product) => {
+                      return (
+                        <li
+                          key={product.id}
+                          style={{ paddingLeft: theme.spacing(2) }}
+                        >
+                          <Typography variant="subtitle1">
+                            - {product.productName}
+                          </Typography>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </Grid>
+              ) : null}
             </Grid>
           </Grid>
         ))}
@@ -181,7 +205,7 @@ function Receipt({ order }: { order: Order }): JSX.Element {
             </Box>
             <Box gridColumn="span 6">
               <Typography variant="subtitle1" fontWeight="bold">
-                ${order.subTotal.toFixed(2)}
+                {order.subTotal}
               </Typography>
             </Box>
 
@@ -192,7 +216,7 @@ function Receipt({ order }: { order: Order }): JSX.Element {
             </Box>
             <Box gridColumn="span 6">
               <Typography variant="subtitle1" fontWeight="bold">
-                ${order.tax.toFixed(2)}
+                {order.tax}
               </Typography>
             </Box>
 
@@ -203,7 +227,7 @@ function Receipt({ order }: { order: Order }): JSX.Element {
             </Box>
             <Box gridColumn="span 6">
               <Typography variant="subtitle1" fontWeight="bold">
-                ${order.orderTotal.toFixed(2)}
+                {order.orderTotal}
               </Typography>
             </Box>
           </Box>
@@ -245,6 +269,7 @@ function ConfigurePizza({
                 color: product.selected
                   ? theme.palette.primary.contrastText
                   : "black",
+                cursor: "pointer",
               }}
               onClick={() => {
                 product.selected = !product.selected;
@@ -283,7 +308,7 @@ export function CustomerOrder() {
     <Container maxWidth="lg" sx={{ paddingTop: theme.spacing(3), flexGrow: 1 }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={12} md={8}>
-          <Grid container direction="column" columnGap={2}>
+          <Grid container direction="column" spacing={2}>
             <Grid item>
               <MenuCategories menu={menu} />
             </Grid>
@@ -317,7 +342,9 @@ export function CustomerOrder() {
                       menuItemId: menuItem.id,
                       quantity: 1,
                       isDrink: false,
-                      products: [],
+                      products: menuItem.products
+                        .filter((p) => p.selected)
+                        .map((p) => new Product(p)),
                       id: -1,
                     })
                   );
@@ -336,7 +363,10 @@ export function CustomerOrder() {
                 variant="contained"
                 color="primary"
                 fullWidth
-                onClick={() => {}}
+                onClick={() => {
+                  menu.resetSelections();
+                  store.order.next(new Order());
+                }}
               >
                 Checkout
               </Button>
