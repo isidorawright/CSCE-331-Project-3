@@ -10,16 +10,26 @@ import { AppProps } from "next/app";
 import NavBar, { TemporaryDrawer } from "../components/NavBar";
 import "../styles/globals.css";
 import { initializeStore, store } from "../models/store";
+import { once } from "lodash";
 
 // Client-side cache shared for the whole session
 // of the user in the browser.
 
 const clientSideEmotionCache = createEmotionCache();
 
+let googleTranslateElementInit = once(() => {
+  new (window as any).google.translate.TranslateElement(
+      {pageLanguage: 'en'},
+      'google_translate_element'
+  );
+});
+
+
 export default function MyApp(props: any) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   React.useEffect(() => {
     initializeStore(store);
+    googleTranslateElementInit();
   });
   return (
     <CacheProvider value={emotionCache}>
@@ -31,6 +41,7 @@ export default function MyApp(props: any) {
         <TemporaryDrawer />
         <NavBar />
         <Component {...pageProps} />
+        <div id="google_translate_element"></div>
       </ThemeProvider>
     </CacheProvider>
   );

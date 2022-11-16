@@ -21,16 +21,17 @@ const Inventorycolumns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 70 },
   { field: 'productName', headerName: 'Product Name', width: 130 },
   { field: 'category', headerName: 'Category', width: 130 },
+  { field: 'quantity', headerName: 'Quantity', width: 100 },
 ];
 
 const Inventoryrows = [
     //mock data
-  { id: 1, productName: 'Pepperoni', category: 'Topping' },
-  { id: 2, productName: 'Cheese', category: 'Cheese'},
-  { id: 3, productName: 'Sauce', category: 'Sauce'},
-  { id: 4, productName: 'chicken', category: 'Topping'},
-  { id: 5, productName: 'drink', category: 'Beverage'},
-  { id: 6, productName: 'cookie', category: 'other'},
+  { id: 1, productName: 'Pepperoni', category: 'Topping', quantity: 100 },
+  { id: 2, productName: 'Cheese', category: 'Cheese', quantity: 200},
+  { id: 3, productName: 'Sauce', category: 'Sauce', quantity: 400},
+  { id: 4, productName: 'chicken', category: 'Topping', quantity: 350},
+  { id: 5, productName: 'drink', category: 'Beverage', quantity: 420},
+  { id: 6, productName: 'cookie', category: 'other', quantity: 50},
 ];
 
 //Menu Item to Price Table
@@ -144,7 +145,7 @@ function createData(
 
 export default function DataTables() {
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <div style={{  width: '100%' }}>
       <h1>Inventory Table</h1>
         <DataGrid
             rows={Inventoryrows}
@@ -152,6 +153,7 @@ export default function DataTables() {
             pageSize={10}
             rowsPerPageOptions={[10]}
             checkboxSelection
+            sx={{height: "400px"}}
         />
       
       <br />
@@ -162,12 +164,13 @@ export default function DataTables() {
             pageSize={10}
             rowsPerPageOptions={[10]}
             checkboxSelection
+            sx={{height: "400px"}}
         />
       
       <br></br>
       <h1>Shipment Table</h1>
       <TableContainer component={Paper}>
-        <Table aria-label="collapsible table">
+        <Table aria-label="collapsible table" sx={{height: "400px"}}>
           <TableHead>
             <TableRow>
               <TableCell />
