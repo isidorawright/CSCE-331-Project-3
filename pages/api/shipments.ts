@@ -4,7 +4,7 @@ import { Product } from "../../models/product";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   // mock response
-  let shipment = new Shipment({
+  let shipment = Shipment({
     shipmentId: 1,
     shipmentDate: "2022-10-29",
     fulfilled: true,

@@ -9,7 +9,7 @@ export default async function handler(
   if (req.method === "POST") {
     let body = req.body;
     try {
-      let order = new Order(body);
+      let order = Order(body);
       const result = await database.query(
         `insert into orders (order_date, order_total, sub_total, tax) values ('${order.orderDate}', ${order.orderTotal}, ${order.subTotal}, ${order.tax}) returning order_id`
       );

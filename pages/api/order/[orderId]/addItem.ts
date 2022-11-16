@@ -7,7 +7,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const orderItem = new OrderItem(req.body);
+    const orderItem = OrderItem(req.body);
 
     const id = await database
       .query(
