@@ -25,7 +25,8 @@ import theme from "../styles/theme";
 import { useDispatch, useSelector } from "react-redux";
 
 const pages: { [key: string]: string } = {
-  Order: "/",
+  Home: "/",
+  Order: "/order",
   manage: "/manager",
 };
 

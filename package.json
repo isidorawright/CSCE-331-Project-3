@@ -13,7 +13,7 @@
     "@emotion/server": "^11.10.0",
     "@emotion/styled": "^11.10.4",
     "@mui/icons-material": "^5.10.9",
-    "@mui/material": "^5.10.11",
+    "@mui/material": "^5.10.14",
     "@mui/x-data-grid": "^5.17.10",
     "@rematch/core": "^2.2.0",
     "@types/axios": "^0.14.0",

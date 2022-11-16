@@ -6,7 +6,6 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "../styles/Home.module.css";
-import CustomerOrder from "../components/customer";
 
 const HomePageBanner = styled(Box)(({ theme }) => {
   return {
@@ -31,7 +30,26 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <CustomerOrder />
+      <HomePageBanner />
+
+      <Box
+        sx={{
+          backgroundColor: theme.palette.grey[100],
+          color: "white",
+        }}
+      >
+        <Container
+          sx={{
+            padding: theme.spacing(10),
+          }}
+        >
+          <Typography variant="h4">
+            Here at Spin N' Stone, we make pizza and sell drinks. If that's what
+            you like then come on by! If not.. well too bad that's all we've
+            got.
+          </Typography>
+        </Container>
+      </Box>
     </div>
   );
 }
