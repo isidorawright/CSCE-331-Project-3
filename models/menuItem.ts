@@ -12,24 +12,23 @@ export interface IMenuItem {
   active?: boolean;
 }
 
-export class MenuItem implements IMenuItem {
-  id = -1;
-  name = "";
-  price = "$0.00";
-  configurable = false;
-  category: IMenuCategory = { id: -1, name: "", active: false, menuItems: [] };
-  products: IProduct[] = [];
-  active = false;
-
-  constructor(data?: IMenuItem, omit?: string[]) {
-    if (data) {
-      Object.assign(this, data);
-      if (!omit || !omit.includes("category")) {
-        this.category = new MenuCategory(data.category, ["menuItems"]);
-      }
-      if (!omit || !omit.includes("products")) {
-        this.products = data.products.map((p) => new Product(p));
-      }
+export function MenuItem(data?: IMenuItem, omit?: string[]): IMenuItem {
+  if (data) {
+    const item = { ...data };
+    if (!omit || !omit.includes("category")) {
+      item.category = MenuCategory(data.category, ["menuItems"]);
     }
+    if (!omit || !omit.includes("products")) {
+      item.products = data.products.map((p) => Product(p));
+    }
+    return item;
   }
+  return {
+    id: -1,
+    name: "",
+    price: "$0.00",
+    configurable: false,
+    category: MenuCategory(),
+    products: [],
+  };
 }

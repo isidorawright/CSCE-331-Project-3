@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import React from "react";
-import { Menu, MenuCategory } from "../models/menu";
+import { IMenu, IMenuCategory, Menu, MenuCategory } from "../models/menu";
 import {
   Button,
   Card,
@@ -13,18 +13,16 @@ import {
 } from "@mui/material";
 import LocalPizzaIcon from "@mui/icons-material/LocalPizza";
 import _ from "lodash";
-import store from "../models/store";
-import { Subscription } from "rxjs";
+import { Dispatch, RootState } from "../models/store";
 import { IMenuItem, MenuItem } from "../models/menuItem";
-import { Order } from "../models/order";
-import { OrderItem } from "../models/orderItem";
-import { Product } from "../models/product";
+import { IOrder, Order } from "../models/order";
 import { Money } from "../util/money";
+import { useDispatch, useSelector } from "react-redux";
 
 function MenuCategoryTile({
   category,
 }: {
-  category: MenuCategory;
+  category: IMenuCategory;
 }): JSX.Element {
   const theme = useTheme<CustomTheme>();
   return (
@@ -37,6 +35,7 @@ function MenuCategoryTile({
       }}
     >
       <Grid
+        container
         sx={{ padding: theme.spacing(1), height: "100%" }}
         direction="column"
         justifyContent="center"
@@ -52,8 +51,10 @@ function MenuCategoryTile({
   );
 }
 
-function MenuCategories({ menu }: { menu: Menu }): JSX.Element {
+function MenuCategories(): JSX.Element {
   const theme = useTheme<CustomTheme>();
+  const dispatch = useDispatch<Dispatch>();
+  const menu = useSelector((state: RootState) => state.menu);
 
   return (
     <Paper sx={{ padding: theme.spacing(3), height: "100%" }}>
@@ -61,39 +62,35 @@ function MenuCategories({ menu }: { menu: Menu }): JSX.Element {
         Categories
       </Typography>
       <Grid container spacing={2}>
-        {menu.categories.map((category) => (
-          <Grid item xs={12} sm={4} md={3} lg={2} key={category.id}>
-            <Paper
-              sx={{
-                width: "100%",
-                display: "inline-block",
-                marginRight: "10px",
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                let activeCategory = menu.activeCategory();
-                if (activeCategory) {
-                  activeCategory.active = false;
-                }
-                ("");
-                category.active = true;
-                store.menu.next(new Menu(menu));
-              }}
-            >
-              <MenuCategoryTile category={category} />
-            </Paper>
-          </Grid>
-        ))}
+        {menu.categories
+          .filter((category) => category.menuItems.length)
+          .map((category, index) => (
+            <Grid item xs={12} sm={4} md={3} lg={2} key={index}>
+              <Paper
+                sx={{
+                  width: "100%",
+                  display: "inline-block",
+                  marginRight: "10px",
+                  cursor: "pointer",
+                }}
+                onClick={() => dispatch.menu.selectCategory(category)}
+              >
+                <MenuCategoryTile category={category} />
+              </Paper>
+            </Grid>
+          ))}
       </Grid>
     </Paper>
   );
 }
 
-function MenuItems({ menu, order }: { menu: Menu; order: Order }): JSX.Element {
+function MenuItems(): JSX.Element {
   const theme = useTheme<CustomTheme>();
-  let activeCategory = _(menu.categories)
-    .filter((c: MenuCategory) => c.active)
+  const menu = useSelector<RootState, IMenu>((state) => state.menu);
+  const activeCategory = _(menu.categories)
+    .filter((c: IMenuCategory) => Boolean(c.active))
     .first();
+  const dispatch = useDispatch<Dispatch>();
 
   if (!activeCategory) return <></>;
 
@@ -119,12 +116,7 @@ function MenuItems({ menu, order }: { menu: Menu; order: Order }): JSX.Element {
                 height: "100%",
                 cursor: "pointer",
               }}
-              onClick={() => {
-                items.forEach((i) => (i.active = false));
-                menuItem.active = true;
-
-                store.menu.next(new Menu(menu));
-              }}
+              onClick={() => dispatch.menu.selectItem(menuItem)}
             >
               <Grid container direction="column" justifyContent="center">
                 <Typography variant="subtitle1" fontWeight="bold">
@@ -140,7 +132,7 @@ function MenuItems({ menu, order }: { menu: Menu; order: Order }): JSX.Element {
   );
 }
 
-function Receipt({ order }: { order: Order }): JSX.Element {
+function Receipt({ order }: { order: IOrder }): JSX.Element {
   const theme = useTheme<CustomTheme>();
 
   return (
@@ -237,17 +229,17 @@ function Receipt({ order }: { order: Order }): JSX.Element {
   );
 }
 
-function ConfigurePizza({
-  menu,
-  order,
-}: {
-  menu: Menu;
-  order: Order;
-}): JSX.Element {
+function ConfigurePizza(): JSX.Element {
   const theme = useTheme<CustomTheme>();
+  const dispatch = useDispatch<Dispatch>();
+  const order = useSelector((state: RootState) => state.order);
+  const menu = useSelector((state: RootState) => state.menu);
 
-  const category = menu.activeCategory();
-  const item = category?.activeItem();
+  const category = Menu.activeCategory(menu);
+
+  if (!category) return <></>;
+
+  const item = MenuCategory.activeItem(category);
 
   if (!item || !item.products.length) return <></>;
 
@@ -271,10 +263,7 @@ function ConfigurePizza({
                   : "black",
                 cursor: "pointer",
               }}
-              onClick={() => {
-                product.selected = !product.selected;
-                store.menu.next(menu);
-              }}
+              onClick={() => dispatch.menu.toggleMenuItemProduct(product)}
             >
               <Typography variant="subtitle1" fontWeight="bold">
                 {product.productName}
@@ -287,20 +276,16 @@ function ConfigurePizza({
   );
 }
 
-var menuSub: Subscription;
-var orderSub: Subscription;
-
 export function CustomerOrder() {
-  const [menu, setMenu] = React.useState<Menu>(store.menu.value);
-  const [order, setOrder] = React.useState<Order>(store.order.value);
   const theme = useTheme<CustomTheme>();
+  const dispatch = useDispatch<Dispatch>();
+  const menu = useSelector((state: RootState) => state.menu);
+  const order = useSelector((state: RootState) => state.order);
 
-  React.useEffect(() => {
-    menuSub =
-      menuSub || store.menu.subscribe((menu) => setMenu(new Menu(menu)));
-    orderSub =
-      orderSub || store.order.subscribe((order) => setOrder(new Order(order)));
-  });
+  const activeCategory = Menu.activeCategory(menu);
+  const activeItem = activeCategory
+    ? MenuCategory.activeItem(activeCategory)
+    : null;
 
   menu.configuringPizza = true;
 
@@ -310,14 +295,14 @@ export function CustomerOrder() {
         <Grid item xs={12} sm={12} md={8}>
           <Grid container direction="column" spacing={2}>
             <Grid item>
-              <MenuCategories menu={menu} />
+              <MenuCategories />
             </Grid>
             <Grid item>
-              <MenuItems menu={menu} order={order} />
+              <MenuItems />
             </Grid>
             {menu.configuringPizza ? (
               <Grid item>
-                <ConfigurePizza menu={menu} order={order} />
+                <ConfigurePizza />
               </Grid>
             ) : null}
           </Grid>
@@ -326,31 +311,14 @@ export function CustomerOrder() {
           <Receipt order={order} />
         </Grid>
         <Grid item container xs={12} spacing={2}>
-          {menu.activeCategory()?.activeItem() ? (
+          {activeItem ? (
             <Grid item>
               <Button
                 variant="contained"
                 color="primary"
                 onClick={() => {
-                  let menuItem =
-                    menu.activeCategory()?.activeItem() || new MenuItem();
-
-                  order.addItem(
-                    new OrderItem({
-                      menuItem: new MenuItem(menuItem),
-                      orderId: -1,
-                      menuItemId: menuItem.id,
-                      quantity: 1,
-                      isDrink: false,
-                      products: menuItem.products
-                        .filter((p) => p.selected)
-                        .map((p) => new Product(p)),
-                      id: -1,
-                    })
-                  );
-
-                  menu.resetSelections();
-                  store.order.next(new Order(order));
+                  dispatch.order.addItem(activeItem);
+                  dispatch.menu.reset();
                 }}
               >
                 Add Item
@@ -364,8 +332,8 @@ export function CustomerOrder() {
                 color="primary"
                 fullWidth
                 onClick={() => {
-                  menu.resetSelections();
-                  store.order.next(new Order());
+                  dispatch.menu.reset();
+                  dispatch.order.reset();
                 }}
               >
                 Checkout

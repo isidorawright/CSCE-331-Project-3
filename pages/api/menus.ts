@@ -23,7 +23,7 @@ export default async function handler(
     .filter((row) => row.menu_item_category_name)
     .groupBy("menu_item_category_name")
     .map((rows, categoryName) => {
-      return new MenuCategory({
+      return MenuCategory({
         id: rows[0]?.category_id,
         name: categoryName,
         active: false,

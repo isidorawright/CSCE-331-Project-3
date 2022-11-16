@@ -14,32 +14,19 @@ export interface IShipment {
   products: IProduct[];
 }
 
-export class Shipment implements IShipment {
-  shipmentId = -1;
-  shipmentDate = new Date();
-  fulfilled = false;
-  products: Product[] = [];
-
-  constructor(shipment: IShipment) {
-    if (typeof shipment.shipmentDate === "string") {
-      shipment.shipmentDate = new Date(shipment.shipmentDate);
-    }
-    shipment.products = shipment.products.map((p) => new Product(p));
-    Object.assign(this, shipment);
+export function Shipment(data?: IShipment): IShipment {
+  if (data) {
+    return {
+      shipmentId: data.shipmentId,
+      shipmentDate: new Date(data.shipmentDate),
+      fulfilled: data.fulfilled,
+      products: data.products.map((p) => Product(p)),
+    };
   }
-
-  insert() {
-    // insert the shipment created client side
-  }
-  update() {
-    // update the shipment with new values
-  }
-  delete() {
-    // delete the shipment from local shipmentId
-  }
-  fulfull() {
-    api.shipment.fulfill(this);
-  }
-  //getQuantitySold(start: Date, end: Date) {} // on second sprint
-
+  return {
+    shipmentId: -1,
+    shipmentDate: new Date(),
+    fulfilled: false,
+    products: [],
+  };
 }

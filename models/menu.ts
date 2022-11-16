@@ -9,26 +9,25 @@ export interface IMenuCategory {
   menuItemCount?: number;
 }
 
-export class MenuCategory implements IMenuCategory {
-  id = -1;
-  name = "";
-
-  menuItems: IMenuItem[] = [];
-
-  // local props
-  active = false;
-  menuItemCount = 0;
-
-  activeItem(): IMenuItem | undefined {
-    return this.menuItems.find((m) => m.active);
-  }
-
-  constructor(data: IMenuCategory, omit?: string[]) {
-    Object.assign(this, data);
-    // potential recursive reference
+export function MenuCategory(
+  category?: IMenuCategory,
+  omit?: string[]
+): IMenuCategory {
+  if (category) {
     if (!omit || !omit.includes("menuItems")) {
-      this.menuItems = data.menuItems.map((m) => new MenuItem(m, ["category"]));
+      category.menuItems = category.menuItems.map((m) => MenuItem(m));
     }
+    return category;
+  }
+  return { id: -1, name: "", menuItems: [] };
+}
+
+export namespace MenuCategory {
+  export function activeItem(
+    cat: IMenuCategory | undefined
+  ): IMenuItem | undefined {
+    if (!cat) return undefined;
+    return cat.menuItems.find((m) => m.active);
   }
 }
 
@@ -37,30 +36,28 @@ export interface IMenu {
   configuringPizza?: boolean;
 }
 
-export class Menu implements IMenu {
-  categories: MenuCategory[] = [];
-  configuringPizza = false;
+export function Menu(menu?: IMenu): IMenu {
+  if (menu) {
+    menu.categories = menu.categories.map((c) => MenuCategory(c));
+    return menu;
+  }
+  return { categories: [] };
+}
 
-  activeCategory(): MenuCategory | undefined {
-    return this.categories.find((c) => c.active);
+export namespace Menu {
+  export function activeCategory(
+    menu: IMenu | undefined
+  ): IMenuCategory | undefined {
+    if (!menu) return undefined;
+    return menu.categories.find((c) => c.active);
   }
 
-  constructor(data?: IMenu) {
-    if (data) {
-      Object.assign(this, data);
-      this.categories = data.categories.map((c) => new MenuCategory(c));
-    }
-  }
-
-  resetSelections() {
-    let cat = this.activeCategory();
-    let item = cat?.activeItem();
-    if (item) {
-      item.products.forEach((p) => (p.selected = false));
-      item.active = false;
-      if (cat) {
-        cat.active = false;
-      }
-    }
+  export function resetSelections(menu: IMenu | undefined): IMenu | undefined {
+    if (!menu) return undefined;
+    menu.categories.forEach((c) => {
+      c.active = false;
+      c.menuItems.forEach((m) => (m.active = false));
+    });
+    return menu;
   }
 }

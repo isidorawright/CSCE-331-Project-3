@@ -10,38 +10,27 @@ export interface IProduct {
   selected?: boolean;
 }
 
-export class Product implements IProduct {
-  id = -1;
-  productName = "";
-  quantityInStock = 0;
-  conversionFactor = 0.0;
-  productTypeId = -1;
-
-  selected = false;
-
-  constructor(product: IProduct) {
-    Object.assign(this, product);
+export function Product(product?: IProduct): IProduct {
+  if (product) {
+    return product;
   }
+  return {
+    id: -1,
+    productName: "",
+    quantityInStock: 0,
+    conversionFactor: 0,
+    productTypeId: -1,
+  } as IProduct;
+}
 
-  insert() {
-    // TODO
-  }
-
-  update() {
-    // TODO
-  }
-
-  delete() {
-    // optional
-  }
-
-  equals(other: IProduct): boolean {
+export namespace Product {
+  export function equals(product: IProduct, other: IProduct): boolean {
     return (
-      this.id === other.id &&
-      this.productName === other.productName &&
-      this.quantityInStock === other.quantityInStock &&
-      this.conversionFactor === other.conversionFactor &&
-      this.productTypeId === other.productTypeId
+      product.id === other.id &&
+      product.productName === other.productName &&
+      product.quantityInStock === other.quantityInStock &&
+      product.conversionFactor === other.conversionFactor &&
+      product.productTypeId === other.productTypeId
     );
   }
 }

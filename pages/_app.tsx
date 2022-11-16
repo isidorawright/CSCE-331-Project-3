@@ -10,6 +10,7 @@ import { AppProps } from "next/app";
 import NavBar, { TemporaryDrawer } from "../components/NavBar";
 import "../styles/globals.css";
 import { initializeStore, store } from "../models/store";
+import { Provider } from "react-redux";
 
 // Client-side cache shared for the whole session
 // of the user in the browser.
@@ -22,16 +23,18 @@ export default function MyApp(props: any) {
     initializeStore(store);
   });
   return (
-    <CacheProvider value={emotionCache}>
-      <Head>
-        <meta name="viewport" content="initial-scale=1, width=device-width" />
-      </Head>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <TemporaryDrawer />
-        <NavBar />
-        <Component {...pageProps} />
-      </ThemeProvider>
-    </CacheProvider>
+    <Provider store={store}>
+      <CacheProvider value={emotionCache}>
+        <Head>
+          <meta name="viewport" content="initial-scale=1, width=device-width" />
+        </Head>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <TemporaryDrawer />
+          <NavBar />
+          <Component {...pageProps} />
+        </ThemeProvider>
+      </CacheProvider>
+    </Provider>
   );
 }
