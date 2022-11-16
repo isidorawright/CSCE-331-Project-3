@@ -13,41 +13,38 @@ export interface IOrderItem {
   isDrink: boolean;
 }
 
-// todo
-
-export class OrderItem implements IOrderItem {
-  id = -1;
-  orderId = -1;
-  menuItemId = -1;
-
-  products: Product[] = [];
-  menuItem: IMenuItem;
-
-  quantity = 0;
-  isDrink = false;
-
-  constructor(data: IOrderItem, omit?: string[]) {
-    Object.assign(this, data);
-    // potential recursive reference
-    if (!omit || !omit.includes("products")) {
-      this.products = data.products.map((p) => new Product(p));
-    }
+export function OrderItem(data?: IOrderItem, omit?: string[]): IOrderItem {
+  if (data) {
+    const item = { ...data };
     if (!omit || !omit.includes("menuItem")) {
-      this.menuItem = new MenuItem(data.menuItem);
-    } else {
-      this.menuItem = data.menuItem;
+      item.menuItem = MenuItem(data.menuItem, ["menuItems"]);
     }
+    if (!omit || !omit.includes("products")) {
+      item.products = data.products.map((p) => Product(p));
+    }
+    return item;
   }
+  return {
+    id: -1,
+    orderId: -1,
+    menuItemId: -1,
+    products: [],
+    menuItem: MenuItem(),
+    quantity: 1,
+    isDrink: false,
+  };
+}
 
-  equals(other: IOrderItem): boolean {
+export namespace OrderItem {
+  export function equals(order: IOrderItem, other: IOrderItem): boolean {
     return (
-      this.id === other.id &&
-      this.orderId === other.orderId &&
-      this.menuItemId === other.menuItemId &&
-      this.quantity === other.quantity &&
-      this.isDrink === other.isDrink &&
-      this.products.length === other.products.length &&
-      this.products.every((p, i) => p.equals(other.products[i]))
+      order.id === other.id &&
+      order.orderId === other.orderId &&
+      order.menuItemId === other.menuItemId &&
+      order.quantity === other.quantity &&
+      order.isDrink === other.isDrink &&
+      order.products.length === other.products.length &&
+      order.products.every((p, i) => Product.equals(p, other.products[i]))
     );
   }
 }

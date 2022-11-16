@@ -26,6 +26,9 @@ export default class MyDocument extends Document {
           ></link>
           {/* Inject MUI styles first to match with the prepend: true configuration. */}
           {(this.props as any).emotionStyleTags}
+
+          <script type="text/javascript" src= "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async defer>
+          </script>
         </Head>
         <body>
           <Main />

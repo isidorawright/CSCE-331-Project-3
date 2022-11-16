@@ -20,8 +20,9 @@ import {
 import Grid2 from "@mui/material/Unstable_Grid2";
 import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
-import store from "../models/store";
+import store, { Dispatch, RootState } from "../models/store";
 import theme from "../styles/theme";
+import { useDispatch, useSelector } from "react-redux";
 
 const pages: { [key: string]: string } = {
   Order: "/",
@@ -29,13 +30,8 @@ const pages: { [key: string]: string } = {
 };
 
 export function TemporaryDrawer(): JSX.Element {
-  const [state, setState] = React.useState(false);
-
-  React.useEffect(() => {
-    store.drawer.subscribe(({ open }) => {
-      setState(open);
-    });
-  });
+  const drawerState = useSelector((state: RootState) => state.drawer);
+  const dispatch = useDispatch<Dispatch>();
 
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -46,7 +42,7 @@ export function TemporaryDrawer(): JSX.Element {
       ) {
         return;
       }
-      store.drawer.next({ open });
+      dispatch.drawer.open();
     };
 
   const list = () => (
@@ -73,7 +69,11 @@ export function TemporaryDrawer(): JSX.Element {
   return (
     <div>
       <React.Fragment>
-        <Drawer anchor={"right"} open={state} onClose={toggleDrawer(false)}>
+        <Drawer
+          anchor={"right"}
+          open={drawerState.open}
+          onClose={toggleDrawer(false)}
+        >
           {list()}
         </Drawer>
       </React.Fragment>
@@ -87,6 +87,8 @@ export default function ResponsiveAppBar() {
   const [mobile, setIsMobile] = React.useState(
     useMediaQuery(theme.breakpoints.down("xs"))
   );
+  const drawerState = useSelector((state: RootState) => state.drawer);
+  const dispatch = useDispatch<Dispatch>();
 
   function handleResize() {
     if (
@@ -94,7 +96,7 @@ export default function ResponsiveAppBar() {
         .matches
     ) {
       if (mobile) {
-        store.drawer.next({ open: false });
+        dispatch.drawer.close();
         setIsMobile(false);
       }
     } else {
@@ -152,7 +154,7 @@ export default function ResponsiveAppBar() {
               color="inherit"
               aria-label="open drawer"
               edge="end"
-              onClick={() => store.drawer.next({ open: true })}
+              onClick={() => dispatch.drawer.open()}
               sx={{ display: mobile ? "block" : "none" }}
             >
               <MenuIcon />

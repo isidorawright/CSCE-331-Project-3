@@ -10,11 +10,11 @@ export default async function handler(
     let body = req.body;
     try {
       let order = new Order(body);
-      const res = await database.query(
+      const result = await database.query(
         `insert into orders (order_date, order_total, sub_total, tax) values ('${order.orderDate}', ${order.orderTotal}, ${order.subTotal}, ${order.tax}) returning order_id`
       );
 
-      order.orderId = res.rows[0].order_id;
+      order.orderId = result.rows[0].order_id;
 
       res.status(200).json(order);
     } catch (error) {
