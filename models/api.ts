@@ -35,7 +35,7 @@ export namespace api {
 
   export namespace shipment {
     export async function fulfill(shipment: Shipment): Promise<Response> {
-      return await fetch(`/api/shipment/fulfill/${shipment.shipmentId}`);
+      return await fetch(`/api/shipment/${shipment.shipmentId}/fulfill/`);
     }
   }
 }
