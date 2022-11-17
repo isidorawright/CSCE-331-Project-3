@@ -13,11 +13,26 @@ const HomePageBanner = styled(Box)(({ theme }) => {
     backgroundSize: "contain",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.palette.grey[100],
     height: "250px",
     width: "100%",
   };
 }) as typeof Box;
+
+const dayStyle = {
+  width: '11%',
+  display: 'inline-block',
+  boxSizing: 'border-box' as 'border-box',
+  textAlign: 'right' as 'right'
+};
+
+const hoursStyle = {
+  width: '80%',
+  paddingLeft: '10px',
+  display: 'inline-block',
+  boxSizing: 'border-box' as 'border-box',
+  textAlign: 'left' as 'left'
+};
 
 export default function Home() {
   let theme = useTheme();
@@ -25,8 +40,7 @@ export default function Home() {
   return (
     <div>
       <Head>
-        <title>spinstone</title>
-        <meta name="description" content="its pizza" />
+        <title>Spin 'N Stone</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -35,7 +49,6 @@ export default function Home() {
       <Box
         sx={{
           backgroundColor: theme.palette.grey[100],
-          color: "white",
         }}
       >
         <Container
@@ -43,11 +56,14 @@ export default function Home() {
             padding: theme.spacing(10),
           }}
         >
-          <Typography variant="h4">
-            Here at Spin N' Stone, we make pizza and sell drinks. If that's what
-            you like then come on by! If not.. well too bad that's all we've
-            got.
-          </Typography>
+          <Typography variant="h6">Hours of Operation</Typography>
+          <div style={dayStyle}>SUNDAY:</div>     <div style={hoursStyle}> closed</div>  
+          <div style={dayStyle}>MONDAY:</div>     <div style={hoursStyle}> 10:00 AM - 4:00 PM</div> 
+          <div style={dayStyle}>TUESDAY:</div>    <div style={hoursStyle}> 10:00 AM - 4:00 PM</div>
+          <div style={dayStyle}>WEDNESDAY:</div>  <div style={hoursStyle}> 10:00 AM - 4:00 PM</div>
+          <div style={dayStyle}>THURSDAY:</div>   <div style={hoursStyle}> 10:00 AM - 4:00 PM</div>
+          <div style={dayStyle}>FRIDAY:</div>     <div style={hoursStyle}> 10:00 AM - 3:00 PM</div>
+          <div style={dayStyle}>SATURDAY:</div>   <div style={hoursStyle}> closed</div> 
         </Container>
       </Box>
     </div>
