@@ -18,6 +18,7 @@ import { IMenuItem, MenuItem } from "../models/menuItem";
 import { IOrder, Order } from "../models/order";
 import { Money } from "../util/money";
 import { useDispatch, useSelector } from "react-redux";
+import Head from "next/head";
 
 function MenuCategoryTile({
   category,
@@ -137,6 +138,10 @@ function Receipt({ order }: { order: IOrder }): JSX.Element {
 
   return (
     <Paper sx={{ padding: theme.spacing(3), width: "100%" }}>
+      <Head>
+          <title>Spin 'N Stone | Order</title>
+          <link rel="icon" href="/favicon.ico" />
+      </Head> 
       <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: "12px" }}>
         Receipt
       </Typography>

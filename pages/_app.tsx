@@ -1,12 +1,10 @@
 import * as React from "react";
-import PropTypes from "prop-types";
 import Head from "next/head";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { CacheProvider } from "@emotion/react";
 import theme from "../styles/theme";
 import createEmotionCache from "../util/createEmotionCache";
-import { AppProps } from "next/app";
 import NavBar, { TemporaryDrawer } from "../components/NavBar";
 import "../styles/globals.css";
 import { initializeStore, store } from "../models/store";
