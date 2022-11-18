@@ -151,31 +151,31 @@ export default function DataTables() {
           <title>Spin 'N Stone | Manage</title>
           <link rel="icon" href="/favicon.ico" />
       </Head> 
-      <h1>Inventory Table</h1>
+      <h1 style={{paddingLeft: 40, paddingTop: 30}}>Inventory Table</h1>
         <DataGrid
             rows={Inventoryrows}
             columns={Inventorycolumns}
             pageSize={10}
             rowsPerPageOptions={[10]}
             checkboxSelection
-            sx={{height: "400px"}}
+            sx={{height: "400px", marginLeft: 5, marginRight: 5, marginTop: 1}}
         />
       
       <br />
-      <h1>Menu Item to Price Table</h1>
+      <h1 style={{paddingLeft: 40, paddingTop: 30}}>Menu Item to Price Table</h1>
         <DataGrid
             rows={MenuToPricerows}
             columns={MenuToPricecolumns}
             pageSize={10}
             rowsPerPageOptions={[10]}
             checkboxSelection
-            sx={{height: "400px"}}
+            sx={{height: "400px", marginLeft: 5, marginRight: 5, marginTop: 1}}
         />
       
       <br></br>
-      <h1>Shipment Table</h1>
-      <TableContainer component={Paper}>
-        <Table aria-label="collapsible table" sx={{height: "400px"}}>
+      <h1 style={{paddingLeft: 40, paddingTop: 30, paddingBottom: 10}}>Shipment Table</h1>
+      <TableContainer component={Paper} sx={{marginBottom: 3}}>
+        <Table aria-label="collapsible table" sx={{height: "400px", width: "90%", margin: 5, marginTop: 2}}>
           <TableHead>
             <TableRow>
               <TableCell />
