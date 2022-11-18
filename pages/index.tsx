@@ -17,7 +17,8 @@ const HomePageBanner = styled(Box)(({ theme }) => {
 }) as typeof Box;
 
 const dayStyle = {
-  width: '11%',
+  width: '10%',
+  minWidth: '100px',
   display: 'inline-block',
   boxSizing: 'border-box' as 'border-box',
   textAlign: 'right' as 'right'
@@ -25,6 +26,7 @@ const dayStyle = {
 
 const hoursStyle = {
   width: '80%',
+  maxWidth: 'calc(90% - 100px)',
   paddingLeft: '10px',
   display: 'inline-block',
   boxSizing: 'border-box' as 'border-box',
