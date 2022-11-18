@@ -12,7 +12,7 @@ import {
   useTheme,
 } from "@mui/material";
 import LocalPizzaIcon from "@mui/icons-material/LocalPizza";
-import _ from "lodash";
+import _, { groupBy } from "lodash";
 import { Dispatch, RootState } from "../models/store";
 import { IMenuItem, MenuItem } from "../models/menuItem";
 import { IOrder, Order } from "../models/order";
@@ -242,6 +242,8 @@ function ConfigurePizza(): JSX.Element {
   const item = MenuCategory.activeItem(category);
 
   if (!item || !item.products.length) return <></>;
+
+  const itemsByType = groupBy(item.products, (p) => p.productTypeId);
 
   return (
     <Paper sx={{ padding: theme.spacing(3), height: "100%" }}>

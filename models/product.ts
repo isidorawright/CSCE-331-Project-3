@@ -7,6 +7,7 @@ export interface IProduct {
   conversionFactor: number;
   productTypeId: number;
 
+  productType?: string;
   selected?: boolean;
 }
 

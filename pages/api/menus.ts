@@ -10,10 +10,11 @@ export default async function handler(
 ) {
   const all_menu_rows = await database
     .query(
-      `select * from menu_item_category full outer JOIN menu_item ON 
-      menu_item.menu_item_category_id = menu_item_category.menu_item_category_id 
-      full outer JOIN menu_item_product ON menu_item_product.menu_item_menu_item_id = menu_item.menu_item_id 
-      full outer join product ON product.product_id = menu_item_product.product_product_id 
+      `select * from menu_item_category full outer JOIN menu_item ON
+      menu_item.menu_item_category_id = menu_item_category.menu_item_category_id
+      full outer JOIN menu_item_product ON menu_item_product.menu_item_menu_item_id = menu_item.menu_item_id
+      full outer join product ON product.product_id = menu_item_product.product_product_id
+      full outer join product_type on product.product_type_id = product_type.product_type_id
       ORDER BY menu_item_category.menu_item_category_name
       `
     )
@@ -50,6 +51,7 @@ export default async function handler(
                     quantityInStock: row.quantity_in_stock,
                     conversionFactor: row.conversion_factor,
                     productTypeId: row.product_type_id,
+                    productType: row.product_type_name,
                   }))
                 : [],
             };
