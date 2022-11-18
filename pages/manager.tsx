@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import Head from "next/head";
 
 //imports for the collapsible table
 import Box from '@mui/material/Box';
@@ -146,6 +147,10 @@ function createData(
 export default function DataTables() {
   return (
     <div style={{  width: '100%' }}>
+      <Head>
+          <title>Spin 'N Stone | Manage</title>
+          <link rel="icon" href="/favicon.ico" />
+      </Head> 
       <h1>Inventory Table</h1>
         <DataGrid
             rows={Inventoryrows}

@@ -25,9 +25,10 @@ import theme from "../styles/theme";
 import { useDispatch, useSelector } from "react-redux";
 
 const pages: { [key: string]: string } = {
-  Home: "/",
-  Order: "/order",
+  home: "/",
+  order: "/order",
   manage: "/manager",
+  login: "/login",
 };
 
 export function TemporaryDrawer(): JSX.Element {
