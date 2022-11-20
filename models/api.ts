@@ -2,6 +2,8 @@ import { IMenu, IMenuCategory, Menu, MenuCategory } from "./menu";
 import { IShipment, Shipment } from "./shipment";
 import { Product, IProduct } from "./product";
 import { User, IUser } from "./customer";
+import { Order } from "./order";
+import { IOrderItem } from "./orderItem";
 
 export namespace api {
   export async function getMenuCategories(): Promise<IMenuCategory[]> {
@@ -37,6 +39,12 @@ export namespace api {
   export namespace shipment {
     export async function fulfill(shipment: IShipment): Promise<Response> {
       return await fetch(`/api/shipment/${shipment.shipmentId}/fulfill/`);
+    }
+  }
+
+  export namespace order {
+    export async function placeOrder(order: IOrderItem): Promise<Response> {
+      return await fetch(`/api/order/${order.orderId}/addItem/`);
     }
   }
 
