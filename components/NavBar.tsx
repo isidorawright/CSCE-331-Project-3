@@ -34,6 +34,8 @@ const pages: { [key: string]: string } = {
 export function TemporaryDrawer(): JSX.Element {
   const drawerState = useSelector((state: RootState) => state.drawer);
   const dispatch = useDispatch<Dispatch>();
+  const router = useRouter();
+  const theme = useTheme<CustomTheme>();
 
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -144,7 +146,7 @@ export default function ResponsiveAppBar() {
             >
               {Object.entries(pages).map(([name, route]) => (
                 <Button
-                  color="inherit"
+                  sx={{ color: router.pathname == route ? theme.palette.primary.contrastText : "inherit", background: router.pathname == route ? theme.palette.primary.main : "inherit" }}
                   key={name}
                   onClick={() => router.push(route)}
                 >
