@@ -14,8 +14,8 @@ import {
 import LocalPizzaIcon from "@mui/icons-material/LocalPizza";
 import _ from "lodash";
 import { Dispatch, RootState } from "../models/store";
-import { IMenuItem, MenuItem } from "../models/menuItem";
-import { IOrder, Order } from "../models/order";
+import { IMenuItem } from "../models/menuItem";
+import { IOrder } from "../models/order";
 import { Money } from "../util/money";
 import { useDispatch, useSelector } from "react-redux";
 import Head from "next/head";
@@ -251,10 +251,122 @@ function ConfigurePizza(): JSX.Element {
   return (
     <Paper sx={{ padding: theme.spacing(3), height: "100%" }}>
       <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: "12px" }}>
-        Add Toppings
+        Select Crust
       </Typography>
       <Grid container spacing={2}>
-        {item.products.map((product, index) => (
+        {item.products.filter(function(product) {return product.productTypeId == 7;}).map((product, index) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+            <Card
+              sx={{
+                padding: theme.spacing(2),
+                border: `1px solid ${theme.palette.borderColor}`,
+                background: product.selected
+                  ? theme.palette.primary.main
+                  : "white",
+                color: product.selected
+                  ? theme.palette.primary.contrastText
+                  : "black",
+                cursor: "pointer",
+              }}
+              onClick={() => dispatch.menu.toggleMenuItemProduct(product)}
+            >
+              <Typography variant="subtitle1" fontWeight="bold">
+                {product.productName}
+              </Typography>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+
+      <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: "12px", marginTop: "24px" }}>
+        Select Sauce
+      </Typography>
+      <Grid container spacing={2}>
+        {item.products.filter(function(product) {return product.productTypeId == 3;}).map((product, index) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+            <Card
+              sx={{
+                padding: theme.spacing(2),
+                border: `1px solid ${theme.palette.borderColor}`,
+                background: product.selected
+                  ? theme.palette.primary.main
+                  : "white",
+                color: product.selected
+                  ? theme.palette.primary.contrastText
+                  : "black",
+                cursor: "pointer",
+              }}
+              onClick={() => dispatch.menu.toggleMenuItemProduct(product)}
+            >
+              <Typography variant="subtitle1" fontWeight="bold">
+                {product.productName}
+              </Typography>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+
+      <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: "12px", marginTop: "24px" }}>
+        Select Cheese
+      </Typography>
+      <Grid container spacing={2}>
+        {item.products.filter(function(product) {return product.productTypeId == 4;}).map((product, index) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+            <Card
+              sx={{
+                padding: theme.spacing(2),
+                border: `1px solid ${theme.palette.borderColor}`,
+                background: product.selected
+                  ? theme.palette.primary.main
+                  : "white",
+                color: product.selected
+                  ? theme.palette.primary.contrastText
+                  : "black",
+                cursor: "pointer",
+              }}
+              onClick={() => dispatch.menu.toggleMenuItemProduct(product)}
+            >
+              <Typography variant="subtitle1" fontWeight="bold">
+                {product.productName}
+              </Typography>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+
+      <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: "12px", marginTop: "24px" }}>
+        Select Toppings
+      </Typography>
+      <Grid container spacing={2}>
+        {item.products.filter(function(product) {return product.productTypeId == 5 || product.productTypeId == 6;}).map((product, index) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+            <Card
+              sx={{
+                padding: theme.spacing(2),
+                border: `1px solid ${theme.palette.borderColor}`,
+                background: product.selected
+                  ? theme.palette.primary.main
+                  : "white",
+                color: product.selected
+                  ? theme.palette.primary.contrastText
+                  : "black",
+                cursor: "pointer",
+              }}
+              onClick={() => dispatch.menu.toggleMenuItemProduct(product)}
+            >
+              <Typography variant="subtitle1" fontWeight="bold">
+                {product.productName}
+              </Typography>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+
+      <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: "12px", marginTop: "24px" }}>
+        Select Drizzle
+      </Typography>
+      <Grid container spacing={2}>
+        {item.products.filter(function(product) {return product.productTypeId == 2;}).map((product, index) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
             <Card
               sx={{

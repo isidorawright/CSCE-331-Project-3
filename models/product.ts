@@ -1,5 +1,3 @@
-import { PHASE_PRODUCTION_SERVER } from "next/dist/shared/lib/constants";
-
 export interface IProduct {
   id: number;
   productName: string;

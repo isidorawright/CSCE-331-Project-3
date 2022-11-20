@@ -20,8 +20,7 @@ import {
 import Grid2 from "@mui/material/Unstable_Grid2";
 import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
-import store, { Dispatch, RootState } from "../models/store";
-import theme from "../styles/theme";
+import { Dispatch, RootState } from "../models/store";
 import { useDispatch, useSelector } from "react-redux";
 
 const pages: { [key: string]: string } = {
