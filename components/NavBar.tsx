@@ -20,8 +20,7 @@ import {
 import Grid2 from "@mui/material/Unstable_Grid2";
 import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
-import store, { Dispatch, RootState } from "../models/store";
-import theme from "../styles/theme";
+import { Dispatch, RootState } from "../models/store";
 import { useDispatch, useSelector } from "react-redux";
 
 const pages: { [key: string]: string } = {
@@ -34,6 +33,8 @@ const pages: { [key: string]: string } = {
 export function TemporaryDrawer(): JSX.Element {
   const drawerState = useSelector((state: RootState) => state.drawer);
   const dispatch = useDispatch<Dispatch>();
+  const router = useRouter();
+  const theme = useTheme<CustomTheme>();
 
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -144,7 +145,7 @@ export default function ResponsiveAppBar() {
             >
               {Object.entries(pages).map(([name, route]) => (
                 <Button
-                  color="inherit"
+                  sx={{ color: router.pathname == route ? theme.palette.primary.contrastText : "inherit", background: router.pathname == route ? theme.palette.primary.main : "inherit" }}
                   key={name}
                   onClick={() => router.push(route)}
                 >

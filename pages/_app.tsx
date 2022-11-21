@@ -11,8 +11,7 @@ import { initializeStore, store } from "../models/store";
 import { Provider } from "react-redux";
 import { once } from "lodash";
 
-// Client-side cache shared for the whole session
-// of the user in the browser.
+// Client-side cache shared for the whole user session in the browser.
 
 const clientSideEmotionCache = createEmotionCache();
 
