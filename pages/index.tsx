@@ -17,20 +17,20 @@ const HomePageBanner = styled(Box)(({ theme }) => {
 }) as typeof Box;
 
 const dayStyle = {
-  width: '10%',
-  minWidth: '100px',
-  display: 'inline-block',
-  boxSizing: 'border-box' as 'border-box',
-  textAlign: 'right' as 'right'
+  width: "10%",
+  minWidth: "100px",
+  display: "inline-block",
+  boxSizing: "border-box" as "border-box",
+  textAlign: "right" as "right",
 };
 
 const hoursStyle = {
-  width: '80%',
-  maxWidth: 'calc(90% - 100px)',
-  paddingLeft: '10px',
-  display: 'inline-block',
-  boxSizing: 'border-box' as 'border-box',
-  textAlign: 'left' as 'left'
+  width: "80%",
+  maxWidth: "calc(90% - 100px)",
+  paddingLeft: "10px",
+  display: "inline-block",
+  boxSizing: "border-box" as "border-box",
+  textAlign: "left" as "left",
 };
 
 export default function Home() {
@@ -39,7 +39,7 @@ export default function Home() {
   return (
     <div>
       <Head>
-        <title>Spin 'N Stone</title>
+        <title>Spin &apos;N Stone</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -56,14 +56,20 @@ export default function Home() {
           }}
         >
           <Typography variant="h6">Hours of Operation</Typography>
-          <div style={dayStyle}>SUNDAY:</div>     <div style={hoursStyle}> closed</div>  
-          <div style={dayStyle}>MONDAY:</div>     <div style={hoursStyle}> 10:00 AM - 4:00 PM</div> 
-          <div style={dayStyle}>TUESDAY:</div>    <div style={hoursStyle}> 10:00 AM - 4:00 PM</div>
-          <div style={dayStyle}>WEDNESDAY:</div>  <div style={hoursStyle}> 10:00 AM - 4:00 PM</div>
-          <div style={dayStyle}>THURSDAY:</div>   <div style={hoursStyle}> 10:00 AM - 4:00 PM</div>
-          <div style={dayStyle}>FRIDAY:</div>     <div style={hoursStyle}> 10:00 AM - 3:00 PM</div>
-          <div style={dayStyle}>SATURDAY:</div>   <div style={hoursStyle}> closed</div> 
-
+          <div style={dayStyle}>SUNDAY:</div>{" "}
+          <div style={hoursStyle}> closed</div>
+          <div style={dayStyle}>MONDAY:</div>{" "}
+          <div style={hoursStyle}> 10:00 AM - 4:00 PM</div>
+          <div style={dayStyle}>TUESDAY:</div>{" "}
+          <div style={hoursStyle}> 10:00 AM - 4:00 PM</div>
+          <div style={dayStyle}>WEDNESDAY:</div>{" "}
+          <div style={hoursStyle}> 10:00 AM - 4:00 PM</div>
+          <div style={dayStyle}>THURSDAY:</div>{" "}
+          <div style={hoursStyle}> 10:00 AM - 4:00 PM</div>
+          <div style={dayStyle}>FRIDAY:</div>{" "}
+          <div style={hoursStyle}> 10:00 AM - 3:00 PM</div>
+          <div style={dayStyle}>SATURDAY:</div>{" "}
+          <div style={hoursStyle}> closed</div>
           <iframe
             title="Google Maps"
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3433.7667023268996!2d-96.34363518513555!3d30.612342998476418!
@@ -72,7 +78,7 @@ export default function Home() {
             width="100%"
             height="450"
             loading="lazy"
-            style={{paddingTop: "40px", paddingBottom: "30px"}}
+            style={{ paddingTop: "40px", paddingBottom: "30px" }}
           ></iframe>
         </Container>
       </Box>
