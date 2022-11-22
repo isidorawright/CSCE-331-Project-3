@@ -139,7 +139,7 @@ function Receipt({ order }: { order: IOrder }): JSX.Element {
   return (
     <Paper sx={{ padding: theme.spacing(3), width: "100%" }}>
       <Head>
-        <title>Spin 'N Stone | Order</title>
+        <title>Spin &apos;N Stone | Order</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: "12px" }}>

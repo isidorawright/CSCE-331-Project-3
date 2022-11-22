@@ -1,8 +1,7 @@
 import { IMenu, IMenuCategory, Menu, MenuCategory } from "./menu";
 import { IShipment, Shipment } from "./shipment";
 import { Product, IProduct } from "./product";
-import { User, IUser } from "./customer";
-import { json } from "stream/consumers";
+import { User, IUser } from "./user";
 import { IOrder } from "./order";
 
 export namespace api {
@@ -50,6 +49,57 @@ export namespace api {
     return json.items.map((u: ))
   }*/
 
+  export namespace user {
+    export async function login(
+      username: string,
+      password: string
+    ): Promise<IUser> {
+      const response = await fetch("/api/user/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+      if (response.status != 200) {
+        throw new Error("Invalid username or password");
+      }
+      const json = await response.json();
+      return User(json);
+    }
+    export async function register(
+      username: string,
+      password: string
+    ): Promise<IUser> {
+      const response = await fetch("/api/user/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+      if (response.status != 200) {
+        let text = await response.text();
+        throw new Error(text);
+      }
+      const json = await response.json();
+      return User(json);
+    }
+    export async function logout(): Promise<void> {
+      const response = await fetch("/api/user/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.status != 200) {
+        let text = await response.text();
+        throw new Error(text);
+      }
+      return;
+    }
+  }
+
   export namespace shipment {
     export async function fulfill(shipment: IShipment) {
       await fetch(`/api/shipment/${shipment.shipmentId}/fulfill/`);
@@ -90,31 +140,6 @@ export namespace api {
         },
         body: JSON.stringify(order),
       });
-    }
-  }
-
-  export namespace order {
-    export async function placeOrder(order: IOrderItem): Promise<Response> {
-      return await fetch(`/api/order/${order.orderId}/addItem/`);
-    }
-  }
-
-  export namespace user {
-    export async function login(
-      email: string,
-      password: string
-    ): Promise<IUser> {
-      const response = await fetch("/api/user/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const json = await response.json();
-
-      return User(json);
     }
   }
 }

@@ -13,27 +13,59 @@ import Container from "@mui/material/Container";
 import { CustomTheme, useTheme } from "@mui/material";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import { api } from "../models/api";
+import { useDispatch, useSelector } from "react-redux";
+import { Dispatch, RootState } from "../models/store";
+import { User, UserRole } from "../models/user";
 
 export default function SignIn() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-  };
-
   const theme = useTheme<CustomTheme>();
   const router = useRouter();
+
+  const [error, setError] = React.useState("");
+  const [registering, setRegistering] = React.useState(false);
+  const userState = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch<Dispatch>();
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError("");
+    const data = new FormData(event.currentTarget);
+
+    try {
+      if (registering) {
+        await dispatch.user.register(
+          User({
+            username: data.get("username") as string,
+            password: data.get("password") as string,
+            id: -1,
+            authenticated: false,
+            role: UserRole.CUSTOMER,
+          })
+        );
+      } else {
+        await dispatch.user.login(
+          User({
+            username: data.get("username") as string,
+            password: data.get("password") as string,
+            id: -1,
+            authenticated: false,
+            role: UserRole.CUSTOMER,
+          })
+        );
+      }
+    } catch (e: any) {
+      setError(e.message);
+    }
+  };
 
   return (
     <div>
       <Container component="main" maxWidth="xs">
         <Head>
-          <title>Spin 'N Stone | Login</title>
+          <title>Spin &apos;N Stone | Login</title>
           <link rel="icon" href="/favicon.ico" />
-        </Head> 
+        </Head>
 
         <Box
           sx={{
@@ -52,15 +84,20 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
+          >
             <TextField
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              id="username"
+              label="Username"
+              name="username"
+              autoComplete="username"
               autoFocus
             />
             <TextField
@@ -73,29 +110,54 @@ export default function SignIn() {
               id="password"
               autoComplete="current-password"
             />
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
-            />
+            /> */}
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              onClick={() => router.push("/")}
             >
-              Sign In
+              {registering ? "Register" : "Sign In"}
             </Button>
+            <Box sx={{ mt: 2, textAlign: "center" }}>
+              {error && (
+                <Typography color="error" variant="body2">
+                  {error}
+                </Typography>
+              )}
+            </Box>
             <Grid container>
               <Grid item xs={12} sx={{ textAlign: "center" }}>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
+                <Typography
+                  variant="body2"
+                  onClick={() => {
+                    setRegistering(!registering);
+                    setError("");
+                  }}
+                  sx={{
+                    cursor: "pointer",
+                  }}
+                >
+                  {registering
+                    ? "Already have an account? Sign in"
+                    : "Don't have an account? Sign Up"}
+                </Typography>
               </Grid>
               <Grid item xs={12} sx={{ textAlign: "center" }}>
-                <Link href="#" variant="body2">
+                <Typography
+                  variant="body2"
+                  onClick={() => {
+                    setError("too bad, write it down next time");
+                  }}
+                  sx={{
+                    cursor: "pointer",
+                  }}
+                >
                   Forgot password?
-                </Link>
+                </Typography>
               </Grid>
             </Grid>
           </Box>

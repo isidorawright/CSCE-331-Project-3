@@ -6,9 +6,8 @@ export enum UserRole {
 
 export interface IUser {
   id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
+  username: string;
+  password?: string;
   authenticated: boolean;
   role: UserRole;
 }
@@ -19,9 +18,8 @@ export function User(user?: IUser): IUser {
   }
   return {
     id: -1,
-    firstName: "",
-    lastName: "",
-    email: "",
+    username: "",
     authenticated: false,
+    role: UserRole.CUSTOMER,
   } as IUser;
 }

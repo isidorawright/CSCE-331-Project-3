@@ -17,10 +17,18 @@ import { once } from "lodash";
 const clientSideEmotionCache = createEmotionCache();
 
 let googleTranslateElementInit = once(() => {
-  new (window as any).google.translate.TranslateElement(
-    { pageLanguage: "en" },
-    "google_translate_element"
-  );
+  try {
+    new (window as any).google.translate.TranslateElement(
+      {
+        pageLanguage: "en",
+        layout: (window as any).google.translate.TranslateElement.InlineLayout
+          .SIMPLE,
+      },
+      "google_translate_element"
+    );
+  } catch (e) {
+    console.error(e);
+  }
 });
 
 export default function MyApp(props: any) {
@@ -41,7 +49,7 @@ export default function MyApp(props: any) {
           <TemporaryDrawer />
           <NavBar />
           <Component {...pageProps} />
-          <div id="google_translate_element" style={{padding: '15px'}}></div>
+          <div id="google_translate_element" style={{ padding: "15px" }}></div>
         </ThemeProvider>
       </CacheProvider>
     </Provider>
