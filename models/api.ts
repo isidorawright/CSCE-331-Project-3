@@ -22,6 +22,20 @@ export namespace api {
 
     return Menu(json);
   }
+  export namespace product {
+    export async function insert(product: IProduct): Promise<IProduct> {
+      const response = await fetch("/api/menu/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(product),
+      });
+      const { id } = await response.json();
+      product.id = id;
+      return product;
+    }
+  }
   export namespace category {
     export async function find(id: number): Promise<IMenuCategory> {
       const response = await fetch(`/api/menu/category/${id}`);
