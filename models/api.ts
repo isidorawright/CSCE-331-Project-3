@@ -41,6 +41,9 @@ export namespace api {
     export async function addProduct(shipment: IShipment, product: IProduct, quantity: number) {
       return await fetch(`/api/shipment/${shipment.shipmentId}/addProduct/?productId=${product.id}&quantity=${quantity}`);
     }
+    export async function setQuantity(shipment: IShipment, product:IProduct, quantity: number) {
+      return await fetch(`/api/shipment/${shipment.shipmentId}/setQuantity/?productId=${product.id}&quantity=${quantity}`);
+    }
   }
 
   export namespace user {
