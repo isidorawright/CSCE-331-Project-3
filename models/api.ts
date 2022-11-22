@@ -3,6 +3,7 @@ import { IShipment, Shipment } from "./shipment";
 import { Product, IProduct } from "./product";
 import { User, IUser } from "./customer";
 import { json } from "stream/consumers";
+import { IOrder } from "./order";
 
 export namespace api {
   export async function getMenuCategories(): Promise<IMenuCategory[]> {
@@ -39,17 +40,42 @@ export namespace api {
     export async function fulfill(shipment: IShipment) {
       await fetch(`/api/shipment/${shipment.shipmentId}/fulfill/`);
     }
-    export async function addProduct(shipment: IShipment, product: IProduct, quantity: number) {
-      await fetch(`/api/shipment/${shipment.shipmentId}/addProduct/?productId=${product.id}&quantity=${quantity}`);
+    export async function addProduct(
+      shipment: IShipment,
+      product: IProduct,
+      quantity: number
+    ) {
+      await fetch(
+        `/api/shipment/${shipment.shipmentId}/addProduct/?productId=${product.id}&quantity=${quantity}`
+      );
     }
-    export async function setQuantity(shipment: IShipment, product:IProduct, quantity: number) {
-      await fetch(`/api/shipment/${shipment.shipmentId}/setQuantity/?productId=${product.id}&quantity=${quantity}`);
+    export async function setQuantity(
+      shipment: IShipment,
+      product: IProduct,
+      quantity: number
+    ) {
+      await fetch(
+        `/api/shipment/${shipment.shipmentId}/setQuantity/?productId=${product.id}&quantity=${quantity}`
+      );
     }
-    export async function getShipment(shipment: IShipment) {//: Promise<IShipment>{
+    export async function getShipment(shipment: IShipment) {
+      //: Promise<IShipment>{
       const response = await fetch(`/api/shipment/${shipment.shipmentId}`);
       //const json = await response.json();
       //return json.items.map((s: IShipment) => Shipment(s));
       return response;
+    }
+  }
+
+  export namespace order {
+    export async function submit(order: IOrder) {
+      await fetch("/api/order/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(order),
+      });
     }
   }
 
