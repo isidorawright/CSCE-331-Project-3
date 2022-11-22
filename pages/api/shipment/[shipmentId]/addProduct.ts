@@ -5,8 +5,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // real response
     console.log(req.query.shipmentId);
     database.query(
-      `update shipment set fulfilled = true where shipment_id = ${req.query.shipmentId}`
+        `insert into shipment_product (shipment_shipment_id, product_product_id, quantity_ordered) values (${req.query.shipmentId}, ${req.query.productId}, ${req.query.quantity})`
     );
 
     res.status(200).send("");
-  }
+}

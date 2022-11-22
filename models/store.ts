@@ -138,7 +138,13 @@ export const orderState = createModel<RootModel>()({
       return state;
     },
   },
-  effects: (dispatch) => ({}),
+  effects: (dispatch) => ({
+    async submit(order: IOrder) {
+      await api.order.submit(order);
+      dispatch.menu.reset();
+      dispatch.order.reset();
+    },
+  }),
 });
 
 export interface RootModel extends Models<RootModel> {

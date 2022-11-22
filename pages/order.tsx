@@ -139,9 +139,9 @@ function Receipt({ order }: { order: IOrder }): JSX.Element {
   return (
     <Paper sx={{ padding: theme.spacing(3), width: "100%" }}>
       <Head>
-          <title>Spin 'N Stone | Order</title>
-          <link rel="icon" href="/favicon.ico" />
-      </Head> 
+        <title>Spin 'N Stone | Order</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: "12px" }}>
         Receipt
       </Typography>
@@ -163,7 +163,7 @@ function Receipt({ order }: { order: IOrder }): JSX.Element {
                   </Typography>
                 </Grid>
 
-                <Grid item direction="column">
+                <Grid item>
                   <Typography variant="subtitle1" fontWeight="bold">
                     {Money.of(item.menuItem.price)
                       .mul(item.quantity)
@@ -237,16 +237,22 @@ function Receipt({ order }: { order: IOrder }): JSX.Element {
 function ConfigurePizza(): JSX.Element {
   const theme = useTheme<CustomTheme>();
   const dispatch = useDispatch<Dispatch>();
-  const order = useSelector((state: RootState) => state.order);
   const menu = useSelector((state: RootState) => state.menu);
 
   const category = Menu.activeCategory(menu);
 
   if (!category) return <></>;
 
-  const item = MenuCategory.activeItem(category);
+  const menuItem = MenuCategory.activeItem(category);
 
-  if (!item || !item.products.length) return <></>;
+  if (!menuItem || !menuItem.products.length) return <></>;
+
+  const maxToppings =
+    {
+      "1 Topping Pizza": 1,
+      "2-4 Topping Pizza": 4,
+      "Original Cheese Pizza": 0,
+    }[menuItem.name] || 0;
 
   return (
     <Paper sx={{ padding: theme.spacing(3), height: "100%" }}>
@@ -254,140 +260,184 @@ function ConfigurePizza(): JSX.Element {
         Select Crust
       </Typography>
       <Grid container spacing={2}>
-        {item.products.filter(function(product) {return product.productTypeId == 7;}).map((product, index) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-            <Card
-              sx={{
-                padding: theme.spacing(2),
-                border: `1px solid ${theme.palette.borderColor}`,
-                background: product.selected
-                  ? theme.palette.primary.main
-                  : "white",
-                color: product.selected
-                  ? theme.palette.primary.contrastText
-                  : "black",
-                cursor: "pointer",
-              }}
-              onClick={() => dispatch.menu.toggleMenuItemProduct(product)}
-            >
-              <Typography variant="subtitle1" fontWeight="bold">
-                {product.productName}
-              </Typography>
-            </Card>
-          </Grid>
-        ))}
+        {menuItem.products
+          .filter(function (product) {
+            return product.productTypeId == 7;
+          })
+          .map((product, index) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+              <Card
+                sx={{
+                  padding: theme.spacing(2),
+                  border: `1px solid ${theme.palette.borderColor}`,
+                  background: product.selected
+                    ? theme.palette.primary.main
+                    : "white",
+                  color: product.selected
+                    ? theme.palette.primary.contrastText
+                    : "black",
+                  cursor: "pointer",
+                }}
+                onClick={() => dispatch.menu.toggleMenuItemProduct(product)}
+              >
+                <Typography variant="subtitle1" fontWeight="bold">
+                  {product.productName}
+                </Typography>
+              </Card>
+            </Grid>
+          ))}
       </Grid>
 
-      <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: "12px", marginTop: "24px" }}>
+      <Typography
+        variant="h6"
+        fontWeight="bold"
+        sx={{ marginBottom: "12px", marginTop: "24px" }}
+      >
         Select Sauce
       </Typography>
       <Grid container spacing={2}>
-        {item.products.filter(function(product) {return product.productTypeId == 3;}).map((product, index) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-            <Card
-              sx={{
-                padding: theme.spacing(2),
-                border: `1px solid ${theme.palette.borderColor}`,
-                background: product.selected
-                  ? theme.palette.primary.main
-                  : "white",
-                color: product.selected
-                  ? theme.palette.primary.contrastText
-                  : "black",
-                cursor: "pointer",
-              }}
-              onClick={() => dispatch.menu.toggleMenuItemProduct(product)}
-            >
-              <Typography variant="subtitle1" fontWeight="bold">
-                {product.productName}
-              </Typography>
-            </Card>
-          </Grid>
-        ))}
+        {menuItem.products
+          .filter(function (product) {
+            return product.productTypeId == 3;
+          })
+          .map((product, index) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+              <Card
+                sx={{
+                  padding: theme.spacing(2),
+                  border: `1px solid ${theme.palette.borderColor}`,
+                  background: product.selected
+                    ? theme.palette.primary.main
+                    : "white",
+                  color: product.selected
+                    ? theme.palette.primary.contrastText
+                    : "black",
+                  cursor: "pointer",
+                }}
+                onClick={() => dispatch.menu.toggleMenuItemProduct(product)}
+              >
+                <Typography variant="subtitle1" fontWeight="bold">
+                  {product.productName}
+                </Typography>
+              </Card>
+            </Grid>
+          ))}
       </Grid>
 
-      <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: "12px", marginTop: "24px" }}>
+      <Typography
+        variant="h6"
+        fontWeight="bold"
+        sx={{ marginBottom: "12px", marginTop: "24px" }}
+      >
         Select Cheese
       </Typography>
       <Grid container spacing={2}>
-        {item.products.filter(function(product) {return product.productTypeId == 4;}).map((product, index) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-            <Card
-              sx={{
-                padding: theme.spacing(2),
-                border: `1px solid ${theme.palette.borderColor}`,
-                background: product.selected
-                  ? theme.palette.primary.main
-                  : "white",
-                color: product.selected
-                  ? theme.palette.primary.contrastText
-                  : "black",
-                cursor: "pointer",
-              }}
-              onClick={() => dispatch.menu.toggleMenuItemProduct(product)}
-            >
-              <Typography variant="subtitle1" fontWeight="bold">
-                {product.productName}
-              </Typography>
-            </Card>
-          </Grid>
-        ))}
+        {menuItem.products
+          .filter(function (product) {
+            return product.productTypeId == 4;
+          })
+          .map((product, index) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+              <Card
+                sx={{
+                  padding: theme.spacing(2),
+                  border: `1px solid ${theme.palette.borderColor}`,
+                  background: product.selected
+                    ? theme.palette.primary.main
+                    : "white",
+                  color: product.selected
+                    ? theme.palette.primary.contrastText
+                    : "black",
+                  cursor: "pointer",
+                }}
+                onClick={() => dispatch.menu.toggleMenuItemProduct(product)}
+              >
+                <Typography variant="subtitle1" fontWeight="bold">
+                  {product.productName}
+                </Typography>
+              </Card>
+            </Grid>
+          ))}
       </Grid>
 
-      <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: "12px", marginTop: "24px" }}>
+      <Typography
+        variant="h6"
+        fontWeight="bold"
+        sx={{ marginBottom: "12px", marginTop: "24px" }}
+      >
         Select Toppings
       </Typography>
       <Grid container spacing={2}>
-        {item.products.filter(function(product) {return product.productTypeId == 5 || product.productTypeId == 6;}).map((product, index) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-            <Card
-              sx={{
-                padding: theme.spacing(2),
-                border: `1px solid ${theme.palette.borderColor}`,
-                background: product.selected
-                  ? theme.palette.primary.main
-                  : "white",
-                color: product.selected
-                  ? theme.palette.primary.contrastText
-                  : "black",
-                cursor: "pointer",
-              }}
-              onClick={() => dispatch.menu.toggleMenuItemProduct(product)}
-            >
-              <Typography variant="subtitle1" fontWeight="bold">
-                {product.productName}
-              </Typography>
-            </Card>
-          </Grid>
-        ))}
+        {menuItem.products
+          .filter(function (product) {
+            return product.productTypeId == 5 || product.productTypeId == 6;
+          })
+          .map((product, index) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+              <Card
+                sx={{
+                  padding: theme.spacing(2),
+                  border: `1px solid ${theme.palette.borderColor}`,
+                  background: product.selected
+                    ? theme.palette.primary.main
+                    : "white",
+                  color: product.selected
+                    ? theme.palette.primary.contrastText
+                    : "black",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  if (
+                    menuItem.products.filter((product) => product.selected)
+                      .length < maxToppings ||
+                    product.selected
+                  ) {
+                    dispatch.menu.toggleMenuItemProduct(product);
+                  }
+                }}
+              >
+                <Typography variant="subtitle1" fontWeight="bold">
+                  {product.productName}
+                </Typography>
+              </Card>
+            </Grid>
+          ))}
       </Grid>
 
-      <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: "12px", marginTop: "24px" }}>
+      <Typography
+        variant="h6"
+        fontWeight="bold"
+        sx={{ marginBottom: "12px", marginTop: "24px" }}
+      >
         Select Drizzle
       </Typography>
       <Grid container spacing={2}>
-        {item.products.filter(function(product) {return product.productTypeId == 2;}).map((product, index) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-            <Card
-              sx={{
-                padding: theme.spacing(2),
-                border: `1px solid ${theme.palette.borderColor}`,
-                background: product.selected
-                  ? theme.palette.primary.main
-                  : "white",
-                color: product.selected
-                  ? theme.palette.primary.contrastText
-                  : "black",
-                cursor: "pointer",
-              }}
-              onClick={() => dispatch.menu.toggleMenuItemProduct(product)}
-            >
-              <Typography variant="subtitle1" fontWeight="bold">
-                {product.productName}
-              </Typography>
-            </Card>
-          </Grid>
-        ))}
+        {menuItem.products
+          .filter(function (product) {
+            return product.productTypeId == 2;
+          })
+          .map((product, index) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+              <Card
+                sx={{
+                  padding: theme.spacing(2),
+                  border: `1px solid ${theme.palette.borderColor}`,
+                  background: product.selected
+                    ? theme.palette.primary.main
+                    : "white",
+                  color: product.selected
+                    ? theme.palette.primary.contrastText
+                    : "black",
+                  cursor: "pointer",
+                }}
+                onClick={() => dispatch.menu.toggleMenuItemProduct(product)}
+              >
+                <Typography variant="subtitle1" fontWeight="bold">
+                  {product.productName}
+                </Typography>
+              </Card>
+            </Grid>
+          ))}
       </Grid>
     </Paper>
   );
@@ -449,8 +499,7 @@ export function CustomerOrder() {
                 color="primary"
                 fullWidth
                 onClick={() => {
-                  dispatch.menu.reset();
-                  dispatch.order.reset();
+                  dispatch.order.submit(order);
                 }}
               >
                 Checkout

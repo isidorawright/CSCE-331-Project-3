@@ -56,7 +56,12 @@ export namespace Menu {
     if (!menu) return undefined;
     menu.categories.forEach((c) => {
       c.active = false;
-      c.menuItems.forEach((m) => (m.active = false));
+      c.menuItems.forEach((item) => {
+        item.active = false;
+        item.products.forEach((p) => {
+          p.selected = false;
+        });
+      });
     });
     return menu;
   }
