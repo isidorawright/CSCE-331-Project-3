@@ -2,6 +2,7 @@ import { IMenu, IMenuCategory, Menu, MenuCategory } from "./menu";
 import { IShipment, Shipment } from "./shipment";
 import { Product, IProduct } from "./product";
 import { User, IUser } from "./customer";
+import { json } from "stream/consumers";
 
 export namespace api {
   export async function getMenuCategories(): Promise<IMenuCategory[]> {
@@ -35,14 +36,20 @@ export namespace api {
   }*/
 
   export namespace shipment {
-    export async function fulfill(shipment: IShipment): Promise<Response> {
-      return await fetch(`/api/shipment/${shipment.shipmentId}/fulfill/`);
+    export async function fulfill(shipment: IShipment) {
+      await fetch(`/api/shipment/${shipment.shipmentId}/fulfill/`);
     }
     export async function addProduct(shipment: IShipment, product: IProduct, quantity: number) {
-      return await fetch(`/api/shipment/${shipment.shipmentId}/addProduct/?productId=${product.id}&quantity=${quantity}`);
+      await fetch(`/api/shipment/${shipment.shipmentId}/addProduct/?productId=${product.id}&quantity=${quantity}`);
     }
     export async function setQuantity(shipment: IShipment, product:IProduct, quantity: number) {
-      return await fetch(`/api/shipment/${shipment.shipmentId}/setQuantity/?productId=${product.id}&quantity=${quantity}`);
+      await fetch(`/api/shipment/${shipment.shipmentId}/setQuantity/?productId=${product.id}&quantity=${quantity}`);
+    }
+    export async function getShipment(shipment: IShipment) {//: Promise<IShipment>{
+      const response = await fetch(`/api/shipment/${shipment.shipmentId}`);
+      //const json = await response.json();
+      //return json.items.map((s: IShipment) => Shipment(s));
+      return response;
     }
   }
 
@@ -87,4 +94,25 @@ export namespace api {
     • Finalize shipment
     • Edit shipment quantity
     • Add product to shipment
+
+
+  Shipment:
+    shipment
+      {
+        GET   Get all shipments view
+      }
+    shipment/[shipmentId]/
+      {
+        GET     Get Shipment object (date, fulfilled, product)
+        POST    Create new shipment (date, fulfilled)
+        PUT     Update shipment (date, fulfilled, (need to pass in products?))
+        DELETE  Remove shipment (cascade delete products in shipment)
+      }
+    shipment/[shipmentId]/product/[productId]
+      {
+        GET     Get quantity
+        POST    create new product in a given shipment
+        PUT     update product quantity
+        DELETE  remove product in shipment
+      }
 */
