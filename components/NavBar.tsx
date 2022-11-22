@@ -22,16 +22,17 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Link from "next/link";
 import { Dispatch, RootState } from "../models/store";
 import { useDispatch, useSelector } from "react-redux";
+import { UserRole } from "../models/user";
 
 const pages: { [key: string]: string } = {
   home: "/",
   order: "/order",
   manage: "/manager",
-  login: "/login",
 };
 
 export function TemporaryDrawer(): JSX.Element {
   const drawerState = useSelector((state: RootState) => state.drawer);
+  const userState = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<Dispatch>();
   const router = useRouter();
   const theme = useTheme<CustomTheme>();
@@ -56,15 +57,38 @@ export function TemporaryDrawer(): JSX.Element {
       sx={{ padding: theme.spacing(2) }}
     >
       <List>
-        {Object.entries(pages).map(([name, route], index) => (
-          <ListItem key={name} disablePadding>
+        {[
+          ...Object.entries(pages).map(([name, route], index) => {
+            if (userState.user.role != UserRole.MANAGER && name == "manage") {
+              return null;
+            }
+            return (
+              <ListItem key={name} disablePadding>
+                <ListItemButton>
+                  <Link href={route}>
+                    <ListItemText primary={name} />
+                  </Link>
+                </ListItemButton>
+              </ListItem>
+            );
+          }),
+          <ListItem key="login" disablePadding>
             <ListItemButton>
-              <Link href={route}>
-                <ListItemText primary={name} />
+              <Link
+                href="/login"
+                onClick={() => {
+                  if (userState.loggedIn) {
+                    dispatch.user.logout();
+                  }
+                }}
+              >
+                <ListItemText
+                  primary={userState.loggedIn ? "logout" : "login"}
+                />
               </Link>
             </ListItemButton>
-          </ListItem>
-        ))}
+          </ListItem>,
+        ]}
       </List>
     </Box>
   );
@@ -92,6 +116,7 @@ export default function ResponsiveAppBar() {
   );
   const drawerState = useSelector((state: RootState) => state.drawer);
   const dispatch = useDispatch<Dispatch>();
+  const userState = useSelector((state: RootState) => state.user);
 
   function handleResize() {
     if (
@@ -143,15 +168,50 @@ export default function ResponsiveAppBar() {
                 display: mobile ? "none" : "flex",
               }}
             >
-              {Object.entries(pages).map(([name, route]) => (
+              {[
+                ...Object.entries(pages).map(([name, route]) => {
+                  if (
+                    userState.user.role != UserRole.MANAGER &&
+                    name == "manage"
+                  ) {
+                    return null;
+                  }
+                  return (
+                    <Button
+                      sx={{
+                        color:
+                          router.pathname == route
+                            ? theme.palette.primary.contrastText
+                            : "inherit",
+                        background:
+                          router.pathname == route
+                            ? theme.palette.primary.main
+                            : "inherit",
+                      }}
+                      key={name}
+                      onClick={() => router.push(route)}
+                    >
+                      {name}
+                    </Button>
+                  );
+                }),
                 <Button
-                  sx={{ color: router.pathname == route ? theme.palette.primary.contrastText : "inherit", background: router.pathname == route ? theme.palette.primary.main : "inherit" }}
-                  key={name}
-                  onClick={() => router.push(route)}
+                  sx={{
+                    color: "inherit",
+                    background: "inherit",
+                  }}
+                  key={"login"}
+                  onClick={() => {
+                    if (userState.loggedIn) {
+                      dispatch.user.logout();
+                    } else {
+                      router.push("/login");
+                    }
+                  }}
                 >
-                  {name}
-                </Button>
-              ))}
+                  {userState.loggedIn ? "logout" : "login"}
+                </Button>,
+              ]}
             </Box>
             <IconButton
               color="inherit"

@@ -16,6 +16,9 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { withIronSessionSsr } from "iron-session/next";
+import { IUser, User, UserRole } from "../models/user";
+import { InferGetServerSidePropsType } from "next";
 
 //Inventory Table
 const Inventorycolumns: GridColDef[] = [
@@ -142,7 +145,12 @@ const rows = [
   createData(3, "2022-11-06", "false"),
 ];
 
-export default function DataTables() {
+export default function DataTables({
+  user,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  if (!user || user.role !== UserRole.MANAGER) {
+    return <h1>Unauthorized</h1>;
+  }
   return (
     <div style={{ width: "100%" }}>
       <Head>
@@ -199,3 +207,53 @@ export default function DataTables() {
     </div>
   );
 }
+
+export const getServerSideProps = withIronSessionSsr(
+  function (context) {
+    const { req, res } = context;
+    const user: IUser | undefined = req.session.user;
+
+    if (user === undefined || !user.authenticated) {
+      res.setHeader("location", "/login");
+      res.statusCode = 302;
+      res.end();
+      return {
+        props: {
+          user: User({
+            username: "",
+            authenticated: false,
+            role: UserRole.CUSTOMER,
+            id: -1,
+          }),
+        },
+      };
+    }
+
+    if (user.role !== UserRole.MANAGER) {
+      res.setHeader("location", "/login");
+      res.statusCode = 302;
+      res.end();
+      return {
+        props: {
+          user: User({
+            username: user.username,
+            authenticated: user.authenticated,
+            role: user.role,
+            id: user.id || -1,
+          }),
+        },
+      };
+    }
+
+    return {
+      props: { user: req.session.user as IUser },
+    };
+  },
+  {
+    cookieName: "session",
+    password: process.env.SECRET_COOKIE_PASSWORD as string,
+    cookieOptions: {
+      secure: process.env.NODE_ENV === "production",
+    },
+  }
+);

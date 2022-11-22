@@ -2,34 +2,13 @@ import { createModel, Models } from "@rematch/core";
 import { init, RematchDispatch, RematchRootState } from "@rematch/core";
 import { flow, once } from "lodash";
 import { api } from "./api";
-import { User, IUser } from "./customer";
+import { User, IUser } from "./user";
 import { IMenu, IMenuCategory, Menu, MenuCategory } from "./menu";
 import { IMenuItem, MenuItem } from "./menuItem";
 import { IOrder, Order } from "./order";
 import { OrderItem } from "./orderItem";
 import { IProduct, Product } from "./product";
-
-export interface UserLoginInfo {
-  email: string;
-  password: string;
-}
-
-export const customerState = createModel<RootModel>()({
-  state: User(),
-  reducers: {
-    replace(state, payload: IUser) {
-      return { ...payload };
-    },
-  },
-  effects: (dispatch) => ({
-    login(data: UserLoginInfo) {
-      api.user
-        .login(data.email, data.password)
-        .then(dispatch.customer.replace)
-        .catch((err) => console.error(err));
-    },
-  }),
-});
+import Router from "next/router";
 
 export interface drawerState {
   open: boolean;
@@ -147,18 +126,70 @@ export const orderState = createModel<RootModel>()({
   }),
 });
 
+interface UserState {
+  loggedIn: boolean;
+  user: IUser;
+}
+
+export const userState = createModel<RootModel>()({
+  state: {
+    user: User(),
+    loggedIn: false,
+  } as UserState,
+  reducers: {
+    replace(state, payload: UserState) {
+      return payload;
+    },
+  },
+  effects: (dispatch) => ({
+    async login(data: IUser) {
+      if (!data.password) return;
+      await api.user
+        .login(data.username, data.password)
+        .then((user) => {
+          dispatch.user.replace({
+            user,
+            loggedIn: true,
+          });
+        })
+        .catch((err) => console.error(err));
+      Router.push("/");
+    },
+    async logout() {
+      await api.user.logout().then(() => {
+        dispatch.user.replace({
+          user: User(),
+          loggedIn: false,
+        });
+      });
+      Router.push("/login");
+    },
+    async register(data: IUser) {
+      if (!data.password) return;
+      await api.user.register(data.username, data.password).then((user) => {
+        dispatch.user.replace({
+          user,
+          loggedIn: true,
+        });
+      });
+      Router.push("/");
+    },
+  }),
+});
+
 export interface RootModel extends Models<RootModel> {
   // moisture: typeof moisture;
   drawer: typeof drawerState;
   menu: typeof menuState;
   order: typeof orderState;
+  user: typeof userState;
 }
 
 export const models: RootModel = {
   drawer: drawerState,
   menu: menuState,
   order: orderState,
-  customer: customerState,
+  user: userState,
 };
 
 export const store = init({
