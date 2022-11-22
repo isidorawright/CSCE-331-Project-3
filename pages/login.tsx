@@ -31,9 +31,9 @@ export default function SignIn() {
     <div>
       <Container component="main" maxWidth="xs">
         <Head>
-          <title>Spin 'N Stone | Login</title>
+          <title>Spin &apos;N Stone | Login</title>
           <link rel="icon" href="/favicon.ico" />
-        </Head> 
+        </Head>
 
         <Box
           sx={{
@@ -52,7 +52,12 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
+          >
             <TextField
               margin="normal"
               required
