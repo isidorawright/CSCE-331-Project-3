@@ -17,7 +17,7 @@ const clientSideEmotionCache = createEmotionCache();
 
 let googleTranslateElementInit = once(() => {
   new (window as any).google.translate.TranslateElement(
-    { pageLanguage: "en" },
+    { pageLanguage: "en", layout: google.translate.TranslateElement.InlineLayout.SIMPLE },
     "google_translate_element"
   );
 });
