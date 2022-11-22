@@ -152,6 +152,12 @@ export default function ResponsiveAppBar() {
                   {name}
                 </Button>
               ))}
+            <Button onClick={()=>{
+              dispatch.app.toggleTheme();
+              (window as any).redrawApp(Date.now())
+            }}>
+              Switch Theme
+            </Button>
             </Box>
             <IconButton
               color="inherit"

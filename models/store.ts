@@ -147,11 +147,28 @@ export const orderState = createModel<RootModel>()({
   }),
 });
 
+interface AppState{
+  highContrastTheme: boolean;
+}
+
+export const appState = createModel<RootModel>()({
+  state: {} as AppState,
+  reducers: {
+    toggleTheme(state){
+      return(
+        {...state, highContrastTheme: !state.highContrastTheme}
+      )
+    }
+  },
+  effects: (dispatch) => ({})
+})
+
 export interface RootModel extends Models<RootModel> {
   // moisture: typeof moisture;
   drawer: typeof drawerState;
   menu: typeof menuState;
   order: typeof orderState;
+  app: typeof appState;
 }
 
 export const models: RootModel = {
@@ -159,6 +176,7 @@ export const models: RootModel = {
   menu: menuState,
   order: orderState,
   customer: customerState,
+  app: appState,
 };
 
 export const store = init({

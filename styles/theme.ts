@@ -1,5 +1,6 @@
 import { createTheme, CustomThemeOptions } from "@mui/material/styles";
 import { red } from "@mui/material/colors";
+import { useMediaQuery } from "@mui/material";
 
 // Create a theme instance.
 const theme = createTheme({
@@ -10,15 +11,26 @@ const theme = createTheme({
     secondary: {
       main: "#279af1",
     },
-    error: {
-      main: red.A400,
+    mode: "light",
+    borderColor: "#131313",
+
+  },
+} as CustomThemeOptions);
+
+export const highConstrasttheme = createTheme({
+  palette: {
+    primary: {
+      main: "#E8B349",
+    },
+    secondary: {
+      main: "#279af1",
     },
     mode: "dark",
     borderColor: "#131313",
-  },
-  background: {
-    default: "#020202",
-    paper: "#24292F",
+    background: {
+      default: "#F00ffa",
+      paper: "#000",
+    },
   },
 } as CustomThemeOptions);
 

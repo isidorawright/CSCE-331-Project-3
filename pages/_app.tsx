@@ -3,12 +3,13 @@ import Head from "next/head";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { CacheProvider } from "@emotion/react";
-import theme from "../styles/theme";
+import theme, { highConstrasttheme } from "../styles/theme";
 import createEmotionCache from "../util/createEmotionCache";
 import NavBar, { TemporaryDrawer } from "../components/NavBar";
 import "../styles/globals.css";
-import { initializeStore, store } from "../models/store";
-import { Provider } from "react-redux";
+import "../styles/hct.less";
+import { initializeStore, RootState, store } from "../models/store";
+import { Provider, useSelector } from "react-redux";
 import { once } from "lodash";
 
 // Client-side cache shared for the whole user session in the browser.
@@ -24,6 +25,7 @@ let googleTranslateElementInit = once(() => {
 
 export default function MyApp(props: any) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
+
   React.useEffect(() => {
     initializeStore(store);
     googleTranslateElementInit();

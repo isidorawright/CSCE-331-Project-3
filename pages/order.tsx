@@ -37,7 +37,7 @@ function MenuCategoryTile({
     >
       <Grid
         container
-        sx={{ padding: theme.spacing(1), height: "100%" }}
+        sx={{ padding: theme.spacing(1), height: "100%", background: theme.palette.background.paper }}
         direction="column"
         justifyContent="center"
         alignItems="center"

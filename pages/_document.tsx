@@ -29,6 +29,7 @@ export default class MyDocument extends Document {
 
           <script type="text/javascript" src= "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async defer>
           </script>
+
         </Head>
         <body>
           <Main />
