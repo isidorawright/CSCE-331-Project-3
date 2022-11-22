@@ -243,9 +243,16 @@ function ConfigurePizza(): JSX.Element {
 
   if (!category) return <></>;
 
-  const item = MenuCategory.activeItem(category);
+  const menuItem = MenuCategory.activeItem(category);
 
-  if (!item || !item.products.length) return <></>;
+  if (!menuItem || !menuItem.products.length) return <></>;
+
+  const maxToppings =
+    {
+      "1 Topping Pizza": 1,
+      "2-4 Topping Pizza": 4,
+      "Original Cheese Pizza": 0,
+    }[menuItem.name] || 0;
 
   return (
     <Paper sx={{ padding: theme.spacing(3), height: "100%" }}>
@@ -253,7 +260,7 @@ function ConfigurePizza(): JSX.Element {
         Select Crust
       </Typography>
       <Grid container spacing={2}>
-        {item.products
+        {menuItem.products
           .filter(function (product) {
             return product.productTypeId == 7;
           })
@@ -289,7 +296,7 @@ function ConfigurePizza(): JSX.Element {
         Select Sauce
       </Typography>
       <Grid container spacing={2}>
-        {item.products
+        {menuItem.products
           .filter(function (product) {
             return product.productTypeId == 3;
           })
@@ -325,7 +332,7 @@ function ConfigurePizza(): JSX.Element {
         Select Cheese
       </Typography>
       <Grid container spacing={2}>
-        {item.products
+        {menuItem.products
           .filter(function (product) {
             return product.productTypeId == 4;
           })
@@ -361,7 +368,7 @@ function ConfigurePizza(): JSX.Element {
         Select Toppings
       </Typography>
       <Grid container spacing={2}>
-        {item.products
+        {menuItem.products
           .filter(function (product) {
             return product.productTypeId == 5 || product.productTypeId == 6;
           })
@@ -379,7 +386,15 @@ function ConfigurePizza(): JSX.Element {
                     : "black",
                   cursor: "pointer",
                 }}
-                onClick={() => dispatch.menu.toggleMenuItemProduct(product)}
+                onClick={() => {
+                  if (
+                    menuItem.products.filter((product) => product.selected)
+                      .length < maxToppings ||
+                    product.selected
+                  ) {
+                    dispatch.menu.toggleMenuItemProduct(product);
+                  }
+                }}
               >
                 <Typography variant="subtitle1" fontWeight="bold">
                   {product.productName}
@@ -397,7 +412,7 @@ function ConfigurePizza(): JSX.Element {
         Select Drizzle
       </Typography>
       <Grid container spacing={2}>
-        {item.products
+        {menuItem.products
           .filter(function (product) {
             return product.productTypeId == 2;
           })

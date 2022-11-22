@@ -99,6 +99,10 @@ export namespace api {
   }
 }
 
+if (typeof window !== "undefined") {
+  (window as any).api = api;
+}
+
 /* 
   Menu Item
     • Get Menu Category
