@@ -38,6 +38,9 @@ export namespace api {
     export async function fulfill(shipment: IShipment): Promise<Response> {
       return await fetch(`/api/shipment/${shipment.shipmentId}/fulfill/`);
     }
+    export async function addProduct(shipment: IShipment, product: IProduct, quantity: number) {
+      return await fetch(`/api/shipment/${shipment.shipmentId}/addProduct/?productId=${product.id}&quantity=${quantity}`);
+    }
   }
 
   export namespace user {
