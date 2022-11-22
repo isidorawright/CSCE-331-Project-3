@@ -17,7 +17,11 @@ const clientSideEmotionCache = createEmotionCache();
 
 let googleTranslateElementInit = once(() => {
   new (window as any).google.translate.TranslateElement(
-    { pageLanguage: "en", layout: google.translate.TranslateElement.InlineLayout.SIMPLE },
+    {
+      pageLanguage: "en",
+      layout: (window as any).google.translate.TranslateElement.InlineLayout
+        .SIMPLE,
+    },
     "google_translate_element"
   );
 });
@@ -39,7 +43,7 @@ export default function MyApp(props: any) {
           <TemporaryDrawer />
           <NavBar />
           <Component {...pageProps} />
-          <div id="google_translate_element" style={{padding: '15px'}}></div>
+          <div id="google_translate_element" style={{ padding: "15px" }}></div>
         </ThemeProvider>
       </CacheProvider>
     </Provider>
