@@ -1,8 +1,8 @@
 import _ from "lodash";
 import type { NextApiRequest, NextApiResponse } from "next";
-import database from "../../../models/database";
-import { IShipment, Shipment } from "../../../models/shipment";
-import { IProduct, Product } from "../../../models/product";
+import database from "../../models/database";
+import { IShipment, Shipment } from "../../models/shipment";
+import { IProduct, Product } from "../../models/product";
   
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 full outer join shipment_product on
                       shipment_product.shipment_shipment_id = shipment.shipment_id
                 full outer join product on	  
-                      product.product_id = shipment_product.product_product_id where shipment_id = 1`
+                      product.product_id = shipment_product.product_product_id`
                 )
                 .then((res) => res.rows);
             

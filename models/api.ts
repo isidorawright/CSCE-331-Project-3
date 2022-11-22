@@ -101,6 +101,22 @@ export namespace api {
   }
 
   export namespace shipment {
+
+    export async function getShipment() {
+      const response = await fetch(`/api/shipment/`, {method : 'GET'});
+      return response;
+    }
+    export async function postShipment(shipment: IShipment) {
+      const response = await fetch(`/api/shipment/${shipment.shipmentId}`, {method : 'POST'});
+    }
+    export async function pushShipment(shipment: IShipment) {
+      const response = await fetch(`/api/shipment/${shipment.shipmentId}`, {method : 'POST'});
+    }
+    export async function deleteShipment(shipment: IShipment) {
+      const response = await fetch(`/api/shipment/${shipment.shipmentId}`, {method : 'POST'});
+    }
+
+
     export async function fulfill(shipment: IShipment) {
       await fetch(`/api/shipment/${shipment.shipmentId}/fulfill/`);
     }
@@ -122,12 +138,6 @@ export namespace api {
         `/api/shipment/${shipment.shipmentId}/setQuantity/?productId=${product.id}&quantity=${quantity}`
       );
     }
-    export async function getShipment(shipment: IShipment) {
-      //: Promise<IShipment>{
-      const response = await fetch(`/api/shipment/${shipment.shipmentId}`);
-      //const json = await response.json();
-      //return json.items.map((s: IShipment) => Shipment(s));
-      return response;
     }
   }
 
@@ -142,7 +152,6 @@ export namespace api {
       });
     }
   }
-}
 
 if (typeof window !== "undefined") {
   (window as any).api = api;
