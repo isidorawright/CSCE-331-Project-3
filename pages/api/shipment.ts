@@ -6,7 +6,7 @@ import { IProduct, Product } from "../../models/product";
   
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
-        // get a Shipment
+        // get all shipments
         if (req.method === "GET") {
             let shipment = await database.query(
                 `select * from shipment 
@@ -20,10 +20,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               const result = _.chain(shipment)
                 .groupBy("shipment_id")
                 .map((rows, shipment_id) => {
+                    let firstRow = rows[0];
                   return Shipment({
-                    shipmentId: rows[0]?.shipment_id,
-                    shipmentDate: rows[0]?.shipment_date,
-                    fulfilled: rows[0]?.fulfilled,
+                    shipmentId: firstRow?.shipment_id,
+                    shipmentDate: firstRow?.shipment_date,
+                    fulfilled: firstRow?.fulfilled,
                     products: _.chain(rows)
                         .map((row) => {
                             return Product ({
@@ -40,27 +41,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             res.status(200).json(result);
         }
-        // create a new shipment (Note: does add products, those should be added ussing the product API within shipments)
-        if (req.method === "POST") {
+        // create a new shipment (Note: does not add products, those should be added using the shipment/[shipmentId]/product/[productId] API)
+        else if (req.method === "POST") {
             const result = await database.query(
-                `insert into shipment_product (shipment_shipment_id, product_product_id, quantity_ordered) values (${req.query.shipmentId}, ${req.query.productId}, ${req.query.quantity})`
+                `insert into shipment (shipment_date, fulfilled) values (${req.query.shipmentDate}, ${req.query.fulfilled}) returning shipment_id`
             );
 
-            res.status(200).send(req.query.shipmentId);
-        }
-        // Update shipment (Does not modify products, those should be added ussing the product API within shipments)
-        else if (req.method === "PUT") {
-            database.query(
-                `update shipment_product set quantity_ordered = ${req.query.quantity} where shipment_shipment_id = ${req.query.shipmentId} and product_product_id = ${req.query.productId}`
-            );
-            res.status(200).send(req.query.shipmentId);
-        }
-        // Delete shipment (also deletes products that were in shipment)
-        else if (req.method === "DELETE") {
-            database.query(
-                `delete from shipment_product where shipment_shipment_id = ${req.query.shipmentId} and product_product_id = ${req.query.productId}`
-            );
-            res.status(200).send(req.query.shipmentId);
+            res.status(200).send(result.rows);
         }
         else {
             res.status(404).json({ message: "Not found" });

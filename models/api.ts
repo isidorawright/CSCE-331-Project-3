@@ -101,45 +101,50 @@ export namespace api {
   }
 
   export namespace shipment {
-
-    export async function getShipment() {
-      const response = await fetch(`/api/shipment/`, {method : 'GET'});
-      return response;
+    // Shipment Collection
+    export async function getAllShipments() {
+        const response = await fetch(`/api/shipment/`, {method : 'GET'})
+        return await response.json();
     }
-    export async function postShipment(shipment: IShipment) {
-      const response = await fetch(`/api/shipment/${shipment.shipmentId}`, {method : 'POST'});
-    }
-    export async function pushShipment(shipment: IShipment) {
-      const response = await fetch(`/api/shipment/${shipment.shipmentId}`, {method : 'POST'});
-    }
-    export async function deleteShipment(shipment: IShipment) {
-      const response = await fetch(`/api/shipment/${shipment.shipmentId}`, {method : 'POST'});
+    export async function createShipment(shipmentId : number, shipmentDate : String, fulfilled : boolean) {
+      const response = await fetch(`/api/shipment/${shipmentId}/?shipmentDate=${shipmentDate}&fulfilled=${fulfilled}`, {method : 'POST'});
+      return await response.json();
     }
 
+    // Indiviudal Shipments
+    export async function getShipment(shipmentId : number){
+      const response = await fetch(`/api/shipment/${shipmentId}`, {method : 'GET'});
+      return await response.json();
+    }
+    // README! : updateShipment() doesn't work for some reason but calling the API directly does (will fix later)
+    export async function updateShipment(shipmentId : number, shipmentDate : String, fulfilled : boolean) {
+      const response = await fetch(`/api/shipment/${shipmentId}/?fulfilled=${fulfilled}&shipmentDate=${shipmentDate}`, {method : 'PUT'});
+      return await response.json();
+    }
+    export async function deleteShipment(shipmentId : number) {
+      const response = await fetch(`/api/shipment/${shipmentId}`, {method : 'DELETE'});
+      return await response.json();
+    }
 
-    export async function fulfill(shipment: IShipment) {
-      await fetch(`/api/shipment/${shipment.shipmentId}/fulfill/`);
+    // Shipment Products
+    export async function getProduct(shipmentId : number, productId : number) {
+      const response = await fetch( `/api/shipment/${shipmentId}/product/${productId}`, {method : 'GET'});
+      return await response.json();
     }
-    export async function addProduct(
-      shipment: IShipment,
-      product: IProduct,
-      quantity: number
-    ) {
-      await fetch(
-        `/api/shipment/${shipment.shipmentId}/addProduct/?productId=${product.id}&quantity=${quantity}`
-      );
+    export async function createProduct(shipmentId : number, productId : number, quantity: number) {
+      const response = await fetch( `/api/shipment/${shipmentId}/product/${productId}/?quantity=${quantity}`, {method : 'POST'});
+      return await response.json();
     }
-    export async function setQuantity(
-      shipment: IShipment,
-      product: IProduct,
-      quantity: number
-    ) {
-      await fetch(
-        `/api/shipment/${shipment.shipmentId}/setQuantity/?productId=${product.id}&quantity=${quantity}`
-      );
+    export async function updateProduct(shipmentId : number, productId : number, quantity: number) {
+      const response = await fetch(`/api/shipment/${shipmentId}/product/${productId}/?quantity=${quantity}`, {method : 'PUT'});
+      return await response.json();
     }
+    export async function deleteProduct(shipmentId : number, productId : number) {
+      const response = await fetch(`/api/shipment/${shipmentId}/product/${productId}`, {method : 'DELETE'});
+      return await response.json();
     }
   }
+}
 
   export namespace order {
     export async function submit(order: IOrder) {

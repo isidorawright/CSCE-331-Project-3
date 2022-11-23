@@ -4,14 +4,14 @@ import { IProduct, Product } from "../../../../../models/product";
   
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
-        // get quantity product in shipment
+        // get quantity of a product in a shipment
         if (req.method === "GET") {
-            const response = database.query(
-                `select quantity_ordered from shipment_prouct where shipment_shipment_id = ${req.query.shipmentId} and product_product_id = ${req.query.productId}`
+            const response = await database.query(
+                `select quantity_ordered from shipment_product where shipment_shipment_id = ${req.query.shipmentId} and product_product_id = ${req.query.productId}`
             );
-            res.status(200).json(response);
+            res.status(200).send(response.rows);
         }
-        // create new product in a shipment
+        // create a new product in a shipment
         if (req.method === "POST") {
             database.query(
                 `insert into shipment_product (shipment_shipment_id, product_product_id, quantity_ordered) values (${req.query.shipmentId}, ${req.query.productId}, ${req.query.quantity})`
