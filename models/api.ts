@@ -162,46 +162,54 @@ if (typeof window !== "undefined") {
   (window as any).api = api;
 }
 
-/* 
-  Menu Item
-    • Get Menu Category
-    • Add a new menu item
-    • Get all menu items with given category
-    • Get products addable to given menu item (pass in menuitem object)
-  Order
-    • Calculate Order Total
-    • Place Order
-    • Add menu_item to order
-  Order_Item
-    • 
-  Product
-    • Add products to order_item
-    • Create product 
-    • Set quantity
-    • Decrement quantity
-  Shipment
-    • Finalize shipment
-    • Edit shipment quantity
-    • Add product to shipment
 
-
+/*
   Shipment:
-    shipment
+
+    Routes:
+    - shipment/                                       (Collection of shipments, i.e. table)
+    - shipment/[shipmentId]                           (Individual Shipment)
+    - shipment/[shipmentId]/product/[productId]       (Individual product in a shipment)
+    
+    Methods:
+      shipment    
       {
-        GET   Get all shipments view
+        GetAllShipments()     GET     Get all shipments view JSON
+        CreateShipment()      POST    Create new shipment (date, fulfilled)
       }
-    shipment/[shipmentId]/
+      shipment/[shipmentId]/    
       {
-        GET     Get Shipment object (date, fulfilled, product)
-        POST    Create new shipment (date, fulfilled)
-        PUT     Update shipment (date, fulfilled, (need to pass in products?))
-        DELETE  Remove shipment (cascade delete products in shipment)
+        GetShipment()         GET     Get Shipment object JSON (date, fulfilled, product)
+        UpdateShipment()      PUT     Update shipment (date, fulfilled)                   **Does not update products, use product route for that**
+        DeleteShipment()      DELETE  Remove shipment                                     ** Does not remove products in a shipment, use product route for that **
       }
-    shipment/[shipmentId]/product/[productId]
+      shipment/[shipmentId]/product/[productId]     
       {
-        GET     Get quantity
-        POST    create new product in a given shipment
-        PUT     update product quantity
-        DELETE  remove product in shipment
+        getProduct()          GET     Get product quantity in a given shipment
+        createProduct()       POST    create new product in a given shipment
+        updateProduct         PUT     Update product quantity in a given shipment
+        deleteProduct         DELETE  Remove product in a given shipment
       }
+
+  TODO Routes:
+    Menu Item
+      • Get Menu Category
+      • Add a new menu item
+      • Get all menu items with given category
+      • Get products addable to given menu item (pass in menuitem object)
+    Order
+      • Calculate Order Total
+      • Place Order
+      • Add menu_item to order
+    Order_Item
+      • 
+    Product
+      • Add products to order_item
+      • Create product 
+      • Set quantity
+      • Decrement quantity
+    Shipment
+      • Finalize shipment
+      • Edit shipment quantity
+      • Add product to shipment
 */
