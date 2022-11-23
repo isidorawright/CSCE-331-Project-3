@@ -106,7 +106,7 @@ export namespace api {
         const response = await fetch(`/api/shipment/`, {method : 'GET'})
         return await response.json();
     }
-    export async function createShipment(shipmentDate : String, fulfilled : boolean) {
+    export async function createShipment(shipmentDate : String | Date, fulfilled : boolean) {
       const response = await fetch(`/api/shipment/?shipmentDate='${shipmentDate}'&fulfilled=${fulfilled}`, {method : 'POST'});
       return await response.json();
     }
@@ -116,7 +116,7 @@ export namespace api {
       const response = await fetch(`/api/shipment/${shipmentId}`, {method : 'GET'});
       return await response.json();
     }
-    export async function updateShipment(shipmentId : number, shipmentDate : Date, fulfilled : boolean) {
+    export async function updateShipment(shipmentId : number, shipmentDate : String | Date, fulfilled : boolean) {
       const response = await fetch(`/api/shipment/${shipmentId}/?fulfilled=${fulfilled}&shipmentDate='${shipmentDate}'`, {method : 'PUT'});
       return await response.json();
     }
@@ -143,19 +143,41 @@ export namespace api {
       return await response.json();
     }
   }
-}
 
-  export namespace order {
-    export async function submit(order: IOrder) {
-      await fetch("/api/order/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(order),
-      });
+  export namespace reports {
+    // Returns a list of all products and dollar amount sold between startDate and endDate
+    export async function sales(startDate : String | Date, endDate : String | Date) {
+      const response = await fetch(`/api/reports/sales/?startDate='${startDate}'&endDate='${endDate}'`, {method : 'GET'});
+      return response.json();
+    }
+    // Returns a list of products whose inventory has fallen below the restock threshold
+    export async function restock() {
+      return await fetch(`/api/reports/restock`, {method : 'GET'});
+    }
+    // Returns list of products and percent of thier invetory sold for products which have sold less than 10% of thier stock up to a given date
+    export async function excess(date : String | Date) {
+      const response = await fetch(`/api/reports/excess/?date='${date}'`, {method : 'GET'});
+      return response.json();
+    }
+    // Returns a list of all menu items which commonly sold together between startDate and endDate, along with the frequency of these combinations
+    export async function pairs(startDate : String | Date, endDate : String | Date) {
+      const response = await fetch(`/api/reports/pairs/?startDate='${startDate}'&endDate='${endDate}'`, {method : 'GET'});
+      return response.json();
     }
   }
+}
+
+export namespace order {
+  export async function submit(order: IOrder) {
+    await fetch("/api/order/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(order),
+    });
+  }
+}
 
 if (typeof window !== "undefined") {
   (window as any).api = api;
@@ -189,6 +211,15 @@ if (typeof window !== "undefined") {
         updateProduct         PUT     Update product quantity in a given shipment
         deleteProduct         DELETE  Remove product in a given shipment
       }
+
+  Reports:
+
+    Routes:
+      - api/reports/excess/?date='${date}'
+      - api/reports/pairs/?startDate='${startDate}'&endDate='${endDate}'
+      - api/reports/restock
+      - api/reports/sales/?startDate='${startDate}'&endDate='${endDate}'
+
 
   TODO Routes:
     Menu Item

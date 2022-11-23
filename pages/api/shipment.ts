@@ -14,8 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                       shipment_product.shipment_shipment_id = shipment.shipment_id
                 full outer join product on	  
                       product.product_id = shipment_product.product_product_id`
-                )
-                .then((res) => res.rows);
+                ).then((res) => res.rows);
             
               const result = _.chain(shipment)
                 .groupBy("shipment_id")
