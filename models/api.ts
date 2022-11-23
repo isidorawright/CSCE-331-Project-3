@@ -106,8 +106,8 @@ export namespace api {
         const response = await fetch(`/api/shipment/`, {method : 'GET'})
         return await response.json();
     }
-    export async function createShipment(shipmentId : number, shipmentDate : String, fulfilled : boolean) {
-      const response = await fetch(`/api/shipment/${shipmentId}/?shipmentDate=${shipmentDate}&fulfilled=${fulfilled}`, {method : 'POST'});
+    export async function createShipment(shipmentDate : String, fulfilled : boolean) {
+      const response = await fetch(`/api/shipment/?shipmentDate='${shipmentDate}'&fulfilled=${fulfilled}`, {method : 'POST'});
       return await response.json();
     }
 
@@ -116,9 +116,8 @@ export namespace api {
       const response = await fetch(`/api/shipment/${shipmentId}`, {method : 'GET'});
       return await response.json();
     }
-    // README! : updateShipment() doesn't work for some reason but calling the API directly does (will fix later)
-    export async function updateShipment(shipmentId : number, shipmentDate : String, fulfilled : boolean) {
-      const response = await fetch(`/api/shipment/${shipmentId}/?fulfilled=${fulfilled}&shipmentDate=${shipmentDate}`, {method : 'PUT'});
+    export async function updateShipment(shipmentId : number, shipmentDate : Date, fulfilled : boolean) {
+      const response = await fetch(`/api/shipment/${shipmentId}/?fulfilled=${fulfilled}&shipmentDate='${shipmentDate}'`, {method : 'PUT'});
       return await response.json();
     }
     export async function deleteShipment(shipmentId : number) {
