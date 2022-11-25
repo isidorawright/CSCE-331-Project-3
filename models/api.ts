@@ -3,6 +3,7 @@ import { IShipment, Shipment } from "./shipment";
 import { Product, IProduct } from "./product";
 import { User, IUser } from "./user";
 import { IOrder } from "./order";
+import { IMenuItem } from "./menuItem";
 
 export namespace api {
   export async function getMenuCategories(): Promise<IMenuCategory[]> {
@@ -46,6 +47,23 @@ export namespace api {
           quantityInStock: product.quantity_in_stock,
           conversionFactor: product.conversion_factor,
           productTypeId: product.product_type_id
+        }
+      })
+    }
+  }
+  export namespace menu {
+    export async function getMenuItems(): Promise<IMenuItem[]> {
+      const response = await fetch("/api/menuItem");
+      const body = await response.json();
+
+      return body.map((item:any) => {
+        return {
+          id: item.menu_item_id,
+          name: item.item_name,
+          price: item.menu_item_price,
+          configurable: item.configurable,
+          category: null,
+          products: null
         }
       })
     }

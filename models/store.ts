@@ -178,12 +178,14 @@ export const userState = createModel<RootModel>()({
 });
 
 interface ManagerState {
-  inventory: IProduct[]
+  menuItems: IMenuItem[];
+  inventory: IProduct[];
 }
 
 export const managerState = createModel<RootModel>()({
   state: {
-    inventory: []
+    inventory: [],
+    menuItems: []
   } as ManagerState,
   reducers: {
     setInventory(state, payload: IProduct[]) {
@@ -191,12 +193,21 @@ export const managerState = createModel<RootModel>()({
         ...state,
         inventory: payload
       }
+    },
+    setMenuItems(state, payload: IMenuItem[]) {
+      return {
+        ...state,
+        menuItems: payload
+      }
     }
   },
   effects: (dispatch) => ({
     async fetch() {
       const products = await api.product.getAll();
       dispatch.manager.setInventory(products);
+
+      const menuItems = await api.menu.getMenuItems();
+      dispatch.manager.setMenuItems(menuItems);
     }
   })
 })

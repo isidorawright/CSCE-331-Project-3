@@ -25,23 +25,16 @@ import { RootState } from "../models/store";
 //Inventory Table
 const InventoryColumns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 70 },
-  { field: "productName", headerName: "Product Name", width: 130 },
-  { field: "productType", headerName: "Product Type", width: 130 },
-  { field: "quantityInStock", headerName: "Quantity", width: 100 },
+  { field: "productName", headerName: "Product Name", width: 170 },
+  { field: "productType", headerName: "Product Type", width: 150 },
+  { field: "quantityInStock", headerName: "Quantity", width: 110 },
 ];
 
 //Menu Item to Price Table
 const MenuToPriceColumns: GridColDef[] = [
-  { field: "id", headerName: "Menu Item ID", width: 70 },
-  { field: "menuName", headerName: "Menu Item Name", width: 130 },
-  { field: "price", headerName: "Price", width: 130 },
-];
-
-const MenuToPriceRows = [
-  //mock data
-  { id: 1, menuName: "Pepperoni Pizza", price: "$7.99" },
-  { id: 2, menuName: "Fountain Drink", price: "$3.99" },
-  { id: 3, menuName: "Cookie", price: "$2.99" },
+  { field: "id", headerName: "ID", width: 70 },
+  { field: "name", headerName: "Menu Item Name", width: 220 },
+  { field: "price", headerName: "Price", width: 110 },
 ];
 
 //Shipment Table (collapsible)
@@ -145,6 +138,7 @@ export default function DataTables({
     return <h1>Unauthorized</h1>;
   }
   const inventory = useSelector((state: RootState) => state.manager.inventory);
+  const menuItems = useSelector((state: RootState) => state.manager.menuItems);
   return (
     <div style={{ width: "100%" }}>
       <Head>
@@ -158,7 +152,7 @@ export default function DataTables({
         pageSize={100}
         rowsPerPageOptions={[Infinity]}
         checkboxSelection
-        sx={{ height: "400px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
+        sx={{ height: "420px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
       />
 
       <br />
@@ -166,12 +160,12 @@ export default function DataTables({
         Menu Table
       </h1>
       <DataGrid
-        rows={MenuToPriceRows}
+        rows={menuItems}
         columns={MenuToPriceColumns}
-        pageSize={10}
+        pageSize={100}
         rowsPerPageOptions={[10]}
         checkboxSelection
-        sx={{ height: "400px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
+        sx={{ height: "425px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
       />
 
       <br></br>
