@@ -360,17 +360,15 @@ function ConfigurePizza(): JSX.Element {
           ))}
       </Grid>
 
-      <Typography
-        variant="h6"
-        fontWeight="bold"
-        sx={{ marginBottom: "12px", marginTop: "24px" }}
-      >
-        Select Toppings
-      </Typography>
+      <>
+        {maxToppings != 0 ? 
+        <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: "12px", marginTop: "24px" }}>Select Toppings</Typography> : 
+        <Typography sx={{ marginBottom: "12px", marginTop: "24px" }}></Typography>}
+      </>
       <Grid container spacing={2}>
         {menuItem.products
           .filter(function (product) {
-            return product.productTypeId == 5 || product.productTypeId == 6;
+            return ((product.productTypeId == 5 || product.productTypeId == 6) && maxToppings != 0);
           })
           .map((product, index) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
