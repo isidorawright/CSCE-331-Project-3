@@ -169,7 +169,6 @@ function Receipt({ order }: { order: IOrder }): JSX.Element {
                       .mul(item.quantity)
                       .toString()}
                   </Typography>
-                  <Typography variant="subtitle1">x{item.quantity}</Typography>
                 </Grid>
               </Grid>
               {item.products.length ? (

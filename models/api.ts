@@ -165,17 +165,17 @@ export namespace api {
       return response.json();
     }
   }
-}
 
-export namespace order {
-  export async function submit(order: IOrder) {
-    await fetch("/api/order/submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(order),
-    });
+  export namespace order {
+    export async function submit(order: IOrder) {
+      await fetch("/api/order/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(order),
+      });
+    }
   }
 }
 

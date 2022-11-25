@@ -21,14 +21,14 @@ import { IUser, User, UserRole } from "../models/user";
 import { InferGetServerSidePropsType } from "next";
 
 //Inventory Table
-const Inventorycolumns: GridColDef[] = [
+const InventoryColumns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 70 },
   { field: "productName", headerName: "Product Name", width: 130 },
   { field: "category", headerName: "Category", width: 130 },
   { field: "quantity", headerName: "Quantity", width: 100 },
 ];
 
-const Inventoryrows = [
+const InventoryRows = [
   //mock data
   { id: 1, productName: "Pepperoni", category: "Topping", quantity: 100 },
   { id: 2, productName: "Cheese", category: "Cheese", quantity: 200 },
@@ -39,13 +39,13 @@ const Inventoryrows = [
 ];
 
 //Menu Item to Price Table
-const MenuToPricecolumns: GridColDef[] = [
+const MenuToPriceColumns: GridColDef[] = [
   { field: "id", headerName: "Menu Item ID", width: 70 },
   { field: "menuName", headerName: "Menu Item Name", width: 130 },
   { field: "price", headerName: "Price", width: 130 },
 ];
 
-const MenuToPricerows = [
+const MenuToPriceRows = [
   //mock data
   { id: 1, menuName: "Pepperoni Pizza", price: "$7.99" },
   { id: 2, menuName: "Fountain Drink", price: "$3.99" },
@@ -159,8 +159,8 @@ export default function DataTables({
       </Head>
       <h1 style={{ paddingLeft: 40, paddingTop: 30 }}>Inventory Table</h1>
       <DataGrid
-        rows={Inventoryrows}
-        columns={Inventorycolumns}
+        rows={InventoryRows}
+        columns={InventoryColumns}
         pageSize={10}
         rowsPerPageOptions={[10]}
         checkboxSelection
@@ -169,11 +169,11 @@ export default function DataTables({
 
       <br />
       <h1 style={{ paddingLeft: 40, paddingTop: 30 }}>
-        Menu Item to Price Table
+        Menu Table
       </h1>
       <DataGrid
-        rows={MenuToPricerows}
-        columns={MenuToPricecolumns}
+        rows={MenuToPriceRows}
+        columns={MenuToPriceColumns}
         pageSize={10}
         rowsPerPageOptions={[10]}
         checkboxSelection
@@ -209,7 +209,7 @@ export default function DataTables({
 }
 
 export const getServerSideProps = withIronSessionSsr(
-  function (context) {
+  function (context: { req: any; res: any; }) {
     const { req, res } = context;
     const user: IUser | undefined = req.session.user;
 
