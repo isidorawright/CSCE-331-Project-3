@@ -19,23 +19,15 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { withIronSessionSsr } from "iron-session/next";
 import { IUser, User, UserRole } from "../models/user";
 import { InferGetServerSidePropsType } from "next";
+import { useSelector } from "react-redux";
+import { RootState } from "../models/store";
 
 //Inventory Table
 const InventoryColumns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 70 },
   { field: "productName", headerName: "Product Name", width: 130 },
-  { field: "category", headerName: "Category", width: 130 },
-  { field: "quantity", headerName: "Quantity", width: 100 },
-];
-
-const InventoryRows = [
-  //mock data
-  { id: 1, productName: "Pepperoni", category: "Topping", quantity: 100 },
-  { id: 2, productName: "Cheese", category: "Cheese", quantity: 200 },
-  { id: 3, productName: "Sauce", category: "Sauce", quantity: 400 },
-  { id: 4, productName: "chicken", category: "Topping", quantity: 350 },
-  { id: 5, productName: "drink", category: "Beverage", quantity: 420 },
-  { id: 6, productName: "cookie", category: "other", quantity: 50 },
+  { field: "productType", headerName: "Product Type", width: 130 },
+  { field: "quantityInStock", headerName: "Quantity", width: 100 },
 ];
 
 //Menu Item to Price Table
@@ -85,6 +77,7 @@ function createData(
 function Row(props: { row: ReturnType<typeof createData> }) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
+  
 
   return (
     <React.Fragment>
@@ -151,6 +144,7 @@ export default function DataTables({
   if (!user || user.role !== UserRole.MANAGER) {
     return <h1>Unauthorized</h1>;
   }
+  const inventory = useSelector((state: RootState) => state.manager.inventory);
   return (
     <div style={{ width: "100%" }}>
       <Head>
@@ -159,10 +153,10 @@ export default function DataTables({
       </Head>
       <h1 style={{ paddingLeft: 40, paddingTop: 30 }}>Inventory Table</h1>
       <DataGrid
-        rows={InventoryRows}
+        rows={inventory}
         columns={InventoryColumns}
-        pageSize={10}
-        rowsPerPageOptions={[10]}
+        pageSize={100}
+        rowsPerPageOptions={[Infinity]}
         checkboxSelection
         sx={{ height: "400px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
       />

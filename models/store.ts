@@ -177,12 +177,37 @@ export const userState = createModel<RootModel>()({
   }),
 });
 
+interface ManagerState {
+  inventory: IProduct[]
+}
+
+export const managerState = createModel<RootModel>()({
+  state: {
+    inventory: []
+  } as ManagerState,
+  reducers: {
+    setInventory(state, payload: IProduct[]) {
+      return {
+        ...state,
+        inventory: payload
+      }
+    }
+  },
+  effects: (dispatch) => ({
+    async fetch() {
+      const products = await api.product.getAll();
+      dispatch.manager.setInventory(products);
+    }
+  })
+})
+
 export interface RootModel extends Models<RootModel> {
   // moisture: typeof moisture;
   drawer: typeof drawerState;
   menu: typeof menuState;
   order: typeof orderState;
   user: typeof userState;
+  manager: typeof managerState;
 }
 
 export const models: RootModel = {
@@ -190,6 +215,7 @@ export const models: RootModel = {
   menu: menuState,
   order: orderState,
   user: userState,
+  manager: managerState
 };
 
 export const store = init({
@@ -208,6 +234,7 @@ export default store;
 
 function _initializeStore(store: Store) {
   store.dispatch.menu.load();
+  store.dispatch.manager.fetch();
 }
 
 export const initializeStore = once(_initializeStore);

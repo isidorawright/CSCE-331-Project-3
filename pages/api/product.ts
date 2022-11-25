@@ -21,10 +21,11 @@ export default async function handler(
 
   else if (req.method == "GET" || req.method == "FETCH"){
     const response = await database.query(
-        `SELECT product.product_id, product.product_name, product_type.product_type_name, product.quantity_in_stock 
+        `SELECT product.product_id, product.product_name, product_type.product_type_name, product.quantity_in_stock, product.conversion_factor
         FROM product 
         JOIN product_type 
-        ON product.product_type_id=product_type.product_type_id`
+        ON product.product_type_id=product_type.product_type_id
+        ORDER BY product.product_id ASC`
       )
       
       res.status(200).send(response.rows);

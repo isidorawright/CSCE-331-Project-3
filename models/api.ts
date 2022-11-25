@@ -34,6 +34,21 @@ export namespace api {
       product.id = id;
       return product;
     }
+    export async function getAll(): Promise<IProduct[]> {
+      const response = await fetch("/api/product");
+      const body = await response.json();
+
+      return body.map((product:any) => {
+        return {
+          id: product.product_id,
+          productName: product.product_name,
+          productType: product.product_type_name,
+          quantityInStock: product.quantity_in_stock,
+          conversionFactor: product.conversion_factor,
+          productTypeId: product.product_type_id
+        }
+      })
+    }
   }
   export namespace category {
     export async function find(id: number): Promise<IMenuCategory> {
