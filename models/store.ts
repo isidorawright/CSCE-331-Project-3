@@ -1,6 +1,6 @@
 import { createModel, Models } from "@rematch/core";
 import { init, RematchDispatch, RematchRootState } from "@rematch/core";
-import { flow, once } from "lodash";
+import { once } from "lodash";
 import { api } from "./api";
 import { User, IUser, UserRole } from "./user";
 import { IMenu, IMenuCategory, Menu, MenuCategory } from "./menu";

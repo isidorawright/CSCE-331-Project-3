@@ -33,7 +33,7 @@ const InventoryColumns: GridColDef[] = [
 //Menu Item to Price Table
 const MenuToPriceColumns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 70 },
-  { field: "name", headerName: "Menu Item Name", width: 220 },
+  { field: "name", headerName: "Menu Item", width: 220 },
   { field: "price", headerName: "Price", width: 110 },
 ];
 
