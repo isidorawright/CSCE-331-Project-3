@@ -159,7 +159,7 @@ export default function ResponsiveAppBar() {
               sx={{ width: "100%" }}
             >
               <Grid2>
-                <Image src="/logo.jpg" alt="logo" width={100} height={100} />
+                <img src="/logo.jpg" alt="logo" style={{width: "160px", height: "auto", paddingTop: 5}}/>
               </Grid2>
             </Grid2>
             <Box
