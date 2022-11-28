@@ -159,7 +159,7 @@ export default function ResponsiveAppBar() {
               sx={{ width: "100%" }}
             >
               <Grid2>
-                <Image
+                <img
                   src="/logo.jpg"
                   alt="logo"
                   hidden={router.pathname == "/" ? true : false}
