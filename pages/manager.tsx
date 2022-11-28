@@ -22,20 +22,32 @@ import { IUser, User, UserRole } from "../models/user";
 import { InferGetServerSidePropsType } from "next";
 import { useSelector } from "react-redux";
 import { RootState } from "../models/store";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleCheck, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 //Inventory Table
 const InventoryColumns: GridColDef[] = [
   { field: "productName", headerName: "Product Name", width: 170 },
   { field: "productType", headerName: "Product Type", width: 150 },
-  { field: "quantityInStock", headerName: "Quantity", width: 75, align: "right", headerAlign: "right" },
+  {
+    field: "quantityInStock",
+    headerName: "Quantity",
+    width: 75,
+    align: "right",
+    headerAlign: "right",
+  },
 ];
 
 //Menu Item to Price Table
 const MenuToPriceColumns: GridColDef[] = [
   { field: "name", headerName: "Menu Item", width: 220 },
-  { field: "price", headerName: "Price", width: 75, align: "right", headerAlign: "right" },
+  {
+    field: "price",
+    headerName: "Price",
+    width: 75,
+    align: "right",
+    headerAlign: "right",
+  },
 ];
 
 //Shipment Table (collapsible)
@@ -71,12 +83,11 @@ function createData(
 function Row(props: { row: ReturnType<typeof createData> }) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
-  const checkmark = <FontAwesomeIcon icon={faCircleCheck} size="xl"/>;
-  const xmark = <FontAwesomeIcon icon={faXmark} size="xl"/>;
+  const checkmark = <FontAwesomeIcon icon={faCircleCheck} size="xl" />;
+  const xmark = <FontAwesomeIcon icon={faXmark} size="xl" />;
 
   return (
     <React.Fragment>
-      <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css"></link>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
         <TableCell>
           <IconButton
@@ -91,12 +102,15 @@ function Row(props: { row: ReturnType<typeof createData> }) {
           {row.shipmentId}
         </TableCell>
         <TableCell align="right">{row.shipmentDate}</TableCell>
-        <TableCell >{(row.fulfilled == "true") ? checkmark : xmark}</TableCell>
+        <TableCell>{row.fulfilled == "true" ? checkmark : xmark}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ marginLeft: 2, marginRight: -2, padding: 1 }} component={Paper}>
+            <Box
+              sx={{ marginLeft: 2, marginRight: -2, padding: 1 }}
+              component={Paper}
+            >
               <Typography variant="h6" gutterBottom component={Paper}>
                 Shipment Details
               </Typography>
@@ -133,9 +147,6 @@ const rows = [
 export default function DataTables({
   user,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  if (!user || user.role !== UserRole.MANAGER) {
-    return <h1>Unauthorized</h1>;
-  }
   const inventory = useSelector((state: RootState) => state.manager.inventory);
   const menuItems = useSelector((state: RootState) => state.manager.menuItems);
   const theme = useTheme<CustomTheme>();
@@ -145,7 +156,15 @@ export default function DataTables({
         <title>Spin &apos;N Stone | Manage</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <h1 style={{ paddingLeft: 40, paddingTop: 30, color: theme.palette.primary.main }}>Inventory</h1>
+      <h1
+        style={{
+          paddingLeft: 40,
+          paddingTop: 30,
+          color: theme.palette.primary.main,
+        }}
+      >
+        Inventory
+      </h1>
       <DataGrid
         rows={inventory}
         columns={InventoryColumns}
@@ -155,8 +174,14 @@ export default function DataTables({
       />
 
       <br />
-      <h1 style={{ paddingLeft: 40, paddingTop: 30, color: theme.palette.primary.main }}>
-        Menu 
+      <h1
+        style={{
+          paddingLeft: 40,
+          paddingTop: 30,
+          color: theme.palette.primary.main,
+        }}
+      >
+        Menu
       </h1>
       <DataGrid
         rows={menuItems}
@@ -167,7 +192,14 @@ export default function DataTables({
       />
 
       <br></br>
-      <h1 style={{ paddingLeft: 40, paddingTop: 30, paddingBottom: 10, color: theme.palette.primary.main }}>
+      <h1
+        style={{
+          paddingLeft: 40,
+          paddingTop: 30,
+          paddingBottom: 10,
+          color: theme.palette.primary.main,
+        }}
+      >
         Shipments
       </h1>
       <TableContainer sx={{ marginBottom: 3 }}>
@@ -195,7 +227,7 @@ export default function DataTables({
 }
 
 export const getServerSideProps = withIronSessionSsr(
-  function (context: { req: any; res: any; }) {
+  function (context: { req: any; res: any }) {
     const { req, res } = context;
     const user: IUser | undefined = req.session.user;
 
