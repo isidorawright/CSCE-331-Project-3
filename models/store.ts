@@ -2,7 +2,7 @@ import { createModel, Models } from "@rematch/core";
 import { init, RematchDispatch, RematchRootState } from "@rematch/core";
 import { flow, once } from "lodash";
 import { api } from "./api";
-import { User, IUser } from "./user";
+import { User, IUser, UserRole } from "./user";
 import { IMenu, IMenuCategory, Menu, MenuCategory } from "./menu";
 import { IMenuItem, MenuItem } from "./menuItem";
 import { IOrder, Order } from "./order";
@@ -129,12 +129,14 @@ export const orderState = createModel<RootModel>()({
 interface UserState {
   loggedIn: boolean;
   user: IUser;
+  manager: boolean;
 }
 
 export const userState = createModel<RootModel>()({
   state: {
     user: User(),
     loggedIn: false,
+    manager: false
   } as UserState,
   reducers: {
     replace(state, payload: UserState) {
@@ -150,16 +152,24 @@ export const userState = createModel<RootModel>()({
           dispatch.user.replace({
             user,
             loggedIn: true,
+            manager: data.role == UserRole.MANAGER ? true : false
           });
         })
         .catch((err) => console.error(err));
-      Router.push("/");
+
+        if(store.getState().manager){
+          Router.push("/manager");
+        }
+        else {
+          Router.push("/order");
+        }
     },
     async logout() {
       await api.user.logout().then(() => {
         dispatch.user.replace({
           user: User(),
           loggedIn: false,
+          manager: false
         });
       });
       Router.push("/login");
@@ -170,9 +180,10 @@ export const userState = createModel<RootModel>()({
         dispatch.user.replace({
           user,
           loggedIn: true,
+          manager: data.role == UserRole.MANAGER ? true : false
         });
       });
-      Router.push("/");
+      Router.push("/order");
     },
   }),
 });
@@ -213,7 +224,6 @@ export const managerState = createModel<RootModel>()({
 })
 
 export interface RootModel extends Models<RootModel> {
-  // moisture: typeof moisture;
   drawer: typeof drawerState;
   menu: typeof menuState;
   order: typeof orderState;

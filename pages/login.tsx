@@ -81,8 +81,8 @@ export default function SignIn() {
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
+          <Typography component="h1" variant="h5" sx={{color: "white"}}>
+            {registering ? "Sign up" : "Sign in"}
           </Typography>
           <Box
             component="form"
@@ -138,12 +138,12 @@ export default function SignIn() {
                     setError("");
                   }}
                   sx={{
-                    cursor: "pointer",
+                    cursor: "pointer", color: "white" 
                   }}
                 >
                   {registering
                     ? "Already have an account? Sign in"
-                    : "Don't have an account? Sign Up"}
+                    : "Don't have an account? Sign up"}
                 </Typography>
               </Grid>
               <Grid item xs={12} sx={{ textAlign: "center" }}>
@@ -153,7 +153,7 @@ export default function SignIn() {
                     setError("too bad, write it down next time");
                   }}
                   sx={{
-                    cursor: "pointer",
+                    cursor: "pointer", color: "white"
                   }}
                 >
                   Forgot password?

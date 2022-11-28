@@ -165,7 +165,7 @@ export default function DataTables({
         pageSize={100}
         rowsPerPageOptions={[10]}
         checkboxSelection
-        sx={{ height: "425px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
+        sx={{ height: "423px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
       />
 
       <br></br>
