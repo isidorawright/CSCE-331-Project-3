@@ -14,42 +14,28 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
+import { useTheme, CustomTheme } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { withIronSessionSsr } from "iron-session/next";
 import { IUser, User, UserRole } from "../models/user";
 import { InferGetServerSidePropsType } from "next";
+import { useSelector } from "react-redux";
+import { RootState } from "../models/store";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircleCheck, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 //Inventory Table
-const Inventorycolumns: GridColDef[] = [
-  { field: "id", headerName: "ID", width: 70 },
-  { field: "productName", headerName: "Product Name", width: 130 },
-  { field: "category", headerName: "Category", width: 130 },
-  { field: "quantity", headerName: "Quantity", width: 100 },
-];
-
-const Inventoryrows = [
-  //mock data
-  { id: 1, productName: "Pepperoni", category: "Topping", quantity: 100 },
-  { id: 2, productName: "Cheese", category: "Cheese", quantity: 200 },
-  { id: 3, productName: "Sauce", category: "Sauce", quantity: 400 },
-  { id: 4, productName: "chicken", category: "Topping", quantity: 350 },
-  { id: 5, productName: "drink", category: "Beverage", quantity: 420 },
-  { id: 6, productName: "cookie", category: "other", quantity: 50 },
+const InventoryColumns: GridColDef[] = [
+  { field: "productName", headerName: "Product Name", width: 170 },
+  { field: "productType", headerName: "Product Type", width: 150 },
+  { field: "quantityInStock", headerName: "Quantity", width: 75, align: "right", headerAlign: "right" },
 ];
 
 //Menu Item to Price Table
-const MenuToPricecolumns: GridColDef[] = [
-  { field: "id", headerName: "Menu Item ID", width: 70 },
-  { field: "menuName", headerName: "Menu Item Name", width: 130 },
-  { field: "price", headerName: "Price", width: 130 },
-];
-
-const MenuToPricerows = [
-  //mock data
-  { id: 1, menuName: "Pepperoni Pizza", price: "$7.99" },
-  { id: 2, menuName: "Fountain Drink", price: "$3.99" },
-  { id: 3, menuName: "Cookie", price: "$2.99" },
+const MenuToPriceColumns: GridColDef[] = [
+  { field: "name", headerName: "Menu Item", width: 220 },
+  { field: "price", headerName: "Price", width: 75, align: "right", headerAlign: "right" },
 ];
 
 //Shipment Table (collapsible)
@@ -85,9 +71,12 @@ function createData(
 function Row(props: { row: ReturnType<typeof createData> }) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
+  const checkmark = <FontAwesomeIcon icon={faCircleCheck} size="xl"/>;
+  const xmark = <FontAwesomeIcon icon={faXmark} size="xl"/>;
 
   return (
     <React.Fragment>
+      <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css"></link>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
         <TableCell>
           <IconButton
@@ -102,29 +91,25 @@ function Row(props: { row: ReturnType<typeof createData> }) {
           {row.shipmentId}
         </TableCell>
         <TableCell align="right">{row.shipmentDate}</TableCell>
-        <TableCell align="right">{row.fulfilled}</TableCell>
+        <TableCell >{(row.fulfilled == "true") ? checkmark : xmark}</TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={3}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                History
+            <Box sx={{ marginLeft: 2, marginRight: -2, padding: 1 }} component={Paper}>
+              <Typography variant="h6" gutterBottom component={Paper}>
+                Shipment Details
               </Typography>
-              <Table size="small" aria-label="purchases">
+              <Table size="small" aria-label="purchases" component={Paper}>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Product ID</TableCell>
                     <TableCell>Product Name</TableCell>
-                    <TableCell align="right">Amount Bought</TableCell>
+                    <TableCell align="right">Amount Ordered</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {row.history.map((historyRow) => (
                     <TableRow key={historyRow.productId}>
-                      <TableCell component="th" scope="row">
-                        {historyRow.productId}
-                      </TableCell>
                       <TableCell>{historyRow.productName}</TableCell>
                       <TableCell align="right">{historyRow.amount}</TableCell>
                     </TableRow>
@@ -151,40 +136,41 @@ export default function DataTables({
   if (!user || user.role !== UserRole.MANAGER) {
     return <h1>Unauthorized</h1>;
   }
+  const inventory = useSelector((state: RootState) => state.manager.inventory);
+  const menuItems = useSelector((state: RootState) => state.manager.menuItems);
+  const theme = useTheme<CustomTheme>();
   return (
     <div style={{ width: "100%" }}>
       <Head>
         <title>Spin &apos;N Stone | Manage</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <h1 style={{ paddingLeft: 40, paddingTop: 30 }}>Inventory Table</h1>
+      <h1 style={{ paddingLeft: 40, paddingTop: 30, color: theme.palette.primary.main }}>Inventory</h1>
       <DataGrid
-        rows={Inventoryrows}
-        columns={Inventorycolumns}
-        pageSize={10}
-        rowsPerPageOptions={[10]}
-        checkboxSelection
-        sx={{ height: "400px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
+        rows={inventory}
+        columns={InventoryColumns}
+        pageSize={100}
+        rowsPerPageOptions={[Infinity]}
+        sx={{ height: "420px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
       />
 
       <br />
-      <h1 style={{ paddingLeft: 40, paddingTop: 30 }}>
-        Menu Item to Price Table
+      <h1 style={{ paddingLeft: 40, paddingTop: 30, color: theme.palette.primary.main }}>
+        Menu 
       </h1>
       <DataGrid
-        rows={MenuToPricerows}
-        columns={MenuToPricecolumns}
-        pageSize={10}
+        rows={menuItems}
+        columns={MenuToPriceColumns}
+        pageSize={100}
         rowsPerPageOptions={[10]}
-        checkboxSelection
-        sx={{ height: "400px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
+        sx={{ height: "423px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
       />
 
       <br></br>
-      <h1 style={{ paddingLeft: 40, paddingTop: 30, paddingBottom: 10 }}>
-        Shipment Table
+      <h1 style={{ paddingLeft: 40, paddingTop: 30, paddingBottom: 10, color: theme.palette.primary.main }}>
+        Shipments
       </h1>
-      <TableContainer component={Paper} sx={{ marginBottom: 3 }}>
+      <TableContainer sx={{ marginBottom: 3 }}>
         <Table
           aria-label="collapsible table"
           sx={{ height: "400px", width: "90%", margin: 5, marginTop: 2 }}
@@ -209,7 +195,7 @@ export default function DataTables({
 }
 
 export const getServerSideProps = withIronSessionSsr(
-  function (context) {
+  function (context: { req: any; res: any; }) {
     const { req, res } = context;
     const user: IUser | undefined = req.session.user;
 
