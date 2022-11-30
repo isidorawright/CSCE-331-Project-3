@@ -20,6 +20,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { withIronSessionSsr } from "iron-session/next";
 import { IUser, User, UserRole } from "../models/user";
 import { InferGetServerSidePropsType } from "next";
+import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { RootState } from "../models/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -150,6 +151,10 @@ export default function DataTables({
   const inventory = useSelector((state: RootState) => state.manager.inventory);
   const menuItems = useSelector((state: RootState) => state.manager.menuItems);
   const theme = useTheme<CustomTheme>();
+  const router = useRouter();
+  if (!user || user.role !== UserRole.MANAGER) {
+    router.push("/");
+  }
   return (
     <div style={{ width: "100%" }}>
       <Head>

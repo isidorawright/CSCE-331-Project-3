@@ -136,40 +136,45 @@ export const userState = createModel<RootModel>()({
   state: {
     user: User(),
     loggedIn: false,
-    manager: false
+    manager: false,
   } as UserState,
   reducers: {
     replace(state, payload: UserState) {
       return payload;
     },
+    updateUser(state, payload: IUser) {
+      return {
+        ...state,
+        user: payload,
+      };
+    },
   },
   effects: (dispatch) => ({
     async login(data: IUser) {
-      if (!data.password) return;
-      await api.user
-        .login(data.username, data.password)
-        .then((user) => {
-          dispatch.user.replace({
-            user,
-            loggedIn: true,
-            manager: data.role == UserRole.MANAGER ? true : false
-          });
-        })
-        .catch((err) => console.error(err));
+      if (!data.password) {
+        throw new Error("Password is required");
+      }
 
-        if(store.getState().manager){
-          Router.push("/manager");
-        }
-        else {
-          Router.push("/order");
-        }
+      await api.user.login(data.username, data.password).then((user) => {
+        dispatch.user.replace({
+          user,
+          loggedIn: true,
+          manager: data.role == UserRole.MANAGER ? true : false,
+        });
+      });
+
+      if (store.getState().manager) {
+        Router.push("/manager");
+      } else {
+        Router.push("/order");
+      }
     },
     async logout() {
       await api.user.logout().then(() => {
         dispatch.user.replace({
           user: User(),
           loggedIn: false,
-          manager: false
+          manager: false,
         });
       });
       Router.push("/login");
@@ -180,10 +185,19 @@ export const userState = createModel<RootModel>()({
         dispatch.user.replace({
           user,
           loggedIn: true,
-          manager: data.role == UserRole.MANAGER ? true : false
+          manager: data.role == UserRole.MANAGER ? true : false,
         });
       });
       Router.push("/order");
+    },
+    async fetch() {
+      // get the current user if they have a session
+      try {
+        let user = await api.user.fetchAccount();
+        dispatch.user.updateUser(user);
+      } catch (e) {
+        // user not logged in, do nothing
+      }
     },
   }),
 });
@@ -196,21 +210,21 @@ interface ManagerState {
 export const managerState = createModel<RootModel>()({
   state: {
     inventory: [],
-    menuItems: []
+    menuItems: [],
   } as ManagerState,
   reducers: {
     setInventory(state, payload: IProduct[]) {
       return {
         ...state,
-        inventory: payload
-      }
+        inventory: payload,
+      };
     },
     setMenuItems(state, payload: IMenuItem[]) {
       return {
         ...state,
-        menuItems: payload
-      }
-    }
+        menuItems: payload,
+      };
+    },
   },
   effects: (dispatch) => ({
     async fetch() {
@@ -219,9 +233,9 @@ export const managerState = createModel<RootModel>()({
 
       const menuItems = await api.menu.getMenuItems();
       dispatch.manager.setMenuItems(menuItems);
-    }
-  })
-})
+    },
+  }),
+});
 
 export interface RootModel extends Models<RootModel> {
   drawer: typeof drawerState;
@@ -236,7 +250,7 @@ export const models: RootModel = {
   menu: menuState,
   order: orderState,
   user: userState,
-  manager: managerState
+  manager: managerState,
 };
 
 export const store = init({
@@ -256,6 +270,7 @@ export default store;
 function _initializeStore(store: Store) {
   store.dispatch.menu.load();
   store.dispatch.manager.fetch();
+  store.dispatch.user.fetch();
 }
 
 export const initializeStore = once(_initializeStore);

@@ -7,11 +7,16 @@ import { withIronSessionApiRoute } from "iron-session/next";
 export default withIronSessionApiRoute(
   async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
-      const userExists = await database
+      let userExists = await database
         .query(
           `SELECT COUNT(*) from "user" where username = '${req.body.username}'`
         )
         .then((result) => result.rows[0].count);
+
+      if (typeof userExists === "string") {
+        // why the heck is count returning a string...
+        userExists = parseInt(userExists);
+      }
 
       if (userExists) {
         res.status(400).send("Username already exists");

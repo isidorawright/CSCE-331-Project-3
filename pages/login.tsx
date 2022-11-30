@@ -78,12 +78,12 @@ export default function SignIn() {
             padding: theme.spacing(5),
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          {/* <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5" sx={{color: "white"}}>
             {registering ? "Sign up" : "Sign in"}
-          </Typography>
+          </Typography> */}
           <Box
             component="form"
             onSubmit={handleSubmit}
@@ -138,7 +138,8 @@ export default function SignIn() {
                     setError("");
                   }}
                   sx={{
-                    cursor: "pointer", color: "white" 
+                    cursor: "pointer",
+                    color: "white",
                   }}
                 >
                   {registering
@@ -153,7 +154,8 @@ export default function SignIn() {
                     setError("too bad, write it down next time");
                   }}
                   sx={{
-                    cursor: "pointer", color: "white"
+                    cursor: "pointer",
+                    color: "white",
                   }}
                 >
                   Forgot password?
