@@ -7,6 +7,11 @@ import { withIronSessionApiRoute } from "iron-session/next";
 export default withIronSessionApiRoute(
   async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
+      if (req.body.username.length < 10) {
+        res.status(400).send("Username must be at least 10 characters");
+        return;
+      }
+
       let userExists = await database
         .query(
           `SELECT COUNT(*) from "user" where username = '${req.body.username}'`

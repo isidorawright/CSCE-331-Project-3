@@ -32,6 +32,25 @@ export default function SignIn() {
     setError("");
     const data = new FormData(event.currentTarget);
 
+    const user = data.get("user");
+
+    if (registering) {
+      if (data.get("password") !== data.get("password2")) {
+        setError("Passwords do not match");
+        return;
+      }
+
+      if (!user) {
+        setError("Username is required");
+        return;
+      }
+
+      if (user.toString().length < 3) {
+        setError("Username must be at least 3 characters");
+        return;
+      }
+    }
+
     try {
       if (registering) {
         await dispatch.user.register(
@@ -87,7 +106,7 @@ export default function SignIn() {
           <Box
             component="form"
             onSubmit={handleSubmit}
-            noValidate
+            // noValidate
             sx={{ mt: 1 }}
           >
             <TextField
@@ -110,6 +129,18 @@ export default function SignIn() {
               id="password"
               autoComplete="current-password"
             />
+            {registering && (
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password2"
+                label="Confirm Password"
+                type="password"
+                id="password2"
+                autoComplete="current-password"
+              />
+            )}
             {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"

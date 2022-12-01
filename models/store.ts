@@ -146,6 +146,8 @@ export const userState = createModel<RootModel>()({
       return {
         ...state,
         user: payload,
+        loggedIn: true,
+        manager: payload.role === UserRole.MANAGER,
       };
     },
   },
