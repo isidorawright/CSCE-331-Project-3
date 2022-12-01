@@ -6,7 +6,6 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import {
   AppBar,
@@ -23,6 +22,7 @@ import Link from "next/link";
 import { Dispatch, RootState } from "../models/store";
 import { useDispatch, useSelector } from "react-redux";
 import { UserRole } from "../models/user";
+import Image from "next/image";
 
 const pages: { [key: string]: string } = {
   home: "/",
@@ -159,7 +159,12 @@ export default function ResponsiveAppBar() {
               sx={{ width: "100%" }}
             >
               <Grid2>
-                <Image src="/logo.jpg" alt="logo" width={100} height={100} />
+                <img
+                  src="/logo.jpg"
+                  alt="logo"
+                  hidden={router.pathname == "/" ? true : false}
+                  style={{ width: "160px", height: "auto", paddingTop: 5 }}
+                />
               </Grid2>
             </Grid2>
             <Box

@@ -169,7 +169,6 @@ function Receipt({ order }: { order: IOrder }): JSX.Element {
                       .mul(item.quantity)
                       .toString()}
                   </Typography>
-                  <Typography variant="subtitle1">x{item.quantity}</Typography>
                 </Grid>
               </Grid>
               {item.products.length ? (
@@ -276,9 +275,18 @@ function ConfigurePizza(): JSX.Element {
                   color: product.selected
                     ? theme.palette.primary.contrastText
                     : "black",
-                  cursor: "pointer",
+                  cursor: "pointer"
                 }}
-                onClick={() => dispatch.menu.toggleMenuItemProduct(product)}
+                onClick={() => {
+                  if (
+                    menuItem.products.filter(function (product) {
+                      return (product.productTypeId == 7 && product.selected);
+                    }).length < 1 ||
+                    product.selected
+                  ) {
+                    dispatch.menu.toggleMenuItemProduct(product);
+                  }
+                }}
               >
                 <Typography variant="subtitle1" fontWeight="bold">
                   {product.productName}
@@ -312,9 +320,18 @@ function ConfigurePizza(): JSX.Element {
                   color: product.selected
                     ? theme.palette.primary.contrastText
                     : "black",
-                  cursor: "pointer",
+                  cursor: "pointer"
                 }}
-                onClick={() => dispatch.menu.toggleMenuItemProduct(product)}
+                onClick={() => {
+                  if (
+                    menuItem.products.filter(function (product) {
+                      return (product.productTypeId == 3 && product.selected);
+                    }).length < 1 ||
+                    product.selected
+                  ) {
+                    dispatch.menu.toggleMenuItemProduct(product);
+                  }
+                }}
               >
                 <Typography variant="subtitle1" fontWeight="bold">
                   {product.productName}
@@ -348,9 +365,18 @@ function ConfigurePizza(): JSX.Element {
                   color: product.selected
                     ? theme.palette.primary.contrastText
                     : "black",
-                  cursor: "pointer",
+                  cursor: "pointer"
                 }}
-                onClick={() => dispatch.menu.toggleMenuItemProduct(product)}
+                onClick={() => {
+                  if (
+                    menuItem.products.filter(function (product) {
+                      return (product.productTypeId == 4 && product.selected);
+                    }).length < 1 ||
+                    product.selected
+                  ) {
+                    dispatch.menu.toggleMenuItemProduct(product);
+                  }
+                }}
               >
                 <Typography variant="subtitle1" fontWeight="bold">
                   {product.productName}
@@ -360,17 +386,15 @@ function ConfigurePizza(): JSX.Element {
           ))}
       </Grid>
 
-      <Typography
-        variant="h6"
-        fontWeight="bold"
-        sx={{ marginBottom: "12px", marginTop: "24px" }}
-      >
-        Select Toppings
-      </Typography>
+      <>
+        {maxToppings != 0 ? 
+        <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: "12px", marginTop: "24px" }}>Select Toppings</Typography> : 
+        <Typography sx={{ marginBottom: "12px", marginTop: "24px" }}></Typography>}
+      </>
       <Grid container spacing={2}>
         {menuItem.products
           .filter(function (product) {
-            return product.productTypeId == 5 || product.productTypeId == 6;
+            return ((product.productTypeId == 5 || product.productTypeId == 6) && maxToppings != 0);
           })
           .map((product, index) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
@@ -388,8 +412,9 @@ function ConfigurePizza(): JSX.Element {
                 }}
                 onClick={() => {
                   if (
-                    menuItem.products.filter((product) => product.selected)
-                      .length < maxToppings ||
+                    menuItem.products.filter(function (product) {
+                      return ((product.productTypeId == 5 || product.productTypeId == 6) && product.selected);
+                    }).length < maxToppings ||
                     product.selected
                   ) {
                     dispatch.menu.toggleMenuItemProduct(product);
@@ -428,7 +453,7 @@ function ConfigurePizza(): JSX.Element {
                   color: product.selected
                     ? theme.palette.primary.contrastText
                     : "black",
-                  cursor: "pointer",
+                  cursor: "pointer"
                 }}
                 onClick={() => dispatch.menu.toggleMenuItemProduct(product)}
               >

@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
-import { Container, Typography } from "@mui/material";
+import { Container, Typography, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
-import { useTheme } from "@emotion/react";
 import Head from "next/head";
 
 const HomePageBanner = styled(Box)(({ theme }) => {

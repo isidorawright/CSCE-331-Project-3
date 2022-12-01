@@ -1,7 +1,7 @@
 export enum UserRole {
   MANAGER = "Manager",
   SERVER = "Server",
-  CUSTOMER = "Customer",
+  CUSTOMER = "Customer"
 }
 
 export interface IUser {
@@ -20,6 +20,6 @@ export function User(user?: IUser): IUser {
     id: -1,
     username: "",
     authenticated: false,
-    role: UserRole.CUSTOMER,
+    role: UserRole.CUSTOMER
   } as IUser;
 }

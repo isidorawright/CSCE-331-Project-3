@@ -32,6 +32,25 @@ export default function SignIn() {
     setError("");
     const data = new FormData(event.currentTarget);
 
+    const user = data.get("user");
+
+    if (registering) {
+      if (data.get("password") !== data.get("password2")) {
+        setError("Passwords do not match");
+        return;
+      }
+
+      if (!user) {
+        setError("Username is required");
+        return;
+      }
+
+      if (user.toString().length < 3) {
+        setError("Username must be at least 3 characters");
+        return;
+      }
+    }
+
     try {
       if (registering) {
         await dispatch.user.register(
@@ -78,16 +97,16 @@ export default function SignIn() {
             padding: theme.spacing(5),
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          {/* <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
+          <Typography component="h1" variant="h5" sx={{color: "white"}}>
+            {registering ? "Sign up" : "Sign in"}
+          </Typography> */}
           <Box
             component="form"
             onSubmit={handleSubmit}
-            noValidate
+            // noValidate
             sx={{ mt: 1 }}
           >
             <TextField
@@ -110,6 +129,18 @@ export default function SignIn() {
               id="password"
               autoComplete="current-password"
             />
+            {registering && (
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password2"
+                label="Confirm Password"
+                type="password"
+                id="password2"
+                autoComplete="current-password"
+              />
+            )}
             {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
@@ -139,11 +170,12 @@ export default function SignIn() {
                   }}
                   sx={{
                     cursor: "pointer",
+                    color: "white",
                   }}
                 >
                   {registering
                     ? "Already have an account? Sign in"
-                    : "Don't have an account? Sign Up"}
+                    : "Don't have an account? Sign up"}
                 </Typography>
               </Grid>
               <Grid item xs={12} sx={{ textAlign: "center" }}>
@@ -154,6 +186,7 @@ export default function SignIn() {
                   }}
                   sx={{
                     cursor: "pointer",
+                    color: "white",
                   }}
                 >
                   Forgot password?
