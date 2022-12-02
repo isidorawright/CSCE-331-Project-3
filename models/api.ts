@@ -4,6 +4,7 @@ import { Product, IProduct } from "./product";
 import { User, IUser } from "./user";
 import { IOrder } from "./order";
 import { IMenuItem } from "./menuItem";
+import { IExcess } from "./excess";
 
 export namespace api {
   export async function getMenuCategories(): Promise<IMenuCategory[]> {
@@ -179,9 +180,21 @@ export namespace api {
 
   export namespace reports {
     // Returns a list of all products and dollar amount sold between startDate and endDate
-    export async function sales(startDate : String | Date, endDate : String | Date) {
+    export async function sales(startDate : String | Date, endDate : String | Date): Promise<IExcess[]> {
       const response = await fetch(`/api/reports/sales/?startDate='${startDate}'&endDate='${endDate}'`, {method : 'GET'});
-      return response.json();
+      //return response.json();
+
+      const body = await response.json();
+
+      return(
+        body.map((item:any) => {
+          return {
+            id: item.id,
+            name: item.product_name,
+            count: item.count,
+          }
+        })
+      )
     }
     // Returns a list of products whose inventory has fallen below the restock threshold
     export async function restock() {

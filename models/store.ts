@@ -9,6 +9,7 @@ import { IOrder, Order } from "./order";
 import { OrderItem } from "./orderItem";
 import { IProduct, Product } from "./product";
 import Router from "next/router";
+import { IExcess } from "./excess";
 
 export interface drawerState {
   open: boolean;
@@ -159,6 +160,7 @@ export const userState = createModel<RootModel>()({
 
         if(store.getState().manager){
           Router.push("/manager");
+          Router.push("/reports");
         }
         else {
           Router.push("/order");
@@ -191,12 +193,17 @@ export const userState = createModel<RootModel>()({
 interface ManagerState {
   menuItems: IMenuItem[];
   inventory: IProduct[];
+  excess: IExcess[];
 }
 
 export const managerState = createModel<RootModel>()({
   state: {
     inventory: [],
-    menuItems: []
+    menuItems: [],
+    excess: [],
+    sales: [],
+    pairs: [],
+    restock: [],
   } as ManagerState,
   reducers: {
     setInventory(state, payload: IProduct[]) {
@@ -210,6 +217,12 @@ export const managerState = createModel<RootModel>()({
         ...state,
         menuItems: payload
       }
+    },
+    setExcess(state, payload: IExcess[]) {
+      return {
+        ...state,
+        excess: payload
+      }
     }
   },
   effects: (dispatch) => ({
@@ -219,6 +232,9 @@ export const managerState = createModel<RootModel>()({
 
       const menuItems = await api.menu.getMenuItems();
       dispatch.manager.setMenuItems(menuItems);
+
+      const excessItems = await api.reports.sales("08-01-2022", "11-30-2022");
+      dispatch.manager.setExcess(excessItems);
     }
   })
 })
