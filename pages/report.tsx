@@ -30,10 +30,10 @@ import { faCircleCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 //Excess Reports
 const ExcessReportCols: GridColDef[] = [
-    { field: "name", headerName: "Product Name", width: 170 },
+    { field: "productName", headerName: "Product Name", width: 170 },
     {
-      field: "count",
-      headerName: "Quantity In Excess",
+      field: "percentSold",
+      headerName: "Percent Sold",
       width: 75,
       align: "right",
       headerAlign: "right",
@@ -56,6 +56,7 @@ const MenuToPriceColumns: GridColDef[] = [
     user,
   }: InferGetServerSidePropsType<typeof getServerSideProps>) {
     const excess = useSelector((state: RootState) => state.manager.excess);
+    debugger;
     const menuItems = useSelector((state: RootState) => state.manager.menuItems);
     const theme = useTheme<CustomTheme>();
     return (
@@ -76,7 +77,7 @@ const MenuToPriceColumns: GridColDef[] = [
         <DataGrid
           rows={excess}
           columns={ExcessReportCols}
-          getRowId={(excess)=>excess.name}
+          getRowId={(excess)=>excess.productName}
           pageSize={100}
           rowsPerPageOptions={[Infinity]}
           sx={{ height: "420px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
@@ -95,6 +96,7 @@ const MenuToPriceColumns: GridColDef[] = [
         <DataGrid
           rows={menuItems}
           columns={MenuToPriceColumns}
+          getRowId={(menuItems)=>menuItems.name}
           pageSize={100}
           rowsPerPageOptions={[10]}
           sx={{ height: "423px", marginLeft: 5, marginRight: 5, marginTop: 1 }}

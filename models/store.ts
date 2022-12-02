@@ -168,6 +168,7 @@ export const userState = createModel<RootModel>()({
 
       if (store.getState().manager) {
         Router.push("/manager");
+        Router.push("/reports");
       } else {
         Router.push("/order");
       }
@@ -215,6 +216,10 @@ export const managerState = createModel<RootModel>()({
   state: {
     inventory: [],
     menuItems: [],
+    excess: [],
+    sales: [],
+    pairs: [],
+    restock: [],
   } as ManagerState,
   reducers: {
     setInventory(state, payload: IProduct[]) {
@@ -229,6 +234,12 @@ export const managerState = createModel<RootModel>()({
         menuItems: payload,
       };
     },
+    setExcess(state, payload: IExcess[]) {
+      return {
+        ...state,
+        excess: payload
+      }
+    },
   },
   effects: (dispatch) => ({
     async fetch() {
@@ -237,6 +248,9 @@ export const managerState = createModel<RootModel>()({
 
       const menuItems = await api.menu.getMenuItems();
       dispatch.manager.setMenuItems(menuItems);
+
+      const excessItems = await api.reports.excess("08-01-2022");
+      dispatch.manager.setExcess(excessItems);
     },
   }),
 });

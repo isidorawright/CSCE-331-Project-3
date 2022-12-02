@@ -17,9 +17,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 join order_item on order_item.order_id = "order".order_id
                 join order_item_product on order_item_product.order_item_order_item_id = order_item.order_id
 				join product on order_item_product.product_product_id = product.product_id
-                where "order".order_date between ${req.query.date} and '01-01-23'
-                group by product_name
-                order by product_name`
+                where "order".order_date between '${req.query.date}' and '01-01-23'
+                group by product_id
+                order by product_id`
             ).then(req => req.rows);
             
             // Determine if product has sold less than 10% of stock on hand
@@ -37,6 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             res.status(404).json({ message: "Not found" });
         }
     } catch (error) {
+        console.log(error);
         res.status(400).end();
     }
 }

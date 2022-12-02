@@ -1,7 +1,7 @@
 export interface IExcess {
-    id: number;
+    // id: number;
     productName: string;
-    count: number;
+    percentSold: string;
   
     selected?: boolean;
   }
@@ -11,8 +11,8 @@ export interface IExcess {
       return excess;
     }
     return {
-      id: -1,
+      //id: -1,
       productName: " ",
-      count: -1,
+      percentSold: "",
     } as IExcess;
   }

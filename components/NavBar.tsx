@@ -28,7 +28,7 @@ const pages: { [key: string]: string } = {
   home: "/",
   order: "/order",
   manage: "/manager",
-  reports: "/reports",
+  reports: "/report",
 };
 
 export function TemporaryDrawer(): JSX.Element {
