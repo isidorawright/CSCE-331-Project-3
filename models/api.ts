@@ -40,16 +40,16 @@ export namespace api {
       const response = await fetch("/api/product");
       const body = await response.json();
 
-      return body.map((product:any) => {
+      return body.map((product: any) => {
         return {
           id: product.product_id,
           productName: product.product_name,
           productType: product.product_type_name,
           quantityInStock: product.quantity_in_stock,
           conversionFactor: product.conversion_factor,
-          productTypeId: product.product_type_id
-        }
-      })
+          productTypeId: product.product_type_id,
+        };
+      });
     }
   }
   export namespace menu {
@@ -57,16 +57,16 @@ export namespace api {
       const response = await fetch("/api/menuItem");
       const body = await response.json();
 
-      return body.map((item:any) => {
+      return body.map((item: any) => {
         return {
           id: item.menu_item_id,
           name: item.item_name,
           price: item.menu_item_price,
           configurable: item.configurable,
           category: null,
-          products: null
-        }
-      })
+          products: null,
+        };
+      });
     }
   }
   export namespace category {
@@ -132,82 +132,126 @@ export namespace api {
       }
       return;
     }
+    export async function fetchAccount(): Promise<IUser> {
+      const response = await fetch("/api/user/current");
+      const json = await response.json();
+      return User(json);
+    }
   }
 
   export namespace shipment {
     // Shipment Collection
     export async function getAllShipments() {
-        const response = await fetch(`/api/shipment/`, {method : 'GET'})
-        return await response.json();
+      const response = await fetch(`/api/shipment/`, { method: "GET" });
+      return await response.json();
     }
-    export async function createShipment(shipmentDate : String | Date, fulfilled : boolean) {
-      const response = await fetch(`/api/shipment/?shipmentDate='${shipmentDate}'&fulfilled=${fulfilled}`, {method : 'POST'});
+    export async function createShipment(
+      shipmentDate: String | Date,
+      fulfilled: boolean
+    ) {
+      const response = await fetch(
+        `/api/shipment/?shipmentDate='${shipmentDate}'&fulfilled=${fulfilled}`,
+        { method: "POST" }
+      );
       return await response.json();
     }
 
     // Indiviudal Shipments
-    export async function getShipment(shipmentId : number){
-      const response = await fetch(`/api/shipment/${shipmentId}`, {method : 'GET'});
+    export async function getShipment(shipmentId: number) {
+      const response = await fetch(`/api/shipment/${shipmentId}`, {
+        method: "GET",
+      });
       return await response.json();
     }
-    export async function updateShipment(shipmentId : number, shipmentDate : String | Date, fulfilled : boolean) {
-      const response = await fetch(`/api/shipment/${shipmentId}/?fulfilled=${fulfilled}&shipmentDate='${shipmentDate}'`, {method : 'PUT'});
+    export async function updateShipment(
+      shipmentId: number,
+      shipmentDate: String | Date,
+      fulfilled: boolean
+    ) {
+      const response = await fetch(
+        `/api/shipment/${shipmentId}/?fulfilled=${fulfilled}&shipmentDate='${shipmentDate}'`,
+        { method: "PUT" }
+      );
       return await response.json();
     }
-    export async function deleteShipment(shipmentId : number) {
-      const response = await fetch(`/api/shipment/${shipmentId}`, {method : 'DELETE'});
+    export async function deleteShipment(shipmentId: number) {
+      const response = await fetch(`/api/shipment/${shipmentId}`, {
+        method: "DELETE",
+      });
       return await response.json();
     }
 
     // Shipment Products
-    export async function getProduct(shipmentId : number, productId : number) {
-      const response = await fetch( `/api/shipment/${shipmentId}/product/${productId}`, {method : 'GET'});
+    export async function getProduct(shipmentId: number, productId: number) {
+      const response = await fetch(
+        `/api/shipment/${shipmentId}/product/${productId}`,
+        { method: "GET" }
+      );
       return await response.json();
     }
-    export async function createProduct(shipmentId : number, productId : number, quantity: number) {
-      const response = await fetch( `/api/shipment/${shipmentId}/product/${productId}/?quantity=${quantity}`, {method : 'POST'});
+    export async function createProduct(
+      shipmentId: number,
+      productId: number,
+      quantity: number
+    ) {
+      const response = await fetch(
+        `/api/shipment/${shipmentId}/product/${productId}/?quantity=${quantity}`,
+        { method: "POST" }
+      );
       return await response.json();
     }
-    export async function updateProduct(shipmentId : number, productId : number, quantity: number) {
-      const response = await fetch(`/api/shipment/${shipmentId}/product/${productId}/?quantity=${quantity}`, {method : 'PUT'});
+    export async function updateProduct(
+      shipmentId: number,
+      productId: number,
+      quantity: number
+    ) {
+      const response = await fetch(
+        `/api/shipment/${shipmentId}/product/${productId}/?quantity=${quantity}`,
+        { method: "PUT" }
+      );
       return await response.json();
     }
-    export async function deleteProduct(shipmentId : number, productId : number) {
-      const response = await fetch(`/api/shipment/${shipmentId}/product/${productId}`, {method : 'DELETE'});
+    export async function deleteProduct(shipmentId: number, productId: number) {
+      const response = await fetch(
+        `/api/shipment/${shipmentId}/product/${productId}`,
+        { method: "DELETE" }
+      );
       return await response.json();
     }
   }
 
   export namespace reports {
     // Returns a list of all products and dollar amount sold between startDate and endDate
-    export async function sales(startDate : String | Date, endDate : String | Date): Promise<IExcess[]> {
-      const response = await fetch(`/api/reports/sales/?startDate='${startDate}'&endDate='${endDate}'`, {method : 'GET'});
-      //return response.json();
-
-      const body = await response.json();
-
-      return(
-        body.map((item:any) => {
-          return {
-            id: item.id,
-            name: item.product_name,
-            count: item.count,
-          }
-        })
-      )
+    export async function sales(
+      startDate: String | Date,
+      endDate: String | Date
+    ) {
+      const response = await fetch(
+        `/api/reports/sales/?startDate='${startDate}'&endDate='${endDate}'`,
+        { method: "GET" }
+      );
+      return response.json();
     }
     // Returns a list of products whose inventory has fallen below the restock threshold
     export async function restock() {
-      return await fetch(`/api/reports/restock`, {method : 'GET'});
+      return await fetch(`/api/reports/restock`, { method: "GET" });
     }
     // Returns list of products and percent of thier invetory sold for products which have sold less than 10% of thier stock up to a given date
-    export async function excess(date : String | Date) {
-      const response = await fetch(`/api/reports/excess/?date='${date}'`, {method : 'GET'});
+    export async function excess(date: String | Date) {
+      const response = await fetch(`/api/reports/excess/?date='${date}'`, {
+        method: "GET",
+      });
       return response.json();
     }
     // Returns a list of all menu items which commonly sold together between startDate and endDate, along with the frequency of these combinations
-    export async function pairs(startDate : String | Date, endDate : String | Date) {
-      const response = await fetch(`/api/reports/pairs/?startDate='${startDate}'&endDate='${endDate}'`, {method : 'GET'});
+    export async function pairs(
+      startDate: String | Date,
+      endDate: String | Date
+    ) {
+      const response = await fetch(
+        `/api/reports/pairs/?startDate='${startDate}'&endDate='${endDate}'`,
+        { method: "GET" }
+      );
       return response.json();
     }
   }
@@ -228,7 +272,6 @@ export namespace api {
 if (typeof window !== "undefined") {
   (window as any).api = api;
 }
-
 
 /*
   Shipment:

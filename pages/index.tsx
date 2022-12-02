@@ -21,6 +21,7 @@ const dayStyle = {
   display: "inline-block",
   boxSizing: "border-box" as "border-box",
   textAlign: "right" as "right",
+  color: "black",
 };
 
 const hoursStyle = {
@@ -30,6 +31,7 @@ const hoursStyle = {
   display: "inline-block",
   boxSizing: "border-box" as "border-box",
   textAlign: "left" as "left",
+  color: "black",
 };
 
 export default function Home() {
@@ -54,7 +56,9 @@ export default function Home() {
             padding: "20px",
           }}
         >
-          <Typography variant="h6">Hours of Operation</Typography>
+          <Typography variant="h6" sx={{ color: "black" }}>
+            Hours of Operation
+          </Typography>
           <div style={dayStyle}>SUNDAY:</div>{" "}
           <div style={hoursStyle}> closed</div>
           <div style={dayStyle}>MONDAY:</div>{" "}
