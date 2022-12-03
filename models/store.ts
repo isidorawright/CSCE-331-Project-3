@@ -168,7 +168,7 @@ export const userState = createModel<RootModel>()({
 
       if (store.getState().manager) {
         Router.push("/manager");
-        Router.push("/reports");
+        Router.push("/report");
       } else {
         Router.push("/order");
       }
@@ -249,7 +249,7 @@ export const managerState = createModel<RootModel>()({
       const menuItems = await api.menu.getMenuItems();
       dispatch.manager.setMenuItems(menuItems);
 
-      const excessItems = await api.reports.excess("08-01-2022");
+      const excessItems = await api.reports.excess("11-23-22");
       dispatch.manager.setExcess(excessItems);
     },
   }),

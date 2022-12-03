@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             // Determine if product has sold less than 10% of stock on hand
             response.forEach(product => {
                 //excess.push(product.product_name);
-                if (product.count < 500 * 0.1) {
+                if (product.count < 500 - (500 * 0.1)) {
                     // Include product name and percent sold in output
                     excess[product.product_name] =  product.count / 500 + "%";
                 }
