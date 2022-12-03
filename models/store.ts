@@ -249,7 +249,7 @@ export const managerState = createModel<RootModel>()({
       const menuItems = await api.menu.getMenuItems();
       dispatch.manager.setMenuItems(menuItems);
 
-      const excessItems = await api.reports.excess("11-23-22");
+      const excessItems = await api.reports.excess("01-01-20");
       dispatch.manager.setExcess(excessItems);
     },
   }),

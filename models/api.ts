@@ -236,7 +236,7 @@ export namespace api {
     export async function restock() {
       return await fetch(`/api/reports/restock`, { method: "GET" });
     }
-    // Returns list of products and percent of thier invetory sold for products which have sold less than 10% of thier stock up to a given date
+    // Returns list of products and percent of their invetory sold for products which have sold less than 10% of thier stock up to a given date
     export async function excess(date: String | Date): Promise<IExcess[]> {
       const response = await fetch(`/api/reports/excess/?date=${date}`, {
         method: "GET",

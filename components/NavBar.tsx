@@ -22,7 +22,6 @@ import Link from "next/link";
 import { Dispatch, RootState } from "../models/store";
 import { useDispatch, useSelector } from "react-redux";
 import { UserRole } from "../models/user";
-import Image from "next/image";
 
 const pages: { [key: string]: string } = {
   home: "/",
@@ -35,7 +34,6 @@ export function TemporaryDrawer(): JSX.Element {
   const drawerState = useSelector((state: RootState) => state.drawer);
   const userState = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<Dispatch>();
-  const router = useRouter();
   const theme = useTheme<CustomTheme>();
 
   const toggleDrawer =
@@ -61,6 +59,9 @@ export function TemporaryDrawer(): JSX.Element {
         {[
           ...Object.entries(pages).map(([name, route], index) => {
             if (userState.user.role != UserRole.MANAGER && name == "manage") {
+              return null;
+            }
+            if (userState.user.role != UserRole.MANAGER && name == "reports") {
               return null;
             }
             return (
@@ -115,7 +116,6 @@ export default function ResponsiveAppBar() {
   const [mobile, setIsMobile] = React.useState(
     useMediaQuery(theme.breakpoints.down("xs"))
   );
-  const drawerState = useSelector((state: RootState) => state.drawer);
   const dispatch = useDispatch<Dispatch>();
   const userState = useSelector((state: RootState) => state.user);
 
@@ -180,6 +180,9 @@ export default function ResponsiveAppBar() {
                     userState.user.role != UserRole.MANAGER &&
                     name == "manage"
                   ) {
+                    return null;
+                  }
+                  if (userState.user.role != UserRole.MANAGER && name == "reports") {
                     return null;
                   }
                   return (

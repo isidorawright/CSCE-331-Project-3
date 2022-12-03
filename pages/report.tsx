@@ -3,38 +3,23 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import Head from "next/head";
 
 //imports for the collapsible table
-import Box from "@mui/material/Box";
-import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
 import { useTheme, CustomTheme } from "@mui/material";
-
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { withIronSessionSsr } from "iron-session/next";
 import { IUser, User, UserRole } from "../models/user";
 import { InferGetServerSidePropsType } from "next";
 import { useSelector } from "react-redux";
 import { RootState } from "../models/store";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { useRouter } from "next/router";
 
 //Reports
 
-//Excess Reports
+//Excess Report
 const ExcessReportCols: GridColDef[] = [
   { field: "productName", headerName: "Product Name", width: 170 },
   {
     field: "percentSold",
     headerName: "Percent Sold",
-    width: 75,
+    width: 120,
     align: "right",
     headerAlign: "right",
   },
@@ -58,6 +43,10 @@ export default function DataTables({
   const excess = useSelector((state: RootState) => state.manager.excess);
   const menuItems = useSelector((state: RootState) => state.manager.menuItems);
   const theme = useTheme<CustomTheme>();
+  const router = useRouter();
+  if (!user || user.role !== UserRole.MANAGER) {
+    router.push("/");
+  }
   return (
     <div style={{ width: "100%" }}>
       <Head>
@@ -90,7 +79,7 @@ export default function DataTables({
           color: theme.palette.primary.main,
         }}
       >
-        Sales Report
+        Sales Report [in progress]
       </h1>
       <DataGrid
         rows={menuItems}
