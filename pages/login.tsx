@@ -26,7 +26,7 @@ export default function SignIn() {
     dispatch.user.setError("");
     const data = new FormData(event.currentTarget);
 
-    const user = data.get("user");
+    const user = data.get("username");
 
     if (registering) {
       if (data.get("password") !== data.get("password2")) {
