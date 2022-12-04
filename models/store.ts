@@ -13,6 +13,7 @@ import { IExcess } from "./excess";
 import { ISales } from "./sales";
 import { IRestock } from "./restock";
 import { IPair } from "./pair";
+import { IShipment } from "./shipment";
 
 export interface drawerState {
   open: boolean;
@@ -217,6 +218,7 @@ interface ManagerState {
   restock: IRestock[];
   pairs: IPair[];
   orders: IOrder[];
+  shipments: IShipment[];
 }
 
 export const managerState = createModel<RootModel>()({
@@ -228,6 +230,7 @@ export const managerState = createModel<RootModel>()({
     sales: [],
     pairs: [],
     restock: [],
+    shipments: [],
   } as ManagerState,
   reducers: {
     setInventory(state, payload: IProduct[]) {
@@ -271,7 +274,13 @@ export const managerState = createModel<RootModel>()({
         ...state,
         pairs: payload
       }
-    }
+    },
+    setShipments(state, payload: IShipment[]) {
+      return {
+        ...state,
+        shipments: payload
+      }
+    },
   },
   effects: (dispatch) => ({
     async fetch() {
@@ -295,6 +304,9 @@ export const managerState = createModel<RootModel>()({
 
       const pairsItems = await api.reports.pairs("08-04-22", "01-01-23");
       dispatch.manager.setPairs(pairsItems);
+
+      const shipments = await api.shipment.getAllShipments();
+      dispatch.manager.setShipments(shipments);
     },
   }),
 });
