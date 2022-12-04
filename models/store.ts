@@ -367,16 +367,16 @@ function _initializeStore(store: Store) {
   } catch (e) {
     console.log(e);
   }
-
-  (window as any).google.accounts.id.initialize({
-    client_id:
-      "716768877261-d2d45v249dmtr6adj9edo3uran066k2k.apps.googleusercontent.com",
-    callback: store.dispatch.user.handleOAuth,
-  });
-
-  if (!store.getState().user.loggedIn) {
-    (window as any).google.accounts.id.prompt();
-  }
+  try {
+    (window as any).google.accounts.id.initialize({
+      client_id:
+        "716768877261-d2d45v249dmtr6adj9edo3uran066k2k.apps.googleusercontent.com",
+      callback: store.dispatch.user.handleOAuth,
+    });
+    if (!store.getState().user.loggedIn) {
+      (window as any).google.accounts.id.prompt();
+    }
+  } catch (e) {}
 }
 
 export const initializeStore = once(_initializeStore);

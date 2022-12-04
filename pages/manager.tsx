@@ -1,5 +1,9 @@
 import * as React from "react";
-import { DataGrid, getDataGridUtilityClass, GridColDef } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  getDataGridUtilityClass,
+  GridColDef,
+} from "@mui/x-data-grid";
 import Head from "next/head";
 
 //imports for the collapsible table
@@ -32,20 +36,44 @@ import { Shipment } from "../models/shipment";
 const InventoryColumns: GridColDef[] = [
   { field: "productName", headerName: "Product Name", width: 200 },
   { field: "productType", headerName: "Product Type", width: 150 },
-  { field: "quantityInStock", headerName: "Quantity", width: 100, align: "right", headerAlign: "right" }
+  {
+    field: "quantityInStock",
+    headerName: "Quantity",
+    width: 100,
+    align: "right",
+    headerAlign: "right",
+  },
 ];
 
 //Menu Item to Price Table
 const MenuToPriceColumns: GridColDef[] = [
   { field: "name", headerName: "Menu Item", width: 200 },
-  { field: "price", headerName: "Price", width: 75, align: "right", headerAlign: "right" }
+  {
+    field: "price",
+    headerName: "Price",
+    width: 75,
+    align: "right",
+    headerAlign: "right",
+  },
 ];
 
 // Order Table
 const OrderColumns: GridColDef[] = [
   { field: "orderDate", headerName: "Order Date", width: 125 },
-  { field: "orderTotal", headerName: "Order Total", width: 125, align: "right", headerAlign: "right"  },
-  { field: "totalItems", headerName: "Items in Order", width: 150, align: "right", headerAlign: "right" }
+  {
+    field: "orderTotal",
+    headerName: "Order Total",
+    width: 125,
+    align: "right",
+    headerAlign: "right",
+  },
+  {
+    field: "totalItems",
+    headerName: "Items in Order",
+    width: 150,
+    align: "right",
+    headerAlign: "right",
+  },
 ];
 
 function Row(props: { row: ReturnType<typeof Shipment> }) {
@@ -69,8 +97,10 @@ function Row(props: { row: ReturnType<typeof Shipment> }) {
         <TableCell component="th" scope="row">
           {row.shipmentId}
         </TableCell>
-        <TableCell align="right">{(row.shipmentDate).toString().substring(0, 10)}</TableCell>
-        <TableCell>{row.fulfilled? checkmark : xmark}</TableCell>
+        <TableCell align="right">
+          {row.shipmentDate.toString().substring(0, 10)}
+        </TableCell>
+        <TableCell>{row.fulfilled ? checkmark : xmark}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
@@ -93,7 +123,9 @@ function Row(props: { row: ReturnType<typeof Shipment> }) {
                   {row.products.map((product) => (
                     <TableRow key={product.id}>
                       <TableCell>{product.productName}</TableCell>
-                      <TableCell align="right">{product.quantityInStock}</TableCell>
+                      <TableCell align="right">
+                        {product.quantityInStock}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -112,12 +144,12 @@ export default function DataTables({
   const inventory = useSelector((state: RootState) => state.manager.inventory);
   const menuItems = useSelector((state: RootState) => state.manager.menuItems);
   const orders = useSelector((state: RootState) => state.manager.orders);
-  const shipments = useSelector((state: RootState) => state.manager.shipments)
+  const shipments = useSelector((state: RootState) => state.manager.shipments);
   const theme = useTheme<CustomTheme>();
   const router = useRouter();
-  if (!user || user.role !== UserRole.MANAGER) {
-    router.push("/");
-  }
+  // if (!user || user.role !== UserRole.MANAGER) {
+  //   router.push("/");
+  // }
   return (
     <div style={{ width: "100%" }}>
       <Head>
