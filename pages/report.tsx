@@ -38,13 +38,25 @@ const SalesReportCols: GridColDef[] = [
 //Restock Report
 const RestockReportCols: GridColDef[] = [
   { field: "restockName", headerName: "Product Name", width: 170 },
-  { field: "amount", headerName: "Quantity in Stock", width: 150, align: "right", headerAlign: "right" }
+  {
+    field: "amount",
+    headerName: "Quantity in Stock",
+    width: 150,
+    align: "right",
+    headerAlign: "right",
+  },
 ];
 
-//Pair Analysis 
+//Pair Analysis
 const PairAnalysisCols: GridColDef[] = [
-  { field: "pairName", headerName: "Product Pairing", width: 350 }, 
-  { field: "pairFrequency", headerName: "Frequency", width: 125, align: "right", headerAlign: "right" }
+  { field: "pairName", headerName: "Product Pairing", width: 350 },
+  {
+    field: "pairFrequency",
+    headerName: "Frequency",
+    width: 125,
+    align: "right",
+    headerAlign: "right",
+  },
 ];
 
 export default function DataTables({
@@ -54,14 +66,11 @@ export default function DataTables({
   const sales = useSelector((state: RootState) => state.manager.sales);
   const restock = useSelector((state: RootState) => state.manager.restock);
   const pairs = useSelector((state: RootState) => state.manager.pairs);
-  
-  console.log(console.error()
-  );
+
+  console.log(console.error());
   const theme = useTheme<CustomTheme>();
   const router = useRouter();
-  if (!user || user.role !== UserRole.MANAGER) {
-    router.push("/");
-  }
+
   return (
     <div style={{ width: "100%" }}>
       <Head>

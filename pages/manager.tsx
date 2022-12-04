@@ -147,9 +147,7 @@ export default function DataTables({
   const shipments = useSelector((state: RootState) => state.manager.shipments);
   const theme = useTheme<CustomTheme>();
   const router = useRouter();
-  // if (!user || user.role !== UserRole.MANAGER) {
-  //   router.push("/");
-  // }
+
   return (
     <div style={{ width: "100%" }}>
       <Head>
