@@ -26,22 +26,39 @@ const ExcessReportCols: GridColDef[] = [
 ];
 
 //Sales Report
-const MenuToPriceColumns: GridColDef[] = [
-  { field: "name", headerName: "Menu Item", width: 220 },
+const SalesReportCols: GridColDef[] = [
+  { field: "itemName", headerName: "Menu Item", width: 220 },
   {
-    field: "price",
-    headerName: "Price",
+    field: "itemSale",
+    headerName: "Sales ($)",
     width: 75,
     align: "right",
     headerAlign: "right",
   },
 ];
 
+//Restock Report
+const RestockReportCols: GridColDef[] = [
+  { field: "restockName", headerName: "Product Name", width: 170 },
+  { field: "amount", headerName: "Quantity in Stock", width: 150, align: "right", headerAlign: "right" }
+];
+
+//Pair Analysis 
+const PairAnalysisCols: GridColDef[] = [
+  { field: "pairName", headerName: "Product Pairing", width: 350 }, 
+  { field: "pairFrequency", headerName: "Frequency", width: 100, align: "right", headerAlign: "right" }
+];
+
 export default function DataTables({
   user,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const excess = useSelector((state: RootState) => state.manager.excess);
-  const menuItems = useSelector((state: RootState) => state.manager.menuItems);
+  const sales = useSelector((state: RootState) => state.manager.sales);
+  const restock = useSelector((state: RootState) => state.manager.restock);
+  const pairs = useSelector((state: RootState) => state.manager.pairs);
+  
+  console.log(console.error()
+  );
   const theme = useTheme<CustomTheme>();
   const router = useRouter();
   if (!user || user.role !== UserRole.MANAGER) {
@@ -79,12 +96,50 @@ export default function DataTables({
           color: theme.palette.primary.main,
         }}
       >
-        Sales Report [in progress]
+        Sales Report
       </h1>
       <DataGrid
-        rows={menuItems}
-        columns={MenuToPriceColumns}
-        getRowId={(menuItems) => menuItems.name}
+        rows={sales}
+        columns={SalesReportCols}
+        getRowId={(sales) => sales.itemName}
+        pageSize={100}
+        rowsPerPageOptions={[10]}
+        sx={{ height: "423px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
+      />
+
+      <br />
+      <h1
+        style={{
+          paddingLeft: 40,
+          paddingTop: 30,
+          color: theme.palette.primary.main,
+        }}
+      >
+        Restock Report
+      </h1>
+      <DataGrid
+        rows={restock}
+        columns={RestockReportCols}
+        getRowId={(restock) => restock.restockName}
+        pageSize={100}
+        rowsPerPageOptions={[10]}
+        sx={{ height: "423px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
+      />
+
+      <br />
+      <h1
+        style={{
+          paddingLeft: 40,
+          paddingTop: 30,
+          color: theme.palette.primary.main,
+        }}
+      >
+        Pair Analysis
+      </h1>
+      <DataGrid
+        rows={pairs}
+        columns={PairAnalysisCols}
+        getRowId={(pairs) => pairs.pairName}
         pageSize={100}
         rowsPerPageOptions={[10]}
         sx={{ height: "423px", marginLeft: 5, marginRight: 5, marginTop: 1 }}

@@ -5,6 +5,9 @@ import { User, IUser } from "./user";
 import { IOrder } from "./order";
 import { IMenuItem } from "./menuItem";
 import { IExcess, Excess } from "./excess";
+import { ISales, Sale } from "./sales";
+import { IRestock, Restock } from "./restock";
+import { IPair, Pair } from "./pair";
 
 export namespace api {
   export async function getMenuCategories(): Promise<IMenuCategory[]> {
@@ -225,27 +228,46 @@ export namespace api {
     export async function sales(
       startDate: String | Date,
       endDate: String | Date
-    ) {
+    ): Promise<ISales[]> {
       const response = await fetch(
-        `/api/reports/sales/?startDate='${startDate}'&endDate='${endDate}'`,
+        `/api/reports/sales/?startDate=${startDate}&endDate=${endDate}`,
         { method: "GET" }
       );
-      return response.json();
+      //return response.json();
+      
+      const body = await response.json() as {[key: string]: string};
+
+      return(
+        Object.entries(body).map(([itemName, itemSale]) => {
+          return Sale({
+            itemName,
+            itemSale
+          })
+        })
+      )
     }
     // Returns a list of products whose inventory has fallen below the restock threshold
-    export async function restock() {
-      return await fetch(`/api/reports/restock`, { method: "GET" });
+    export async function restock(): Promise<IRestock[]> {
+      const response = await fetch(`/api/reports/restock`, { method: "GET" });
+
+      const body = await response.json() as {[key: string]: string};
+
+      return(
+        Object.entries(body).map(([restockName, amount]) => {
+          return Restock({
+            restockName,
+            amount
+          })
+        })
+      )
     }
     // Returns list of products and percent of their invetory sold for products which have sold less than 10% of thier stock up to a given date
     export async function excess(date: String | Date): Promise<IExcess[]> {
       const response = await fetch(`/api/reports/excess/?date=${date}`, {
         method: "GET",
       });
-      //return response.json();
 
       const body = await response.json() as {[key: string]: string};
-
-      // {"Fountain Drink":"0.002%","Bottled Beverage":"0.006%","Gatorade":"0.002%","Cauliflower":"0.014%","Standard":"0.018%","Alfredo":"0.016%","Traditional Red":"0.016%","Zesty Red":"0.022%","House Blend":"0.01%","Parmesan":"0.018%","BBQ Sauce":"0.016%","Olive Oil":"0.008%","Oregano":"0.008%","Ranch":"0.006%","Sriracha":"0.002%","Diced Ham":"0.004%","Salami":"0.006%","Black Olives":"0.004%","Green Peppers":"0.004%","Onions":"0.004%","Pineapple":"0.004%"}
 
       return(
         Object.entries(body).map(([productName, percentSold]) => {
@@ -257,15 +279,22 @@ export namespace api {
       )
     }
     // Returns a list of all menu items which commonly sold together between startDate and endDate, along with the frequency of these combinations
-    export async function pairs(
-      startDate: String | Date,
-      endDate: String | Date
-    ) {
+    export async function pairs(startDate: String | Date, endDate: String | Date): Promise<IPair[]> {
       const response = await fetch(
-        `/api/reports/pairs/?startDate='${startDate}'&endDate='${endDate}'`,
+        `/api/reports/pairs/?startDate=${startDate}&endDate=${endDate}`,
         { method: "GET" }
       );
-      return response.json();
+
+      const body = await response.json() as {[key: string]: string};
+
+      return(
+        Object.entries(body).map(([pairName, pairFrequency]) => {
+          return Pair({
+            pairName,
+            pairFrequency
+          })
+        })
+      )
     }
   }
 

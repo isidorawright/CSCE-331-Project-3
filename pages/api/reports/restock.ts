@@ -7,18 +7,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const restock_threshold = 500;
     try {
         // get quantity of a product in a shipment
-        var restock_products:string[] = [];
+        let restock: {[key: string] : string} = {};
+
         if (req.method === "GET") {
             const response = await database.query(
                 `select * from product`
             ).then(response => response.rows)
             response.forEach(element => {
                 if (element.quantity_in_stock < restock_threshold) {
-                    restock_products.push(element.product_name);
+                    restock[element.product_name] = element.quantity_in_stock;
                 }
             });
 
-            res.status(200).json(restock_products);
+            res.status(200).json(restock);
         }
         else {
             res.status(404).json({ message: "Not found" });

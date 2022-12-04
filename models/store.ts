@@ -10,6 +10,9 @@ import { OrderItem } from "./orderItem";
 import { IProduct, Product } from "./product";
 import Router from "next/router";
 import { IExcess } from "./excess";
+import { ISales } from "./sales";
+import { IRestock } from "./restock";
+import { IPair } from "./pair";
 
 export interface drawerState {
   open: boolean;
@@ -210,6 +213,9 @@ interface ManagerState {
   menuItems: IMenuItem[];
   inventory: IProduct[];
   excess: IExcess[];
+  sales: ISales[];
+  restock: IRestock[];
+  pairs: IPair[];
 }
 
 export const managerState = createModel<RootModel>()({
@@ -240,6 +246,24 @@ export const managerState = createModel<RootModel>()({
         excess: payload
       }
     },
+    setSale(state, payload: ISales[]) {
+      return {
+        ...state,
+        sales: payload
+      }
+    },
+    setRestock(state, payload: IRestock[]) {
+      return {
+        ...state,
+        restock: payload
+      }
+    },
+    setPairs(state, payload: IPair[]) {
+      return {
+        ...state,
+        pairs: payload
+      }
+    }
   },
   effects: (dispatch) => ({
     async fetch() {
@@ -251,6 +275,15 @@ export const managerState = createModel<RootModel>()({
 
       const excessItems = await api.reports.excess("01-01-20");
       dispatch.manager.setExcess(excessItems);
+
+      const salesItems = await api.reports.sales("08-04-22", "01-01-23");
+      dispatch.manager.setSale(salesItems);
+
+      const restockItems = await api.reports.restock();
+      dispatch.manager.setRestock(restockItems);
+
+      const pairsItems = await api.reports.pairs("08-04-22", "01-01-23");
+      dispatch.manager.setPairs(pairsItems);
     },
   }),
 });

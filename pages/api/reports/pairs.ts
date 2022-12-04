@@ -3,19 +3,19 @@ import database from "../../../models/database";
 import _, { Dictionary, first, map } from "lodash";
 import { Shipment } from "../../../models/shipment";
 import { resourceLimits } from "worker_threads";
+import { useState } from "react";
   
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const restock_threshold = 500;
     try {
-        var pairs: {[key :string] : number} = {};
-
         // Query database for all menu items in all orders within date parameters
         if (req.method === "GET") {
+            let pairs: {[key :string] : number} = {};
+            
             const response = await database.query(
                 `select "order".order_id, item_name from "order"
                 join order_item on order_item.order_id = "order".order_id
                 join menu_item on menu_item.menu_item_id = order_item.menu_item_id
-                where "order".order_date between ${req.query.startDate} and ${req.query.endDate}`
+                where "order".order_date between '${req.query.startDate}' and '${req.query.endDate}'`
             ).then(res => res.rows);
             
             // Group orders together
@@ -33,16 +33,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                             if (pairs[combo] === undefined) {
                                 pairs[combo] = 1;
                             }
-                            // Otherwise incriment running total
+                            // Otherwise increment running total
                             else {
                                 pairs[combo]++;
                             }
                         }
                     }
-                
                 }
             };
-
+            
             res.status(200).json(pairs);
         }
         else {

@@ -12,7 +12,7 @@ export interface IExcess {
     }
     return {
       //id: -1,
-      productName: " ",
+      productName: "",
       percentSold: "",
     } as IExcess;
   }
