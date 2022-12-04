@@ -7,6 +7,7 @@ import { IExcess, Excess } from "./excess";
 import { ISales, Sale } from "./sales";
 import { IRestock, Restock } from "./restock";
 import { IPair, Pair } from "./pair";
+import { IShipment, Shipment } from "./shipment";
 
 export namespace api {
   export async function getMenuCategories(): Promise<IMenuCategory[]> {
