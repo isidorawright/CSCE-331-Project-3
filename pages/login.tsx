@@ -111,6 +111,9 @@ export default function SignIn() {
               label="Username"
               name="username"
               autoComplete="username"
+              inputProps={{
+                minLength: 3,
+              }}
               autoFocus
             />
             <TextField
@@ -122,6 +125,9 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              inputProps={{
+                minLength: 10,
+              }}
             />
             {registering && (
               <TextField
@@ -133,6 +139,9 @@ export default function SignIn() {
                 type="password"
                 id="password2"
                 autoComplete="current-password"
+                inputProps={{
+                  minLength: 10,
+                }}
               />
             )}
             {/* <FormControlLabel

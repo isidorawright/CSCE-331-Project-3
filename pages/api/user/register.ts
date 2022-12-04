@@ -7,8 +7,13 @@ import { withIronSessionApiRoute } from "iron-session/next";
 export default withIronSessionApiRoute(
   async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
-      if (req.body.username.length < 10) {
-        res.status(400).send("Username must be at least 10 characters");
+      if (req.body.username.length < 3) {
+        res.status(400).send("Username must be at least 3 characters");
+        return;
+      }
+
+      if (req.body.password.length < 10) {
+        res.status(400).send("Password must be at least 10 characters");
         return;
       }
 
