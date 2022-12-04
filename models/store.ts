@@ -373,6 +373,10 @@ function _initializeStore(store: Store) {
       "716768877261-d2d45v249dmtr6adj9edo3uran066k2k.apps.googleusercontent.com",
     callback: store.dispatch.user.handleOAuth,
   });
+
+  if (!store.getState().user.loggedIn) {
+    (window as any).google.accounts.id.prompt();
+  }
 }
 
 export const initializeStore = once(_initializeStore);
