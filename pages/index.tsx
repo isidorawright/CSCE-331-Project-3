@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
 import { Container, Typography, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
-import { invert } from "lodash";
 import Head from "next/head";
 
 const HomePageBanner = styled(Box)(({ theme }) => {
@@ -49,7 +48,7 @@ export default function Home() {
       <Box>
         <Container
           sx={{
-            padding: "20px",
+            padding: "10px"
           }}
         >
           <Typography variant="h6" sx={{ color: "white" }}>
@@ -77,7 +76,7 @@ export default function Home() {
             width="100%"
             height="400"
             loading="lazy"
-            style={{ paddingTop: "40px", paddingBottom: "30px" }}
+            style={{ paddingTop: "40px", paddingBottom: "30px", filter: "invert(100%)" }}
           ></iframe>
         </Container>
       </Box>

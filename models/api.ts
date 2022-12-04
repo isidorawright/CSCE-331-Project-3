@@ -1,5 +1,4 @@
 import { IMenu, IMenuCategory, Menu, MenuCategory } from "./menu";
-import { IShipment, Shipment } from "./shipment";
 import { Product, IProduct } from "./product";
 import { User, IUser } from "./user";
 import { IOrder } from "./order";
