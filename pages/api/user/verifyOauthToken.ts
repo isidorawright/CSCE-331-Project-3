@@ -56,6 +56,7 @@ export default withIronSessionApiRoute(
         });
       } else {
         const user = users.rows[0];
+        user.password = "";
         req.session.user = User(user);
       }
 

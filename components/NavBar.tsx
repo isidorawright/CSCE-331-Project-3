@@ -63,10 +63,10 @@ export function TemporaryDrawer(): JSX.Element {
       <List>
         {[
           ...Object.entries(pages).map(([name, route], index) => {
-            if (userState.user.role != UserRole.MANAGER && name == "manage") {
+            if (userState.user.role != UserRole.MANAGER && name == "Manage") {
               return null;
             }
-            if (userState.user.role != UserRole.MANAGER && name == "reports") {
+            if (userState.user.role != UserRole.MANAGER && name == "Reports") {
               return null;
             }
             return (
@@ -187,13 +187,13 @@ export default function ResponsiveAppBar() {
                 ...Object.entries(pages).map(([name, route]) => {
                   if (
                     userState.user.role != UserRole.MANAGER &&
-                    name == "manage"
+                    name == "Manage"
                   ) {
                     return null;
                   }
                   if (
                     userState.user.role != UserRole.MANAGER &&
-                    name == "reports"
+                    name == "Reports"
                   ) {
                     return null;
                   }
