@@ -22,6 +22,7 @@ import Link from "next/link";
 import { Dispatch, RootState } from "../models/store";
 import { useDispatch, useSelector } from "react-redux";
 import { UserRole } from "../models/user";
+import Image from "next/image";
 
 const pages: { [key: string]: string } = {
   home: "/",
@@ -160,12 +161,16 @@ export default function ResponsiveAppBar() {
               sx={{ width: "100%" }}
             >
               <Grid2>
-                <a href="/"><img
-                  src="/logo.jpg"
-                  alt="logo"
-                  hidden={router.pathname == "/" ? true : false}
-                  style={{ width: "160px", height: "auto", paddingTop: 5 }}
-                /></a>
+                <Link href="/">
+                  <Image
+                    src="/logo.jpg"
+                    alt="logo"
+                    hidden={router.pathname == "/" ? true : false}
+                    width={718}
+                    height={394}
+                    style={{ width: "160px", height: "auto", paddingTop: 5 }}
+                  />
+                </Link>
               </Grid2>
             </Grid2>
             <Box
@@ -182,7 +187,10 @@ export default function ResponsiveAppBar() {
                   ) {
                     return null;
                   }
-                  if (userState.user.role != UserRole.MANAGER && name == "reports") {
+                  if (
+                    userState.user.role != UserRole.MANAGER &&
+                    name == "reports"
+                  ) {
                     return null;
                   }
                   return (
