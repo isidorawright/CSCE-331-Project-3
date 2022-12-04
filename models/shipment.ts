@@ -1,11 +1,4 @@
-// import { Serializable } from "./serializable";
-
-import { UrlWithStringQuery } from "url";
-import database from "./database";
 import { IProduct, Product } from "./product";
-import { IMenuCategory, Menu, MenuCategory } from "./menu";
-import { responseEncoding } from "axios";
-import { api } from "./api";
 
 export interface IShipment {
   shipmentId: number;

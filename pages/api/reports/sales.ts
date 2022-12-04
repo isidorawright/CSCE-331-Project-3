@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import database from "../../../models/database";
 import _ from "lodash";
-import { Shipment } from "../../../models/shipment";
   
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {

@@ -160,12 +160,12 @@ export default function ResponsiveAppBar() {
               sx={{ width: "100%" }}
             >
               <Grid2>
-                <img
+                <a href="/"><img
                   src="/logo.jpg"
                   alt="logo"
                   hidden={router.pathname == "/" ? true : false}
                   style={{ width: "160px", height: "auto", paddingTop: 5 }}
-                />
+                /></a>
               </Grid2>
             </Grid2>
             <Box

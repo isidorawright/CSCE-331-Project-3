@@ -29,27 +29,22 @@ import { faCircleCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 //Inventory Table
 const InventoryColumns: GridColDef[] = [
-  { field: "productName", headerName: "Product Name", width: 170 },
+  { field: "productName", headerName: "Product Name", width: 200 },
   { field: "productType", headerName: "Product Type", width: 150 },
-  {
-    field: "quantityInStock",
-    headerName: "Quantity",
-    width: 75,
-    align: "right",
-    headerAlign: "right",
-  },
+  { field: "quantityInStock", headerName: "Quantity", width: 100, align: "right", headerAlign: "right" }
 ];
 
 //Menu Item to Price Table
 const MenuToPriceColumns: GridColDef[] = [
-  { field: "name", headerName: "Menu Item", width: 220 },
-  {
-    field: "price",
-    headerName: "Price",
-    width: 75,
-    align: "right",
-    headerAlign: "right",
-  },
+  { field: "name", headerName: "Menu Item", width: 200 },
+  { field: "price", headerName: "Price", width: 75, align: "right", headerAlign: "right" }
+];
+
+// Order Table
+const OrderColumns: GridColDef[] = [
+  { field: "orderDate", headerName: "Order Date", width: 125 },
+  { field: "orderTotal", headerName: "Order Total", width: 125, align: "right", headerAlign: "right"  },
+  { field: "totalItems", headerName: "Items in Order", width: 150, align: "right", headerAlign: "right" }
 ];
 
 //Shipment Table (collapsible)
@@ -151,6 +146,7 @@ export default function DataTables({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const inventory = useSelector((state: RootState) => state.manager.inventory);
   const menuItems = useSelector((state: RootState) => state.manager.menuItems);
+  const orders = useSelector((state: RootState) => state.manager.orders);
   const theme = useTheme<CustomTheme>();
   const router = useRouter();
   if (!user || user.role !== UserRole.MANAGER) {
@@ -192,6 +188,24 @@ export default function DataTables({
       <DataGrid
         rows={menuItems}
         columns={MenuToPriceColumns}
+        pageSize={100}
+        rowsPerPageOptions={[10]}
+        sx={{ height: "423px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
+      />
+
+      <br />
+      <h1
+        style={{
+          paddingLeft: 40,
+          paddingTop: 30,
+          color: theme.palette.primary.main,
+        }}
+      >
+        Orders
+      </h1>
+      <DataGrid
+        rows={orders}
+        columns={OrderColumns}
         pageSize={100}
         rowsPerPageOptions={[10]}
         sx={{ height: "423px", marginLeft: 5, marginRight: 5, marginTop: 1 }}

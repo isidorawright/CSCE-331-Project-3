@@ -2,7 +2,7 @@ import { fromMoneyString, Money, toMoneyString } from "../util/money";
 import { IOrderItem, OrderItem } from "./orderItem";
 
 export interface IOrder {
-  orderId: number;
+  id: number;
   orderDate: Date;
   orderTotal: string;
   subTotal: string;
@@ -10,6 +10,7 @@ export interface IOrder {
   // using the interface instead of the class is important
   // it enables serialization
   orderItems: IOrderItem[];
+  totalItems?: number;
 }
 
 export function Order(data?: IOrder, omit?: string[]): IOrder {
@@ -21,7 +22,7 @@ export function Order(data?: IOrder, omit?: string[]): IOrder {
     return order;
   }
   return {
-    orderId: -1,
+    id: -1,
     orderDate: new Date(),
     orderTotal: "$0.00",
     subTotal: "$0.00",
