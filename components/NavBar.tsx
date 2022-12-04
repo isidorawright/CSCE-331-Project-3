@@ -73,7 +73,7 @@ export function TemporaryDrawer(): JSX.Element {
               <ListItem key={name} disablePadding>
                 <ListItemButton>
                   <Link href={route}>
-                    <ListItemText primary={name} />
+                    <ListItemText primary={name.toUpperCase()} />
                   </Link>
                 </ListItemButton>
               </ListItem>
@@ -90,7 +90,7 @@ export function TemporaryDrawer(): JSX.Element {
                 }}
               >
                 <ListItemText
-                  primary={userState.loggedIn ? "logout" : "login"}
+                  primary={userState.loggedIn ? "LOGOUT" : "LOGIN"}
                 />
               </Link>
             </ListItemButton>
