@@ -11,8 +11,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../models/store";
 import { useRouter } from "next/router";
 
-//Reports
-
 //Excess Report
 const ExcessReportCols: GridColDef[] = [
   { field: "productName", headerName: "Product Name", width: 170 },
@@ -30,8 +28,8 @@ const SalesReportCols: GridColDef[] = [
   { field: "itemName", headerName: "Menu Item", width: 220 },
   {
     field: "itemSale",
-    headerName: "Sales ($)",
-    width: 75,
+    headerName: "Total Sales",
+    width: 125,
     align: "right",
     headerAlign: "right",
   },
@@ -46,7 +44,7 @@ const RestockReportCols: GridColDef[] = [
 //Pair Analysis 
 const PairAnalysisCols: GridColDef[] = [
   { field: "pairName", headerName: "Product Pairing", width: 350 }, 
-  { field: "pairFrequency", headerName: "Frequency", width: 100, align: "right", headerAlign: "right" }
+  { field: "pairFrequency", headerName: "Frequency", width: 125, align: "right", headerAlign: "right" }
 ];
 
 export default function DataTables({
@@ -70,25 +68,6 @@ export default function DataTables({
         <title>Spin &apos;N Stone | Manager Reports</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <h1
-        style={{
-          paddingLeft: 40,
-          paddingTop: 30,
-          color: theme.palette.primary.main,
-        }}
-      >
-        Excess Report
-      </h1>
-      <DataGrid
-        rows={excess}
-        columns={ExcessReportCols}
-        getRowId={(excess) => excess.productName}
-        pageSize={100}
-        rowsPerPageOptions={[Infinity]}
-        sx={{ height: "420px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
-      />
-
-      <br />
       <h1
         style={{
           paddingLeft: 40,
@@ -123,7 +102,7 @@ export default function DataTables({
         getRowId={(restock) => restock.restockName}
         pageSize={100}
         rowsPerPageOptions={[10]}
-        sx={{ height: "423px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
+        sx={{ height: "265px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
       />
 
       <br />
@@ -143,6 +122,25 @@ export default function DataTables({
         pageSize={100}
         rowsPerPageOptions={[10]}
         sx={{ height: "423px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
+      />
+
+      <br />
+      <h1
+        style={{
+          paddingLeft: 40,
+          paddingTop: 30,
+          color: theme.palette.primary.main,
+        }}
+      >
+        Excess Report
+      </h1>
+      <DataGrid
+        rows={excess}
+        columns={ExcessReportCols}
+        getRowId={(excess) => excess.productName}
+        pageSize={100}
+        rowsPerPageOptions={[Infinity]}
+        sx={{ height: "420px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
       />
 
       <br></br>

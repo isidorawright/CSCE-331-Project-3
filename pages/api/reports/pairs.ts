@@ -1,9 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import database from "../../../models/database";
-import _, { Dictionary, first, map } from "lodash";
-import { Shipment } from "../../../models/shipment";
-import { resourceLimits } from "worker_threads";
-import { useState } from "react";
+import _ from "lodash";
   
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
@@ -41,8 +38,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     }
                 }
             };
-            
-            res.status(200).json(pairs);
+
+            var sorted_pairs = Object.fromEntries(
+                Object.entries(pairs).sort(([,a],[,b]) => <number>b - <number>a)
+            );
+
+            res.status(200).json(sorted_pairs);
         }
         else {
             res.status(404).json({ message: "Not found" });

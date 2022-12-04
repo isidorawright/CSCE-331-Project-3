@@ -225,7 +225,7 @@ export default function DataTables({
       <TableContainer sx={{ marginBottom: 3 }}>
         <Table
           aria-label="collapsible table"
-          sx={{ height: "400px", width: "90%", margin: 5, marginTop: 2 }}
+          sx={{ height: "100px", width: "90%", margin: 5, marginTop: 2 }}
         >
           <TableHead>
             <TableRow>
