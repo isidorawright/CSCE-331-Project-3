@@ -9,10 +9,6 @@ import { IOrder, Order } from "./order";
 import { OrderItem } from "./orderItem";
 import { IProduct, Product } from "./product";
 import Router from "next/router";
-import { IExcess } from "./excess";
-import { ISales } from "./sales";
-import { IRestock } from "./restock";
-import { IPair } from "./pair";
 
 export interface drawerState {
   open: boolean;
@@ -171,7 +167,6 @@ export const userState = createModel<RootModel>()({
 
       if (store.getState().manager) {
         Router.push("/manager");
-        Router.push("/report");
       } else {
         Router.push("/order");
       }
@@ -206,28 +201,23 @@ export const userState = createModel<RootModel>()({
         // user not logged in, do nothing
       }
     },
+    async handleOAuth(response) {
+      let user = await api.user.verifyOauthToken(response.credential);
+      dispatch.user.updateUser(user);
+      Router.push("/order");
+    },
   }),
 });
 
 interface ManagerState {
   menuItems: IMenuItem[];
   inventory: IProduct[];
-  excess: IExcess[];
-  sales: ISales[];
-  restock: IRestock[];
-  pairs: IPair[];
-  orders: IOrder[];
 }
 
 export const managerState = createModel<RootModel>()({
   state: {
     inventory: [],
     menuItems: [],
-    orders: [],
-    excess: [],
-    sales: [],
-    pairs: [],
-    restock: [],
   } as ManagerState,
   reducers: {
     setInventory(state, payload: IProduct[]) {
@@ -242,36 +232,6 @@ export const managerState = createModel<RootModel>()({
         menuItems: payload,
       };
     },
-    setOrders(state, payload: IOrder[]) {
-      return {
-        ...state,
-        orders: payload,
-      };
-    },
-    setExcess(state, payload: IExcess[]) {
-      return {
-        ...state,
-        excess: payload
-      }
-    },
-    setSale(state, payload: ISales[]) {
-      return {
-        ...state,
-        sales: payload
-      }
-    },
-    setRestock(state, payload: IRestock[]) {
-      return {
-        ...state,
-        restock: payload
-      }
-    },
-    setPairs(state, payload: IPair[]) {
-      return {
-        ...state,
-        pairs: payload
-      }
-    }
   },
   effects: (dispatch) => ({
     async fetch() {
@@ -280,21 +240,6 @@ export const managerState = createModel<RootModel>()({
 
       const menuItems = await api.menu.getMenuItems();
       dispatch.manager.setMenuItems(menuItems);
-
-      const orders = await api.order.getAllOrders();
-      dispatch.manager.setOrders(orders);
-
-      const excessItems = await api.reports.excess("01-01-20");
-      dispatch.manager.setExcess(excessItems);
-
-      const salesItems = await api.reports.sales("08-04-22", "01-01-23");
-      dispatch.manager.setSale(salesItems);
-
-      const restockItems = await api.reports.restock();
-      dispatch.manager.setRestock(restockItems);
-
-      const pairsItems = await api.reports.pairs("08-04-22", "01-01-23");
-      dispatch.manager.setPairs(pairsItems);
     },
   }),
 });
@@ -330,9 +275,21 @@ if (typeof window !== "undefined") {
 export default store;
 
 function _initializeStore(store: Store) {
-  store.dispatch.menu.load();
-  store.dispatch.manager.fetch();
-  store.dispatch.user.fetch();
+  try {
+    Promise.all([
+      store.dispatch.menu.load(),
+      store.dispatch.manager.fetch(),
+      store.dispatch.user.fetch(),
+    ]);
+  } catch (e) {
+    console.log(e);
+  }
+
+  (window as any).google.accounts.id.initialize({
+    client_id:
+      "716768877261-d2d45v249dmtr6adj9edo3uran066k2k.apps.googleusercontent.com",
+    callback: store.dispatch.user.handleOAuth,
+  });
 }
 
 export const initializeStore = once(_initializeStore);

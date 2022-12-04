@@ -11,6 +11,7 @@ import Head from "next/head";
 import { useDispatch, useSelector } from "react-redux";
 import { Dispatch, RootState } from "../models/store";
 import { User, UserRole } from "../models/user";
+import { OauthLogin } from "../components/oauth";
 
 export default function SignIn() {
   const theme = useTheme<CustomTheme>();
@@ -147,6 +148,8 @@ export default function SignIn() {
             >
               {registering ? "Register" : "Sign In"}
             </Button>
+            <OauthLogin />
+
             <Box sx={{ mt: 2, textAlign: "center" }}>
               {error && (
                 <Typography color="error" variant="body2">
@@ -172,7 +175,7 @@ export default function SignIn() {
                     : "Don't have an account? Sign up"}
                 </Typography>
               </Grid>
-              <Grid item xs={12} sx={{ textAlign: "center" }}>
+              {/* <Grid item xs={12} sx={{ textAlign: "center" }}>
                 <Typography
                   variant="body2"
                   onClick={() => {
@@ -185,7 +188,7 @@ export default function SignIn() {
                 >
                   Forgot password?
                 </Typography>
-              </Grid>
+              </Grid> */}
             </Grid>
           </Box>
         </Box>
