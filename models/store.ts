@@ -130,6 +130,7 @@ interface UserState {
   loggedIn: boolean;
   user: IUser;
   manager: boolean;
+  error: string;
 }
 
 export const userState = createModel<RootModel>()({
@@ -137,6 +138,7 @@ export const userState = createModel<RootModel>()({
     user: User(),
     loggedIn: false,
     manager: false,
+    error: "",
   } as UserState,
   reducers: {
     replace(state, payload: UserState) {
@@ -150,6 +152,9 @@ export const userState = createModel<RootModel>()({
         manager: payload.role === UserRole.MANAGER,
       };
     },
+    setError(state, payload: string) {
+      return { ...state, error: payload };
+    },
   },
   effects: (dispatch) => ({
     async login(data: IUser) {
@@ -162,6 +167,7 @@ export const userState = createModel<RootModel>()({
           user,
           loggedIn: true,
           manager: data.role == UserRole.MANAGER ? true : false,
+          error: "",
         });
       });
 
@@ -177,6 +183,7 @@ export const userState = createModel<RootModel>()({
           user: User(),
           loggedIn: false,
           manager: false,
+          error: "",
         });
       });
       Router.push("/login");
@@ -188,6 +195,7 @@ export const userState = createModel<RootModel>()({
           user,
           loggedIn: true,
           manager: data.role == UserRole.MANAGER ? true : false,
+          error: "",
         });
       });
       Router.push("/order");
@@ -202,9 +210,13 @@ export const userState = createModel<RootModel>()({
       }
     },
     async handleOAuth(response) {
-      let user = await api.user.verifyOauthToken(response.credential);
-      dispatch.user.updateUser(user);
-      Router.push("/order");
+      try {
+        let user = await api.user.verifyOauthToken(response.credential);
+        dispatch.user.updateUser(user);
+        Router.push("/order");
+      } catch (e) {
+        dispatch.user.setError("Error logging in");
+      }
     },
   }),
 });

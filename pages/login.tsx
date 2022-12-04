@@ -15,33 +15,32 @@ import { OauthLogin } from "../components/oauth";
 
 export default function SignIn() {
   const theme = useTheme<CustomTheme>();
-  const router = useRouter();
 
-  const [error, setError] = React.useState("");
   const [registering, setRegistering] = React.useState(false);
   const userState = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<Dispatch>();
+  const error = userState.error;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError("");
+    dispatch.user.setError("");
     const data = new FormData(event.currentTarget);
 
     const user = data.get("user");
 
     if (registering) {
       if (data.get("password") !== data.get("password2")) {
-        setError("Passwords do not match");
+        dispatch.user.setError("Passwords do not match");
         return;
       }
 
       if (!user) {
-        setError("Username is required");
+        dispatch.user.setError("Username is required");
         return;
       }
 
       if (user.toString().length < 3) {
-        setError("Username must be at least 3 characters");
+        dispatch.user.setError("Username must be at least 3 characters");
         return;
       }
     }
@@ -69,7 +68,7 @@ export default function SignIn() {
         );
       }
     } catch (e: any) {
-      setError(e.message);
+      dispatch.user.setError(e.message);
     }
   };
 
@@ -163,7 +162,7 @@ export default function SignIn() {
                   variant="body2"
                   onClick={() => {
                     setRegistering(!registering);
-                    setError("");
+                    dispatch.user.setError("");
                   }}
                   sx={{
                     cursor: "pointer",
