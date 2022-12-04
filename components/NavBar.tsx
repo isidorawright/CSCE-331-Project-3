@@ -25,10 +25,10 @@ import { UserRole } from "../models/user";
 import Image from "next/image";
 
 const pages: { [key: string]: string } = {
-  home: "/",
-  order: "/order",
-  manage: "/manager",
-  reports: "/report",
+  Home: "/",
+  Order: "/order",
+  Manage: "/manager",
+  Reports: "/report",
 };
 
 export function TemporaryDrawer(): JSX.Element {
@@ -46,7 +46,11 @@ export function TemporaryDrawer(): JSX.Element {
       ) {
         return;
       }
-      dispatch.drawer.open();
+      if (open) {
+        dispatch.drawer.open();
+      } else {
+        dispatch.drawer.close();
+      }
     };
 
   const list = () => (
