@@ -145,6 +145,7 @@ export namespace api {
       const response = await fetch(`/api/shipment/`, { method: "GET" });
       return await response.json();
     }
+
     export async function createShipment(
       shipmentDate: String | Date,
       fulfilled: boolean
@@ -277,6 +278,20 @@ export namespace api {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(order),
+      });
+    }
+
+    export async function getAllOrders(): Promise<IOrder[]> {
+      const response = await fetch("/api/order");
+      const body = await response.json();
+
+      return body.map((order: any) => {
+        return {
+          id: order.order_id,
+          orderDate: order.order_date.substring(0, 10),
+          orderTotal: order.order_total,
+          totalItems: order.count
+        };
       });
     }
   }

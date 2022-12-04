@@ -210,12 +210,14 @@ interface ManagerState {
   menuItems: IMenuItem[];
   inventory: IProduct[];
   excess: IExcess[];
+  orders: IOrder[];
 }
 
 export const managerState = createModel<RootModel>()({
   state: {
     inventory: [],
     menuItems: [],
+    orders: [],
     excess: [],
     sales: [],
     pairs: [],
@@ -234,6 +236,12 @@ export const managerState = createModel<RootModel>()({
         menuItems: payload,
       };
     },
+    setOrders(state, payload: IOrder[]) {
+      return {
+        ...state,
+        orders: payload,
+      };
+    },
     setExcess(state, payload: IExcess[]) {
       return {
         ...state,
@@ -248,6 +256,9 @@ export const managerState = createModel<RootModel>()({
 
       const menuItems = await api.menu.getMenuItems();
       dispatch.manager.setMenuItems(menuItems);
+
+      const orders = await api.order.getAllOrders();
+      dispatch.manager.setOrders(orders);
 
       const excessItems = await api.reports.excess("01-01-20");
       dispatch.manager.setExcess(excessItems);
