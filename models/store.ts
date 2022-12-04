@@ -9,6 +9,11 @@ import { IOrder, Order } from "./order";
 import { OrderItem } from "./orderItem";
 import { IProduct, Product } from "./product";
 import Router from "next/router";
+import { IExcess } from "./excess";
+import { ISales } from "./sales";
+import { IRestock } from "./restock";
+import { IPair } from "./pair";
+import { IShipment } from "./shipment";
 
 export interface drawerState {
   open: boolean;
@@ -224,12 +229,24 @@ export const userState = createModel<RootModel>()({
 interface ManagerState {
   menuItems: IMenuItem[];
   inventory: IProduct[];
+  excess: IExcess[];
+  sales: ISales[];
+  restock: IRestock[];
+  pairs: IPair[];
+  orders: IOrder[];
+  shipments: IShipment[];
 }
 
 export const managerState = createModel<RootModel>()({
   state: {
     inventory: [],
     menuItems: [],
+    orders: [],
+    excess: [],
+    sales: [],
+    pairs: [],
+    restock: [],
+    shipments: [],
   } as ManagerState,
   reducers: {
     setInventory(state, payload: IProduct[]) {
@@ -244,6 +261,42 @@ export const managerState = createModel<RootModel>()({
         menuItems: payload,
       };
     },
+    setOrders(state, payload: IOrder[]) {
+      return {
+        ...state,
+        orders: payload,
+      };
+    },
+    setExcess(state, payload: IExcess[]) {
+      return {
+        ...state,
+        excess: payload,
+      };
+    },
+    setSale(state, payload: ISales[]) {
+      return {
+        ...state,
+        sales: payload,
+      };
+    },
+    setRestock(state, payload: IRestock[]) {
+      return {
+        ...state,
+        restock: payload,
+      };
+    },
+    setPairs(state, payload: IPair[]) {
+      return {
+        ...state,
+        pairs: payload,
+      };
+    },
+    setShipments(state, payload: IShipment[]) {
+      return {
+        ...state,
+        shipments: payload,
+      };
+    },
   },
   effects: (dispatch) => ({
     async fetch() {
@@ -252,6 +305,24 @@ export const managerState = createModel<RootModel>()({
 
       const menuItems = await api.menu.getMenuItems();
       dispatch.manager.setMenuItems(menuItems);
+
+      const orders = await api.order.getAllOrders();
+      dispatch.manager.setOrders(orders);
+
+      const excessItems = await api.reports.excess("01-01-20");
+      dispatch.manager.setExcess(excessItems);
+
+      const salesItems = await api.reports.sales("08-04-22", "01-01-23");
+      dispatch.manager.setSale(salesItems);
+
+      const restockItems = await api.reports.restock();
+      dispatch.manager.setRestock(restockItems);
+
+      const pairsItems = await api.reports.pairs("08-04-22", "01-01-23");
+      dispatch.manager.setPairs(pairsItems);
+
+      const shipments = await api.shipment.getAllShipments();
+      dispatch.manager.setShipments(shipments);
     },
   }),
 });
