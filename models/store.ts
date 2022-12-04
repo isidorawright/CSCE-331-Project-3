@@ -176,7 +176,7 @@ export const userState = createModel<RootModel>()({
         });
       });
 
-      if (store.getState().manager) {
+      if (store.getState().role == UserRole.MANAGER) {
         Router.push("/manager");
       } else {
         Router.push("/order");
@@ -218,7 +218,11 @@ export const userState = createModel<RootModel>()({
       try {
         let user = await api.user.verifyOauthToken(response.credential);
         dispatch.user.updateUser(user);
-        Router.push("/order");
+        if (user.role == UserRole.MANAGER) {
+          Router.push("/manager");
+        } else {
+          Router.push("/order");
+        }
       } catch (e) {
         dispatch.user.setError("Error logging in");
       }
