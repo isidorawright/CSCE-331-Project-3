@@ -44,7 +44,7 @@ export default withIronSessionApiRoute(
         // create user
         let id = await database
           .query(
-            `INSERT INTO "user" (username, password, role) VALUES ('${ticket.email}', '${ticket.sub}', 'user') RETURNING *`
+            `INSERT INTO "user" (username, password, role) VALUES ('${ticket.email}', '${ticket.sub}', 'Customer') RETURNING *`
           )
           .then((result) => result.rows[0].user_id);
 
