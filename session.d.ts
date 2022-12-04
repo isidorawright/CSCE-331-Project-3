@@ -4,5 +4,6 @@ import { IUser, UserRole } from "./models/user";
 declare module "iron-session" {
   interface IronSessionData {
     user?: IUser;
+    expiration?: number;
   }
 }

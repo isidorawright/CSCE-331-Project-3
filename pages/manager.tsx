@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, getDataGridUtilityClass, GridColDef } from "@mui/x-data-grid";
 import Head from "next/head";
 
 //imports for the collapsible table
@@ -26,6 +26,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../models/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { Shipment } from "../models/shipment";
 
 //Inventory Table
 const InventoryColumns: GridColDef[] = [
@@ -47,37 +48,7 @@ const OrderColumns: GridColDef[] = [
   { field: "totalItems", headerName: "Items in Order", width: 150, align: "right", headerAlign: "right" }
 ];
 
-//Shipment Table (collapsible)
-function createData(
-  shipmentId: number,
-  shipmentDate: string,
-  fulfilled: string
-) {
-  return {
-    shipmentId,
-    shipmentDate,
-    fulfilled,
-    history: [
-      {
-        productId: 1,
-        productName: "Pepperoni",
-        amount: 200,
-      },
-      {
-        productId: 2,
-        productName: "Cookie",
-        amount: 150,
-      },
-      {
-        productId: 3,
-        productName: "Pumpkin",
-        amount: 300,
-      },
-    ],
-  };
-}
-
-function Row(props: { row: ReturnType<typeof createData> }) {
+function Row(props: { row: ReturnType<typeof Shipment> }) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
   const checkmark = <FontAwesomeIcon icon={faCircleCheck} size="xl" />;
@@ -98,8 +69,8 @@ function Row(props: { row: ReturnType<typeof createData> }) {
         <TableCell component="th" scope="row">
           {row.shipmentId}
         </TableCell>
-        <TableCell align="right">{row.shipmentDate}</TableCell>
-        <TableCell>{row.fulfilled == "true" ? checkmark : xmark}</TableCell>
+        <TableCell align="right">{(row.shipmentDate).toString().substring(0, 10)}</TableCell>
+        <TableCell>{row.fulfilled? checkmark : xmark}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
@@ -119,10 +90,10 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.productId}>
-                      <TableCell>{historyRow.productName}</TableCell>
-                      <TableCell align="right">{historyRow.amount}</TableCell>
+                  {row.products.map((product) => (
+                    <TableRow key={product.id}>
+                      <TableCell>{product.productName}</TableCell>
+                      <TableCell align="right">{product.quantityInStock}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -135,18 +106,13 @@ function Row(props: { row: ReturnType<typeof createData> }) {
   );
 }
 
-const rows = [
-  createData(1, "2022-10-04", "true"),
-  createData(2, "2022-10-24", "false"),
-  createData(3, "2022-11-06", "false"),
-];
-
 export default function DataTables({
   user,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const inventory = useSelector((state: RootState) => state.manager.inventory);
   const menuItems = useSelector((state: RootState) => state.manager.menuItems);
   const orders = useSelector((state: RootState) => state.manager.orders);
+  const shipments = useSelector((state: RootState) => state.manager.shipments)
   const theme = useTheme<CustomTheme>();
   const router = useRouter();
   if (!user || user.role !== UserRole.MANAGER) {
@@ -225,7 +191,7 @@ export default function DataTables({
       <TableContainer sx={{ marginBottom: 3 }}>
         <Table
           aria-label="collapsible table"
-          sx={{ height: "200px", width: "94%", marginLeft: 5, marginRight: 5, marginTop: 1 }}
+          sx={{ height: "100px", width: "90%", margin: 5, marginTop: 2 }}
         >
           <TableHead>
             <TableRow>
@@ -236,8 +202,8 @@ export default function DataTables({
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <Row key={row.shipmentId} row={row} />
+            {shipments.map((shipments) => (
+              <Row key={shipments.shipmentId} row={shipments} />
             ))}
           </TableBody>
         </Table>

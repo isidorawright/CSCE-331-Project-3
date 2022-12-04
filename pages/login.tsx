@@ -11,36 +11,36 @@ import Head from "next/head";
 import { useDispatch, useSelector } from "react-redux";
 import { Dispatch, RootState } from "../models/store";
 import { User, UserRole } from "../models/user";
+import { OauthLogin } from "../components/oauth";
 
 export default function SignIn() {
   const theme = useTheme<CustomTheme>();
-  const router = useRouter();
 
-  const [error, setError] = React.useState("");
   const [registering, setRegistering] = React.useState(false);
   const userState = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<Dispatch>();
+  const error = userState.error;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError("");
+    dispatch.user.setError("");
     const data = new FormData(event.currentTarget);
 
-    const user = data.get("user");
+    const user = data.get("username");
 
     if (registering) {
       if (data.get("password") !== data.get("password2")) {
-        setError("Passwords do not match");
+        dispatch.user.setError("Passwords do not match");
         return;
       }
 
       if (!user) {
-        setError("Username is required");
+        dispatch.user.setError("Username is required");
         return;
       }
 
       if (user.toString().length < 3) {
-        setError("Username must be at least 3 characters");
+        dispatch.user.setError("Username must be at least 3 characters");
         return;
       }
     }
@@ -68,7 +68,7 @@ export default function SignIn() {
         );
       }
     } catch (e: any) {
-      setError(e.message);
+      dispatch.user.setError(e.message);
     }
   };
 
@@ -111,6 +111,9 @@ export default function SignIn() {
               label="Username"
               name="username"
               autoComplete="username"
+              inputProps={{
+                minLength: 3,
+              }}
               autoFocus
             />
             <TextField
@@ -122,6 +125,9 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              inputProps={{
+                minLength: 10,
+              }}
             />
             {registering && (
               <TextField
@@ -133,6 +139,9 @@ export default function SignIn() {
                 type="password"
                 id="password2"
                 autoComplete="current-password"
+                inputProps={{
+                  minLength: 10,
+                }}
               />
             )}
             {/* <FormControlLabel
@@ -147,6 +156,8 @@ export default function SignIn() {
             >
               {registering ? "Register" : "Sign In"}
             </Button>
+            <OauthLogin />
+
             <Box sx={{ mt: 2, textAlign: "center" }}>
               {error && (
                 <Typography color="error" variant="body2">
@@ -160,7 +171,7 @@ export default function SignIn() {
                   variant="body2"
                   onClick={() => {
                     setRegistering(!registering);
-                    setError("");
+                    dispatch.user.setError("");
                   }}
                   sx={{
                     cursor: "pointer",
@@ -172,7 +183,7 @@ export default function SignIn() {
                     : "Don't have an account? Sign up"}
                 </Typography>
               </Grid>
-              <Grid item xs={12} sx={{ textAlign: "center" }}>
+              {/* <Grid item xs={12} sx={{ textAlign: "center" }}>
                 <Typography
                   variant="body2"
                   onClick={() => {
@@ -185,7 +196,7 @@ export default function SignIn() {
                 >
                   Forgot password?
                 </Typography>
-              </Grid>
+              </Grid> */}
             </Grid>
           </Box>
         </Box>

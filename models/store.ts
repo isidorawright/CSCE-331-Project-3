@@ -13,6 +13,7 @@ import { IExcess } from "./excess";
 import { ISales } from "./sales";
 import { IRestock } from "./restock";
 import { IPair } from "./pair";
+import { IShipment } from "./shipment";
 
 export interface drawerState {
   open: boolean;
@@ -134,6 +135,7 @@ interface UserState {
   loggedIn: boolean;
   user: IUser;
   manager: boolean;
+  error: string;
 }
 
 export const userState = createModel<RootModel>()({
@@ -141,6 +143,7 @@ export const userState = createModel<RootModel>()({
     user: User(),
     loggedIn: false,
     manager: false,
+    error: "",
   } as UserState,
   reducers: {
     replace(state, payload: UserState) {
@@ -154,6 +157,9 @@ export const userState = createModel<RootModel>()({
         manager: payload.role === UserRole.MANAGER,
       };
     },
+    setError(state, payload: string) {
+      return { ...state, error: payload };
+    },
   },
   effects: (dispatch) => ({
     async login(data: IUser) {
@@ -166,12 +172,12 @@ export const userState = createModel<RootModel>()({
           user,
           loggedIn: true,
           manager: data.role == UserRole.MANAGER ? true : false,
+          error: "",
         });
       });
 
       if (store.getState().manager) {
         Router.push("/manager");
-        Router.push("/report");
       } else {
         Router.push("/order");
       }
@@ -182,6 +188,7 @@ export const userState = createModel<RootModel>()({
           user: User(),
           loggedIn: false,
           manager: false,
+          error: "",
         });
       });
       Router.push("/login");
@@ -193,6 +200,7 @@ export const userState = createModel<RootModel>()({
           user,
           loggedIn: true,
           manager: data.role == UserRole.MANAGER ? true : false,
+          error: "",
         });
       });
       Router.push("/order");
@@ -206,6 +214,15 @@ export const userState = createModel<RootModel>()({
         // user not logged in, do nothing
       }
     },
+    async handleOAuth(response) {
+      try {
+        let user = await api.user.verifyOauthToken(response.credential);
+        dispatch.user.updateUser(user);
+        Router.push("/order");
+      } catch (e) {
+        dispatch.user.setError("Error logging in");
+      }
+    },
   }),
 });
 
@@ -217,6 +234,7 @@ interface ManagerState {
   restock: IRestock[];
   pairs: IPair[];
   orders: IOrder[];
+  shipments: IShipment[];
 }
 
 export const managerState = createModel<RootModel>()({
@@ -228,6 +246,7 @@ export const managerState = createModel<RootModel>()({
     sales: [],
     pairs: [],
     restock: [],
+    shipments: [],
   } as ManagerState,
   reducers: {
     setInventory(state, payload: IProduct[]) {
@@ -251,27 +270,33 @@ export const managerState = createModel<RootModel>()({
     setExcess(state, payload: IExcess[]) {
       return {
         ...state,
-        excess: payload
-      }
+        excess: payload,
+      };
     },
     setSale(state, payload: ISales[]) {
       return {
         ...state,
-        sales: payload
-      }
+        sales: payload,
+      };
     },
     setRestock(state, payload: IRestock[]) {
       return {
         ...state,
-        restock: payload
-      }
+        restock: payload,
+      };
     },
     setPairs(state, payload: IPair[]) {
       return {
         ...state,
-        pairs: payload
-      }
-    }
+        pairs: payload,
+      };
+    },
+    setShipments(state, payload: IShipment[]) {
+      return {
+        ...state,
+        shipments: payload,
+      };
+    },
   },
   effects: (dispatch) => ({
     async fetch() {
@@ -295,6 +320,9 @@ export const managerState = createModel<RootModel>()({
 
       const pairsItems = await api.reports.pairs("08-04-22", "01-01-23");
       dispatch.manager.setPairs(pairsItems);
+
+      const shipments = await api.shipment.getAllShipments();
+      dispatch.manager.setShipments(shipments);
     },
   }),
 });
@@ -330,9 +358,25 @@ if (typeof window !== "undefined") {
 export default store;
 
 function _initializeStore(store: Store) {
-  store.dispatch.menu.load();
-  store.dispatch.manager.fetch();
-  store.dispatch.user.fetch();
+  try {
+    Promise.all([
+      store.dispatch.menu.load(),
+      store.dispatch.manager.fetch(),
+      store.dispatch.user.fetch(),
+    ]);
+  } catch (e) {
+    console.log(e);
+  }
+
+  (window as any).google.accounts.id.initialize({
+    client_id:
+      "716768877261-d2d45v249dmtr6adj9edo3uran066k2k.apps.googleusercontent.com",
+    callback: store.dispatch.user.handleOAuth,
+  });
+
+  if (!store.getState().user.loggedIn) {
+    (window as any).google.accounts.id.prompt();
+  }
 }
 
 export const initializeStore = once(_initializeStore);

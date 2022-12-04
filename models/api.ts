@@ -87,6 +87,13 @@ export namespace api {
   }*/
 
   export namespace user {
+    export async function verifyOauthToken(credential: string): Promise<IUser> {
+      const response = await fetch(
+        "/api/user/verifyOauthToken?credential=" + credential
+      );
+      const json = await response.json();
+      return User(json);
+    }
     export async function login(
       username: string,
       password: string
@@ -235,32 +242,28 @@ export namespace api {
         { method: "GET" }
       );
       //return response.json();
-      
-      const body = await response.json() as {[key: string]: string};
 
-      return(
-        Object.entries(body).map(([itemName, itemSale]) => {
-          return Sale({
-            itemName,
-            itemSale
-          })
-        })
-      )
+      const body = (await response.json()) as { [key: string]: string };
+
+      return Object.entries(body).map(([itemName, itemSale]) => {
+        return Sale({
+          itemName,
+          itemSale,
+        });
+      });
     }
     // Returns a list of products whose inventory has fallen below the restock threshold
     export async function restock(): Promise<IRestock[]> {
       const response = await fetch(`/api/reports/restock`, { method: "GET" });
 
-      const body = await response.json() as {[key: string]: string};
+      const body = (await response.json()) as { [key: string]: string };
 
-      return(
-        Object.entries(body).map(([restockName, amount]) => {
-          return Restock({
-            restockName,
-            amount
-          })
-        })
-      )
+      return Object.entries(body).map(([restockName, amount]) => {
+        return Restock({
+          restockName,
+          amount,
+        });
+      });
     }
     // Returns list of products and percent of their invetory sold for products which have sold less than 10% of thier stock up to a given date
     export async function excess(date: String | Date): Promise<IExcess[]> {
@@ -268,34 +271,33 @@ export namespace api {
         method: "GET",
       });
 
-      const body = await response.json() as {[key: string]: string};
+      const body = (await response.json()) as { [key: string]: string };
 
-      return(
-        Object.entries(body).map(([productName, percentSold]) => {
-          return Excess({
-            productName,
-            percentSold
-          })
-        })
-      )
+      return Object.entries(body).map(([productName, percentSold]) => {
+        return Excess({
+          productName,
+          percentSold,
+        });
+      });
     }
     // Returns a list of all menu items which commonly sold together between startDate and endDate, along with the frequency of these combinations
-    export async function pairs(startDate: String | Date, endDate: String | Date): Promise<IPair[]> {
+    export async function pairs(
+      startDate: String | Date,
+      endDate: String | Date
+    ): Promise<IPair[]> {
       const response = await fetch(
         `/api/reports/pairs/?startDate=${startDate}&endDate=${endDate}`,
         { method: "GET" }
       );
 
-      const body = await response.json() as {[key: string]: string};
+      const body = (await response.json()) as { [key: string]: string };
 
-      return(
-        Object.entries(body).map(([pairName, pairFrequency]) => {
-          return Pair({
-            pairName,
-            pairFrequency
-          })
-        })
-      )
+      return Object.entries(body).map(([pairName, pairFrequency]) => {
+        return Pair({
+          pairName,
+          pairFrequency,
+        });
+      });
     }
   }
 
@@ -319,7 +321,7 @@ export namespace api {
           id: order.order_id,
           orderDate: order.order_date.substring(0, 10),
           orderTotal: order.order_total,
-          totalItems: order.count
+          totalItems: order.count,
         };
       });
     }

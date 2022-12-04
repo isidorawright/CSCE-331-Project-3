@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import database from "../../../models/database";
 import _ from "lodash";
-import { Shipment } from "../../../models/shipment";
   
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
@@ -27,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 //excess.push(product.product_name);
                 if (product.count < 500 - (500 * 0.1)) {
                     // Include product name and percent sold in output
-                    excess[product.product_name] =  product.count / 500 + "%";
+                    excess[product.product_name] =  product.count / 5 + "%";
                 }
             });
 
