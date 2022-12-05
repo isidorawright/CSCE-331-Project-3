@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import React from "react";
+import React, {useState} from "react";
 import { IMenu, IMenuCategory, Menu, MenuCategory } from "../models/menu";
 import {
   Button,
@@ -10,6 +10,7 @@ import {
   Paper,
   Typography,
   useTheme,
+  Stack
 } from "@mui/material";
 import LocalPizzaIcon from "@mui/icons-material/LocalPizza";
 import _ from "lodash";
@@ -19,6 +20,8 @@ import { IOrder } from "../models/order";
 import { Money } from "../util/money";
 import { useDispatch, useSelector } from "react-redux";
 import Head from "next/head";
+import {ModalType} from '../models/store';
+
 
 function MenuCategoryTile({
   category,
@@ -65,6 +68,7 @@ function MenuCategories(): JSX.Element {
       <Grid container spacing={2}>
         {menu.categories
           .filter((category) => category.menuItems.length)
+          .reverse()
           .map((category, index) => (
             <Grid item xs={12} sm={4} md={3} lg={2} key={index}>
               <Paper
@@ -133,8 +137,13 @@ function MenuItems(): JSX.Element {
   );
 }
 
+interface ReceiptState {
+  [key: number]: boolean | undefined
+}
+
 function Receipt({ order }: { order: IOrder }): JSX.Element {
   const theme = useTheme<CustomTheme>();
+  const dispatch = useDispatch<Dispatch>();
 
   return (
     <Paper sx={{ padding: theme.spacing(3), width: "100%" }}>
@@ -153,9 +162,25 @@ function Receipt({ order }: { order: IOrder }): JSX.Element {
             spacing={2}
             alignItems="center"
             wrap="nowrap"
-            key={index}
+            key={item.id}
           >
-            <Grid container item direction="column">
+            <Grid
+              container item direction="column"
+              sx = {{
+                color: item.selected ? theme.palette.primary.main : "",
+                cursor: "pointer",
+                ":hover": {
+                  color: theme.palette.primary.main
+                },
+                padding: theme.spacing(1),
+              }}
+              onClick={
+                () => {
+                  dispatch.order.toggleSelectOrderItem(item.id)
+                }
+              }
+            
+            >
               <Grid container item>
                 <Grid item flexGrow={1}>
                   <Typography variant="subtitle1" fontWeight="bold">
@@ -164,11 +189,22 @@ function Receipt({ order }: { order: IOrder }): JSX.Element {
                 </Grid>
 
                 <Grid item>
-                  <Typography variant="subtitle1" fontWeight="bold">
-                    {Money.of(item.menuItem.price)
-                      .mul(item.quantity)
-                      .toString()}
-                  </Typography>
+                  <Stack>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      {
+                        Money.of(item.menuItem.price)
+                          .mul(item.quantity)
+                          .toString()
+                      }
+                    </Typography>
+                    {
+                      item.quantity > 1 ? (
+                        <Typography variant="subtitle1" fontWeight="bold">
+                          {`x ${item.quantity}`}
+                        </Typography>
+                      ): null
+                    }
+                  </Stack>
                 </Grid>
               </Grid>
               {item.products.length ? (
@@ -199,7 +235,7 @@ function Receipt({ order }: { order: IOrder }): JSX.Element {
                 Subtotal:
               </Typography>
             </Box>
-            <Box gridColumn="span 6">
+            <Box gridColumn="span 6" sx={{textAlign: "right"}}>
               <Typography variant="subtitle1" fontWeight="bold">
                 {order.subTotal}
               </Typography>
@@ -210,7 +246,7 @@ function Receipt({ order }: { order: IOrder }): JSX.Element {
                 Tax:
               </Typography>
             </Box>
-            <Box gridColumn="span 6">
+            <Box gridColumn="span 6" sx={{textAlign: "right"}}>
               <Typography variant="subtitle1" fontWeight="bold">
                 {order.tax}
               </Typography>
@@ -221,7 +257,7 @@ function Receipt({ order }: { order: IOrder }): JSX.Element {
                 Total:
               </Typography>
             </Box>
-            <Box gridColumn="span 6">
+            <Box gridColumn="span 6" sx={{textAlign: "right"}}>
               <Typography variant="subtitle1" fontWeight="bold">
                 {order.orderTotal}
               </Typography>
@@ -255,9 +291,10 @@ function ConfigurePizza(): JSX.Element {
 
   return (
     <Paper sx={{ padding: theme.spacing(3), height: "100%" }}>
-      <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: "12px" }}>
+      <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: "12px", display: 'inline-block' }}>
         Select Crust
       </Typography>
+      <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: "12px", marginTop: "24px", display: 'inline-block', color: theme.palette.error.main }}>&nbsp;*</Typography>
       <Grid container spacing={2}>
         {menuItem.products
           .filter(function (product) {
@@ -278,13 +315,22 @@ function ConfigurePizza(): JSX.Element {
                   cursor: "pointer"
                 }}
                 onClick={() => {
+                  let Chosen = menuItem.products.filter(function (product) {
+                    return (product.productTypeId == 7 && product.selected);
+                  })
                   if (
-                    menuItem.products.filter(function (product) {
-                      return (product.productTypeId == 7 && product.selected);
-                    }).length < 1 ||
+                    Chosen.length < 1 ||
                     product.selected
                   ) {
-                    dispatch.menu.toggleMenuItemProduct(product);
+                    if (product != Chosen[0]) {
+                      dispatch.menu.toggleMenuItemProduct(product);
+                    }
+                  }
+                  else {
+                    if (product != Chosen[0]) {
+                      dispatch.menu.toggleMenuItemProduct(product);
+                      dispatch.menu.toggleMenuItemProduct(Chosen[0]);
+                    }
                   }
                 }}
               >
@@ -323,13 +369,18 @@ function ConfigurePizza(): JSX.Element {
                   cursor: "pointer"
                 }}
                 onClick={() => {
+                  let Chosen = menuItem.products.filter(function (product) {
+                    return (product.productTypeId == 3 && product.selected);
+                  })
                   if (
-                    menuItem.products.filter(function (product) {
-                      return (product.productTypeId == 3 && product.selected);
-                    }).length < 1 ||
+                    Chosen.length < 1 ||
                     product.selected
                   ) {
                     dispatch.menu.toggleMenuItemProduct(product);
+                  }
+                  else {
+                    dispatch.menu.toggleMenuItemProduct(product);
+                    dispatch.menu.toggleMenuItemProduct(Chosen[0])
                   }
                 }}
               >
@@ -368,13 +419,17 @@ function ConfigurePizza(): JSX.Element {
                   cursor: "pointer"
                 }}
                 onClick={() => {
+                  let Chosen = menuItem.products.filter(function (product) {
+                    return (product.productTypeId == 4 && product.selected);
+                  })
                   if (
-                    menuItem.products.filter(function (product) {
-                      return (product.productTypeId == 4 && product.selected);
-                    }).length < 1 ||
+                    Chosen.length < 1 ||
                     product.selected
                   ) {
                     dispatch.menu.toggleMenuItemProduct(product);
+                  } else {
+                    dispatch.menu.toggleMenuItemProduct(product);
+                    dispatch.menu.toggleMenuItemProduct(Chosen[0])
                   }
                 }}
               >
@@ -388,7 +443,12 @@ function ConfigurePizza(): JSX.Element {
 
       <>
         {maxToppings != 0 ? 
-        <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: "12px", marginTop: "24px" }}>Select Toppings</Typography> : 
+        (
+          <>
+            <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: "12px", marginTop: "24px", display: 'inline-block' }}>Select Toppings</Typography>
+            <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: "12px", marginTop: "24px", display: 'inline-block', color: theme.palette.error.main }}>&nbsp;*</Typography>
+          </>
+        ) : 
         <Typography sx={{ marginBottom: "12px", marginTop: "24px" }}></Typography>}
       </>
       <Grid container spacing={2}>
@@ -411,13 +471,33 @@ function ConfigurePizza(): JSX.Element {
                   cursor: "pointer",
                 }}
                 onClick={() => {
-                  if (
-                    menuItem.products.filter(function (product) {
-                      return ((product.productTypeId == 5 || product.productTypeId == 6) && product.selected);
-                    }).length < maxToppings ||
-                    product.selected
-                  ) {
-                    dispatch.menu.toggleMenuItemProduct(product);
+                  let Chosen = menuItem.products.filter(function (product) {
+                    return ((product.productTypeId == 5 || product.productTypeId == 6) && product.selected);
+                  })
+                  if(maxToppings != 1) {
+                    if (
+                      Chosen.length < maxToppings ||
+                      product.selected
+                    ) {
+                      dispatch.menu.toggleMenuItemProduct(product);
+                    } else {
+                      // TODO: display snackbar error
+                      dispatch.notifications.setMessage({
+                        message: "Can only have up to 4 topppings on 2-4 topping pizza",
+                        severity: 'warning'
+                      });
+                      dispatch.notifications.setOpen(true);
+                    }
+                  } else {
+                    if (
+                      Chosen.length < 1 ||
+                      product.selected
+                    ) {
+                      dispatch.menu.toggleMenuItemProduct(product);
+                    } else {
+                      dispatch.menu.toggleMenuItemProduct(product);
+                      dispatch.menu.toggleMenuItemProduct(Chosen[0])
+                    }
                   }
                 }}
               >
@@ -464,6 +544,10 @@ function ConfigurePizza(): JSX.Element {
             </Grid>
           ))}
       </Grid>
+      <>
+        <Typography sx={{display: 'inline-block', color: theme.palette.error.main}}>*</Typography>
+        <Typography sx={{display: 'inline-block'}}>&nbsp;Required</Typography>
+      </>
     </Paper>
   );
 }
@@ -509,6 +593,11 @@ export function CustomerOrder() {
                 variant="contained"
                 color="primary"
                 onClick={() => {
+                  dispatch.notifications.setMessage({
+                    message: "Item Added",
+                    severity: 'success'
+                  });
+                  dispatch.notifications.setOpen(true);
                   dispatch.order.addItem(activeItem);
                   dispatch.menu.reset();
                 }}
@@ -517,6 +606,51 @@ export function CustomerOrder() {
               </Button>
             </Grid>
           ) : null}
+          {
+            order.orderItems.length ? (
+              <Grid item>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  onClick={() => {
+                    if(order.orderItems.some(item=>item.selected)) {
+                      dispatch.order.removeItems();
+                    } else {
+                      dispatch.notifications.setMessage({
+                        message: "Must select at least 1 item",
+                        severity: 'warning'
+                      });
+                      dispatch.notifications.setOpen(true);
+                    }
+                  }}
+                >
+                  Delete
+                </Button>
+              </Grid>
+            ) : null
+          } 
+          {order.orderItems.length ? (
+            <Grid item>
+              <Button
+                variant="contained"
+                color="primary"
+                fullWidth
+                onClick={() => {
+                  dispatch.notifications.setMessage({
+                    message: "Order Cleared",
+                    severity: 'success'
+                  });
+                  dispatch.notifications.setOpen(true);
+                  dispatch.order.reset();
+                  dispatch.menu.reset();
+                }}
+              >
+                Clear
+              </Button>
+            </Grid>
+          ) : null}
+          
           {order.orderItems.length ? (
             <Grid item>
               <Button
@@ -525,6 +659,9 @@ export function CustomerOrder() {
                 fullWidth
                 onClick={() => {
                   dispatch.order.submit(order);
+                  // debugger;
+                  // dispatch.modal.setType(ModalType.checkout);
+                  // dispatch.modal.setOpen(true);
                 }}
               >
                 Checkout

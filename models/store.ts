@@ -14,6 +14,7 @@ import { ISales } from "./sales";
 import { IRestock } from "./restock";
 import { IPair } from "./pair";
 import { IShipment } from "./shipment";
+import { AlertColor } from "@mui/material";
 
 export interface drawerState {
   open: boolean;
@@ -115,18 +116,46 @@ export const orderState = createModel<RootModel>()({
           products: menuItem.products
             .filter((p) => p.selected)
             .map((p) => Product(p)),
-          id: -1,
+          id: new Date().getTime(),
         })
       );
 
       return state;
     },
+    toggleSelectOrderItem(state, id: number) {
+      return {
+        ...state,
+        orderItems: state.orderItems.map(
+          item => {
+            item.selected =
+              item.id == id
+              ? !item.selected
+              : item.selected;
+
+            return item;
+          }
+        )
+      };
+    },
+    removeItems(state) {
+      return {
+        ...state,
+        orderItems: state.orderItems.filter(
+          item => !item.selected
+        )
+      }
+    }
   },
   effects: (dispatch) => ({
     async submit(order: IOrder) {
       await api.order.submit(order);
       dispatch.menu.reset();
       dispatch.order.reset();
+      dispatch.notifications.setMessage({
+        message: "Order Placed",
+        severity: 'success'
+      });
+      dispatch.notifications.setOpen(true);
     },
   }),
 });
@@ -230,6 +259,35 @@ export const userState = createModel<RootModel>()({
   }),
 });
 
+interface NotificationState {
+  open: boolean;
+  message: string;
+  severity: AlertColor;
+}
+
+export const notificationState = createModel<RootModel>()({
+  state: {
+    open: false,
+    message: "",
+    severity: "info"
+  } as NotificationState,
+  reducers: {
+    setOpen(state, payload: boolean) {
+      return {
+        ...state,
+        open: payload
+      };
+    },
+    setMessage(state, payload) {
+      return {
+        ...state,
+        message: payload.message,
+        severity: payload.severity
+      }
+    }
+  }
+})
+
 interface ManagerState {
   menuItems: IMenuItem[];
   inventory: IProduct[];
@@ -331,12 +389,45 @@ export const managerState = createModel<RootModel>()({
   }),
 });
 
+export enum ModalType {
+  checkout = "checkout"
+}
+
+export interface ModalState {
+  type: ModalType,
+  open: boolean
+}
+
+export const modalState = createModel<RootModel>()({
+  state: {
+    type: ModalType.checkout,
+    open: false
+  } as ModalState,
+  reducers: {
+    setType(state, type: ModalType) {
+      return {
+        ...state,
+        type
+      }
+    },
+    setOpen(state, open: boolean) {
+      return {
+        ...state,
+        open
+      }
+    }
+  }
+})
+
+
 export interface RootModel extends Models<RootModel> {
   drawer: typeof drawerState;
   menu: typeof menuState;
   order: typeof orderState;
   user: typeof userState;
   manager: typeof managerState;
+  notifications: typeof notificationState;
+  modal: typeof modalState;
 }
 
 export const models: RootModel = {
@@ -345,6 +436,8 @@ export const models: RootModel = {
   order: orderState,
   user: userState,
   manager: managerState,
+  notifications: notificationState,
+  modal: modalState,
 };
 
 export const store = init({
