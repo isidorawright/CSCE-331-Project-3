@@ -49,6 +49,11 @@ const InventoryColumns: GridColDef[] = [
   },
 ];
 
+const processRowUpdateInventory = (newRow : GridRowModel) => {
+  api.product.updateQuantity(newRow.productName, newRow.quantityInStock);
+  return newRow;
+}
+
 //Menu Item to Price Table
 const MenuToPriceColumns: GridColDef[] = [
   { field: "name", headerName: "Menu Item", width: 200 },
@@ -63,8 +68,9 @@ const MenuToPriceColumns: GridColDef[] = [
 ];
 
 
-  const processRowUpdate = (newRow : GridRowModel) => {
+  const processRowUpdateMenu = (newRow : GridRowModel) => {
     api.menu.updateMenuItemPrice(newRow.name, newRow.price);
+    return newRow;
   }
 
 // Order Table
@@ -176,6 +182,8 @@ export default function DataTables({
       <DataGrid
         rows={inventory}
         columns={InventoryColumns}
+        processRowUpdate={processRowUpdateInventory}
+        experimentalFeatures={{ newEditingApi: true }}
         pageSize={100}
         rowsPerPageOptions={[Infinity]}
         sx={{ height: "420px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
@@ -194,7 +202,7 @@ export default function DataTables({
       <DataGrid
         rows={menuItems}
         columns={MenuToPriceColumns}
-        processRowUpdate={processRowUpdate}
+        processRowUpdate={processRowUpdateMenu}
         experimentalFeatures={{ newEditingApi: true }}
         pageSize={100}
         rowsPerPageOptions={[10]}

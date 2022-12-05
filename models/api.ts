@@ -54,6 +54,9 @@ export namespace api {
         };
       });
     }
+    export async function updateQuantity(name: String, quantity: number) {
+      const response = await fetch(`/api/product/?quantity=${quantity}&productName=${name}`, {method: "PUT"});
+    }
   }
   export namespace menu {
     export async function getMenuItems(): Promise<IMenuItem[]> {

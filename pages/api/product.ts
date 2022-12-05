@@ -32,6 +32,13 @@ export default async function handler(
       return;
   }
 
+  else if (req.method == "PUT") {
+    const response = await database.query(
+      `update product set quantity_in_stock = ${req.query.quantity} where product_name = '${req.query.productName}'`
+    )
+    res.status(200).send(response.rows);
+  }
+
   else {
     res.status(405).end();
     return;
