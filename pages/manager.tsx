@@ -1,8 +1,10 @@
 import * as React from "react";
+import {useEffect, useState} from 'react';
 import {
   DataGrid,
   getDataGridUtilityClass,
   GridColDef,
+  GridRowModel,
 } from "@mui/x-data-grid";
 import Head from "next/head";
 
@@ -31,6 +33,7 @@ import { RootState } from "../models/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Shipment } from "../models/shipment";
+import { api } from "../models/api";
 
 //Inventory Table
 const InventoryColumns: GridColDef[] = [
@@ -42,6 +45,7 @@ const InventoryColumns: GridColDef[] = [
     width: 100,
     align: "right",
     headerAlign: "right",
+    editable: true,
   },
 ];
 
@@ -54,8 +58,14 @@ const MenuToPriceColumns: GridColDef[] = [
     width: 75,
     align: "right",
     headerAlign: "right",
+    editable: true,
   },
 ];
+
+
+  const processRowUpdate = (newRow : GridRowModel) => {
+    api.menu.updateMenuItemPrice(newRow.name, newRow.price);
+  }
 
 // Order Table
 const OrderColumns: GridColDef[] = [
@@ -184,6 +194,8 @@ export default function DataTables({
       <DataGrid
         rows={menuItems}
         columns={MenuToPriceColumns}
+        processRowUpdate={processRowUpdate}
+        experimentalFeatures={{ newEditingApi: true }}
         pageSize={100}
         rowsPerPageOptions={[10]}
         sx={{ height: "423px", marginLeft: 5, marginRight: 5, marginTop: 1 }}

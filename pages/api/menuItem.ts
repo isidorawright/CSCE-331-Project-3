@@ -14,7 +14,23 @@ export default async function handler(
       res.status(200).send(response.rows);
       return;
   }
-
+  else if (req.method == "POST") {
+    const response = await database.query(
+      `insert into menu_item (item_name, menu_item_price, menu_item_category_id, configurable)
+      values ('${req.query.itemName}', '${req.query.itemPrice}', 3, false)`
+    )
+    
+    res.status(200).send(response.rows);
+    return;
+  }
+  else if (req.method == "PUT") {
+    const response = await database.query(
+      `update menu_item set menu_item_price = '${req.query.itemPrice}' where item_name = '${req.query.itemName}'`
+    )
+    
+    res.status(200).send(response.rows);
+    return;
+  }
   else {
     res.status(405).end();
     return;

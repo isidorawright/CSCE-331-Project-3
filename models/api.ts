@@ -71,6 +71,27 @@ export namespace api {
         };
       });
     }
+    export async function createMenuItem(
+      name: String,
+      price: String
+    ) {
+      const response = await fetch(
+        `/api/menuItem/?itemName=${name}&itemPrice=${price}`,
+        { method: "POST" }
+      );
+      return await response.json();
+    }
+
+    export async function updateMenuItemPrice(
+      name: String,
+      price: String
+    ) {
+      const response = await fetch(
+        `/api/menuItem/?itemName=${name}&itemPrice=${price}`,
+        { method: "PUT" }
+      );
+      return await response.json();
+    }
   }
   export namespace category {
     export async function find(id: number): Promise<IMenuCategory> {
