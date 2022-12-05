@@ -32,7 +32,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../models/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { Shipment } from "../models/shipment";
+import { IShipment, Shipment } from "../models/shipment";
 import { api } from "../models/api";
 
 //Inventory Table
@@ -95,8 +95,16 @@ const OrderColumns: GridColDef[] = [
 function Row(props: { row: ReturnType<typeof Shipment> }) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
-  const checkmark = <FontAwesomeIcon icon={faCircleCheck} size="xl" />;
-  const xmark = <FontAwesomeIcon icon={faXmark} size="xl" />;
+  const [fulfilled, setFulfilled] = React.useState(row.fulfilled);
+  const checkmark = <FontAwesomeIcon icon={faCircleCheck} size="m" />;
+  const xmark = <FontAwesomeIcon icon={faXmark} size="m" />; 
+  
+
+  let fulfill = (row : IShipment) => {
+    api.shipment.updateShipment(row.shipmentId, row.shipmentDate, !row.fulfilled);
+    row.fulfilled = !row.fulfilled;
+    setFulfilled(row.fulfilled);
+  }
 
   return (
     <React.Fragment>
@@ -116,7 +124,14 @@ function Row(props: { row: ReturnType<typeof Shipment> }) {
         <TableCell align="right">
           {row.shipmentDate.toString().substring(0, 10)}
         </TableCell>
-        <TableCell>{row.fulfilled ? checkmark : xmark}</TableCell>
+        <TableCell>
+          <IconButton 
+            aria-label="fulfilled indicator"
+            onClick={() => fulfill(row)}
+          >
+            {row.fulfilled ? checkmark : xmark} 
+          </IconButton>
+        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
@@ -139,7 +154,7 @@ function Row(props: { row: ReturnType<typeof Shipment> }) {
                   {row.products.map((product) => (
                     <TableRow key={product.id}>
                       <TableCell>{product.productName}</TableCell>
-                      <TableCell align="right">
+                      <TableCell id="shipment_quanity" align="right" contenteditable="true">
                         {product.quantityInStock}
                       </TableCell>
                     </TableRow>
