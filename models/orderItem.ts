@@ -11,6 +11,7 @@ export interface IOrderItem {
 
   quantity: number;
   isDrink: boolean;
+  selected?: boolean;
 }
 
 export function OrderItem(data?: IOrderItem, omit?: string[]): IOrderItem {
@@ -32,13 +33,14 @@ export function OrderItem(data?: IOrderItem, omit?: string[]): IOrderItem {
     menuItem: MenuItem(),
     quantity: 1,
     isDrink: false,
+    selected: false
   };
 }
 
 export namespace OrderItem {
   export function equals(order: IOrderItem, other: IOrderItem): boolean {
     return (
-      order.id === other.id &&
+      // order.id === other.id &&
       order.orderId === other.orderId &&
       order.menuItemId === other.menuItemId &&
       order.quantity === other.quantity &&
