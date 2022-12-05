@@ -11,6 +11,7 @@ import { initializeStore, store } from "../models/store";
 import { Provider } from "react-redux";
 import { once } from "lodash";
 import { Notifications } from "../components/Notifications";
+import { GlobalModal } from "../components/GobalModal";
 
 // Client-side cache shared for the whole user session in the browser.
 
@@ -50,6 +51,7 @@ export default function MyApp(props: any) {
           <Component {...pageProps} />
           <div id="google_translate_element" style={{ padding: "15px" }}></div>
           <Notifications />
+          <GlobalModal />
         </ThemeProvider>
       </CacheProvider>
     </Provider>
