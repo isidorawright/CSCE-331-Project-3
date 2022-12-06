@@ -72,7 +72,7 @@ function MenuCategories(): JSX.Element {
       <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: "12px" }}>
         Categories
       </Typography>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} sx={{ marginBottom: "6px" }}>
         {menu.categories
           .filter((category) => category.menuItems.length)
           .reverse()

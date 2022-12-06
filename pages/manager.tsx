@@ -5,6 +5,7 @@ import {
   getDataGridUtilityClass,
   GridColDef,
   GridRowModel,
+  useGridApiRef,
 } from "@mui/x-data-grid";
 import Head from "next/head";
 
@@ -28,12 +29,16 @@ import { withIronSessionSsr } from "iron-session/next";
 import { IUser, User, UserRole } from "../models/user";
 import { InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../models/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faCircleCheck, faXmark, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { IShipment, Shipment } from "../models/shipment";
 import { api } from "../models/api";
+import {MenuItem, IMenuItem} from "../models/menuItem"
+import {Dispatch} from "../models/store"
+import { InputLabel } from "@mui/material";
+import { TextField } from "@mui/material";
 
 //Inventory Table
 const InventoryColumns: GridColDef[] = [
@@ -49,14 +54,13 @@ const InventoryColumns: GridColDef[] = [
   },
 ];
 
-const processRowUpdateInventory = (newRow : GridRowModel) => {
-  api.product.updateQuantity(newRow.productName, newRow.quantityInStock);
-  return newRow;
-}
-
 //Menu Item to Price Table
 const MenuToPriceColumns: GridColDef[] = [
-  { field: "name", headerName: "Menu Item", width: 200 },
+  { field: "name",
+    headerName: "Menu Item",
+    width: 200,
+    editable: true,
+  },
   {
     field: "price",
     headerName: "Price",
@@ -68,10 +72,7 @@ const MenuToPriceColumns: GridColDef[] = [
 ];
 
 
-  const processRowUpdateMenu = (newRow : GridRowModel) => {
-    api.menu.updateMenuItemPrice(newRow.name, newRow.price);
-    return newRow;
-  }
+  
 
 // Order Table
 const OrderColumns: GridColDef[] = [
@@ -154,7 +155,15 @@ function Row(props: { row: ReturnType<typeof Shipment> }) {
                   {row.products.map((product) => (
                     <TableRow key={product.id}>
                       <TableCell>{product.productName}</TableCell>
-                      <TableCell id="shipment_quanity" align="right" contentEditable="true">
+                      <TableCell
+                        align="right"
+                        contentEditable="true"
+                        onBlur={event => 
+                          {
+                            api.shipment.updateProduct(row.shipmentId, product.id, Number(event.currentTarget.innerHTML));
+                          }
+                        }
+                      >
                         {product.quantityInStock}
                       </TableCell>
                     </TableRow>
@@ -178,6 +187,28 @@ export default function DataTables({
   const shipments = useSelector((state: RootState) => state.manager.shipments);
   const theme = useTheme<CustomTheme>();
   const router = useRouter();
+  
+  const apiRef = useGridApiRef();
+  
+  const dispatch = useDispatch<Dispatch>();
+  const addMenuRow = () => {
+    // Add blank row to DB and refresh?
+    const name = (document.getElementById("outlined-basic item_name") as HTMLInputElement)?.value
+    const cost = (document.getElementById("outlined-basic cost") as HTMLInputElement)?.value
+    api.menu.createMenuItem(name, cost);
+    dispatch.manager.fetch();
+  }
+
+  const processRowUpdateMenu = (newRow : GridRowModel) => {
+    api.menu.updateMenuItemPrice(newRow.name, newRow.price);
+    return newRow;
+  }
+
+  const processRowUpdateInventory = (newRow : GridRowModel) => {
+    api.product.updateQuantity(newRow.productName, newRow.quantityInStock);
+    dispatch.manager.fetch();
+    return newRow;
+  }
 
   return (
     <div style={{ width: "100%" }}>
@@ -223,6 +254,23 @@ export default function DataTables({
         rowsPerPageOptions={[10]}
         sx={{ height: "423px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
       />
+
+      <div
+        style={{marginTop: 10, paddingLeft: 40, paddingTop: 10, color: theme.palette.primary.main, marginRight:20}}
+      >
+        <TextField id="outlined-basic item_name"  style={{}}/>
+        <TextField id="outlined-basic cost" style={{}} />
+        <div style={{display: "inline-block", marginLeft:20, marginTop:10}}>
+          <IconButton 
+            aria-label="add row"
+            size="small"
+            onClick={() => addMenuRow()}
+          >
+            {<FontAwesomeIcon icon={faPlusCircle} size="xl"/>}
+            <div  style={{marginLeft:20, fontSize:15}}>Insert New</div>
+          </IconButton>
+        </div>
+      </div>
 
       <br />
       <h1
