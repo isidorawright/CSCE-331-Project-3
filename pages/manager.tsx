@@ -1,5 +1,5 @@
 import * as React from "react";
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from "react";
 import {
   DataGrid,
   getDataGridUtilityClass,
@@ -21,10 +21,11 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import { useTheme, CustomTheme } from "@mui/material";
+import { useTheme, CustomTheme, Fab } from "@mui/material";
 
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import SyncIcon from "@mui/icons-material/Sync";
 import { withIronSessionSsr } from "iron-session/next";
 import { IUser, User, UserRole } from "../models/user";
 import { InferGetServerSidePropsType } from "next";
@@ -32,12 +33,16 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../models/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleCheck, faXmark, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleCheck,
+  faXmark,
+  faPlusCircle,
+} from "@fortawesome/free-solid-svg-icons";
 import { IShipment, Shipment } from "../models/shipment";
 import { api } from "../models/api";
-import {MenuItem, IMenuItem} from "../models/menuItem";
-import {Product, IProduct} from "../models/product";
-import {Dispatch} from "../models/store";
+import { MenuItem, IMenuItem } from "../models/menuItem";
+import { Product, IProduct } from "../models/product";
+import { Dispatch } from "../models/store";
 import { InputLabel } from "@mui/material";
 import { TextField } from "@mui/material";
 
@@ -57,11 +62,7 @@ const InventoryColumns: GridColDef[] = [
 
 //Menu Item to Price Table
 const MenuToPriceColumns: GridColDef[] = [
-  { field: "name",
-    headerName: "Menu Item",
-    width: 200,
-    editable: true,
-  },
+  { field: "name", headerName: "Menu Item", width: 200, editable: true },
   {
     field: "price",
     headerName: "Price",
@@ -97,14 +98,18 @@ function Row(props: { row: ReturnType<typeof Shipment> }) {
   const [open, setOpen] = React.useState(false);
   const [fulfilled, setFulfilled] = React.useState(row.fulfilled);
   const checkmark = <FontAwesomeIcon icon={faCircleCheck} size="1x" />;
-  const xmark = <FontAwesomeIcon icon={faXmark} size="1x" />; 
-  
+  const xmark = <FontAwesomeIcon icon={faXmark} size="1x" />;
+
   //function to update a shipment's fulfillment status
-  let fulfill = (row : IShipment) => {
-    api.shipment.updateShipment(row.shipmentId, row.shipmentDate, !row.fulfilled);
+  let fulfill = (row: IShipment) => {
+    api.shipment.updateShipment(
+      row.shipmentId,
+      row.shipmentDate,
+      !row.fulfilled
+    );
     row.fulfilled = !row.fulfilled;
     setFulfilled(row.fulfilled);
-  }
+  };
 
   //Shipment collapsible table
   return (
@@ -126,11 +131,11 @@ function Row(props: { row: ReturnType<typeof Shipment> }) {
           {row.shipmentDate.toString().substring(0, 10)}
         </TableCell>
         <TableCell>
-          <IconButton 
+          <IconButton
             aria-label="fulfilled indicator"
             onClick={() => fulfill(row)}
           >
-            {row.fulfilled ? checkmark : xmark} 
+            {row.fulfilled ? checkmark : xmark}
           </IconButton>
         </TableCell>
       </TableRow>
@@ -158,11 +163,13 @@ function Row(props: { row: ReturnType<typeof Shipment> }) {
                       <TableCell
                         align="right"
                         contentEditable="true"
-                        onBlur={event => 
-                          {
-                            api.shipment.updateProduct(row.shipmentId, product.id, Number(event.currentTarget.innerHTML));
-                          }
-                        }
+                        onBlur={(event) => {
+                          api.shipment.updateProduct(
+                            row.shipmentId,
+                            product.id,
+                            Number(event.currentTarget.innerHTML)
+                          );
+                        }}
                       >
                         {product.quantityInStock}
                       </TableCell>
@@ -190,39 +197,49 @@ export default function DataTables({
   const shipments = useSelector((state: RootState) => state.manager.shipments);
   const theme = useTheme<CustomTheme>();
   const router = useRouter();
-  
+
   const apiRef = useGridApiRef();
-  
+
   const dispatch = useDispatch<Dispatch>();
   const addMenuRow = () => {
     // Add blank row to DB and refresh?
-    const name = (document.getElementById("outlined-basic item_name") as HTMLInputElement)?.value
-    const cost = (document.getElementById("outlined-basic cost") as HTMLInputElement)?.value
+    const name = (
+      document.getElementById("outlined-basic item_name") as HTMLInputElement
+    )?.value;
+    const cost = (
+      document.getElementById("outlined-basic cost") as HTMLInputElement
+    )?.value;
     api.menu.createMenuItem(name, cost);
     dispatch.manager.fetch();
-  }
+  };
 
   const addInventoryRow = () => {
     // Add blank row to DB and refresh?
-    const name = (document.getElementById("outlined-basic product_name") as HTMLInputElement)?.value
-    const type = (document.getElementById("outlined-basic product_type") as HTMLInputElement)?.value
-    const quantity = (document.getElementById("outlined-basic quantity") as HTMLInputElement)?.value
+    const name = (
+      document.getElementById("outlined-basic product_name") as HTMLInputElement
+    )?.value;
+    const type = (
+      document.getElementById("outlined-basic product_type") as HTMLInputElement
+    )?.value;
+    const quantity = (
+      document.getElementById("outlined-basic quantity") as HTMLInputElement
+    )?.value;
     console.log(name, quantity);
     api.product.insert(name, type, quantity);
 
     dispatch.manager.fetch();
-  }
+  };
 
-  const processRowUpdateMenu = (newRow : GridRowModel) => {
+  const processRowUpdateMenu = (newRow: GridRowModel) => {
     api.menu.updateMenuItemPrice(newRow.name, newRow.price);
     return newRow;
-  }
+  };
 
-  const processRowUpdateInventory = (newRow : GridRowModel) => {
+  const processRowUpdateInventory = (newRow: GridRowModel) => {
     api.product.updateQuantity(newRow.productName, newRow.quantityInStock);
     dispatch.manager.fetch();
     return newRow;
-  }
+  };
 
   return (
     <div style={{ width: "100%" }}>
@@ -230,6 +247,19 @@ export default function DataTables({
         <title>Spin &apos;N Stone | Manage</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <Fab
+        color="secondary"
+        aria-label="sync"
+        sx={{
+          position: "absolute",
+          right: 0,
+          bottom: 0,
+          transform: "translate(-50%, -50%)",
+        }}
+        onClick={() => dispatch.manager.fetch()}
+      >
+        <SyncIcon />
+      </Fab>
       <h1
         style={{
           paddingLeft: 40,
@@ -250,23 +280,36 @@ export default function DataTables({
       />
 
       <div
-        style={{marginTop: 10, paddingLeft: 40, paddingTop: 10, color: theme.palette.primary.main, marginRight:20}}
+        style={{
+          marginTop: 10,
+          paddingLeft: 40,
+          paddingTop: 10,
+          color: theme.palette.primary.main,
+          marginRight: 20,
+        }}
       >
-        <TextField id="outlined-basic product_name" label="Product Name" sx={{paddingRight: 2}}/>
-        <TextField id="outlined-basic product_type" label="Product Type" sx={{paddingRight: 2}}/>
-        <TextField id="outlined-basic quantity" label="Quantity"/>
-        <div style={{display: "inline-block", marginLeft:20, marginTop:10}}>
-          <IconButton 
+        <TextField
+          id="outlined-basic product_name"
+          label="Product Name"
+          sx={{ paddingRight: 2 }}
+        />
+        <TextField
+          id="outlined-basic product_type"
+          label="Product Type"
+          sx={{ paddingRight: 2 }}
+        />
+        <TextField id="outlined-basic quantity" label="Quantity" />
+        <div style={{ display: "inline-block", marginLeft: 20, marginTop: 10 }}>
+          <IconButton
             aria-label="add row"
             size="small"
             onClick={() => {
-                addInventoryRow();
-                window.location.reload();
-              }
-            }
+              addInventoryRow();
+              window.location.reload();
+            }}
           >
-            {<FontAwesomeIcon icon={faPlusCircle} size="xl"/>}
-            <div  style={{marginLeft:20, fontSize:15}}>Add New Product</div>
+            {<FontAwesomeIcon icon={faPlusCircle} size="xl" />}
+            <div style={{ marginLeft: 20, fontSize: 15 }}>Add New Product</div>
           </IconButton>
         </div>
       </div>
@@ -292,22 +335,31 @@ export default function DataTables({
       />
 
       <div
-        style={{marginTop: 10, paddingLeft: 40, paddingTop: 10, color: theme.palette.primary.main, marginRight:20}}
+        style={{
+          marginTop: 10,
+          paddingLeft: 40,
+          paddingTop: 10,
+          color: theme.palette.primary.main,
+          marginRight: 20,
+        }}
       >
-        <TextField id="outlined-basic item_name" label="Item Name" sx={{paddingRight: 2}}/>
-        <TextField id="outlined-basic cost" label="Price ($)"/>
-        <div style={{display: "inline-block", marginLeft:20, marginTop:10}}>
-          <IconButton 
+        <TextField
+          id="outlined-basic item_name"
+          label="Item Name"
+          sx={{ paddingRight: 2 }}
+        />
+        <TextField id="outlined-basic cost" label="Price ($)" />
+        <div style={{ display: "inline-block", marginLeft: 20, marginTop: 10 }}>
+          <IconButton
             aria-label="add row"
             size="small"
             onClick={() => {
               addMenuRow();
               window.location.reload();
-            }
-          }
+            }}
           >
-            {<FontAwesomeIcon icon={faPlusCircle} size="xl"/>}
-            <div  style={{marginLeft:20, fontSize:15}}>Add New Item</div>
+            {<FontAwesomeIcon icon={faPlusCircle} size="xl" />}
+            <div style={{ marginLeft: 20, fontSize: 15 }}>Add New Item</div>
           </IconButton>
         </div>
       </div>
@@ -370,7 +422,6 @@ export const getServerSideProps = withIronSessionSsr(
   function (context: { req: any; res: any }) {
     const { req, res } = context;
     const user: IUser = req.session.user;
-
 
     if (user.role !== UserRole.MANAGER) {
       res.setHeader("location", "/login");
