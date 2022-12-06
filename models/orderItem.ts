@@ -14,6 +14,11 @@ export interface IOrderItem {
   selected?: boolean;
 }
 
+/**
+  * @param data
+  * @param omit
+  * @return order item or null for all values if the order does not exist
+*/
 export function OrderItem(data?: IOrderItem, omit?: string[]): IOrderItem {
   if (data) {
     const item = { ...data };
@@ -37,10 +42,18 @@ export function OrderItem(data?: IOrderItem, omit?: string[]): IOrderItem {
   };
 }
 
+/**
+  * @param order
+  * @param other
+  * @return order id: string
+  * @return menu item id: string
+  * @return if it is a drink: boolean
+  * @return length of the products array: number
+  * @return all products in the product array: IProduct
+*/
 export namespace OrderItem {
   export function equals(order: IOrderItem, other: IOrderItem): boolean {
     return (
-      // order.id === other.id &&
       order.orderId === other.orderId &&
       order.menuItemId === other.menuItemId &&
       order.isDrink === other.isDrink &&

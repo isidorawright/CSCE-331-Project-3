@@ -72,9 +72,6 @@ const MenuToPriceColumns: GridColDef[] = [
   },
 ];
 
-
-  
-
 // Order Table
 const OrderColumns: GridColDef[] = [
   { field: "orderDate", headerName: "Order Date", width: 125 },
@@ -94,6 +91,7 @@ const OrderColumns: GridColDef[] = [
   },
 ];
 
+//propogate rows
 function Row(props: { row: ReturnType<typeof Shipment> }) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
@@ -101,13 +99,14 @@ function Row(props: { row: ReturnType<typeof Shipment> }) {
   const checkmark = <FontAwesomeIcon icon={faCircleCheck} size="1x" />;
   const xmark = <FontAwesomeIcon icon={faXmark} size="1x" />; 
   
-
+  //function to update a shipment's fulfillment status
   let fulfill = (row : IShipment) => {
     api.shipment.updateShipment(row.shipmentId, row.shipmentDate, !row.fulfilled);
     row.fulfilled = !row.fulfilled;
     setFulfilled(row.fulfilled);
   }
 
+  //Shipment collapsible table
   return (
     <React.Fragment>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
@@ -179,6 +178,9 @@ function Row(props: { row: ReturnType<typeof Shipment> }) {
   );
 }
 
+/**
+ * Allows for the tables to be populated with information from database
+ */
 export default function DataTables({
   user,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -363,6 +365,7 @@ export default function DataTables({
   );
 }
 
+//Make sure that the user that is accessing the page is a manager. Only allow access is the login is a manager
 export const getServerSideProps = withIronSessionSsr(
   function (context: { req: any; res: any }) {
     const { req, res } = context;

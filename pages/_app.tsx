@@ -17,8 +17,6 @@ import { GlobalModal } from "../components/GobalModal";
 
 const clientSideEmotionCache = createEmotionCache();
 
-
-
 export default function MyApp(props: any) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   React.useEffect(() => {

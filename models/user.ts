@@ -12,6 +12,10 @@ export interface IUser {
   role: UserRole;
 }
 
+/**
+ * @param user 
+ * @returns user or null for all variables if it does not exist
+ */
 export function User(user?: IUser): IUser {
   if (user) {
     return user;

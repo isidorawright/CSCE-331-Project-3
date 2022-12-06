@@ -12,6 +12,11 @@ export interface IMenuItem {
   active?: boolean;
 }
 
+/**
+  * @param data
+  * @param omit
+  * @return item or null for all values if it does not exist
+*/
 export function MenuItem(data?: IMenuItem, omit?: string[]): IMenuItem {
   if (data) {
     const item = { ...data };

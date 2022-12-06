@@ -13,6 +13,11 @@ export interface IOrder {
   totalItems?: number;
 }
 
+/**
+  * @param data
+  * @param omit
+  * @return order or null for all values if the order does not exist
+*/
 export function Order(data?: IOrder, omit?: string[]): IOrder {
   if (data) {
     const order = { ...data };
@@ -32,6 +37,10 @@ export function Order(data?: IOrder, omit?: string[]): IOrder {
 }
 
 export namespace Order {
+  /**
+   *@param order
+   * @return order
+  */
   export function calculateTotals(order: IOrder): IOrder {
     order.subTotal = order.orderItems
       .reduce(
@@ -43,7 +52,11 @@ export namespace Order {
     order.orderTotal = Money.of(order.subTotal).add(order.tax).toString();
     return order;
   }
-
+  /**
+   * @param order
+   * @param item
+   * @return order
+  */
   export function addItem(order: IOrder, item: IOrderItem): IOrder {
     const existing = order.orderItems.find((o) => OrderItem.equals(o, item));
     if (existing) {

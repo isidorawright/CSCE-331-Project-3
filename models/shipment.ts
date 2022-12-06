@@ -7,6 +7,13 @@ export interface IShipment {
   products: IProduct[];
 }
 
+/**
+ * @param data 
+ * @return shipment ID
+ * @return shipment date
+ * @return fulfilled status
+ * @return products array. Contains all products inside the shipment
+ */
 export function Shipment(data?: IShipment): IShipment {
   if (data) {
     return {

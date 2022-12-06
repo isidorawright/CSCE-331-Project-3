@@ -194,12 +194,8 @@ interface UserState {
 }
 /**
  * Handles the changes for user activities
- * @param user
- * @param loggedIn
- * @param manager
- * @param error
  * @return payload/user
- * @return state for orders and menu items
+ * @return state
  * @return loggedin. boolean true or false
  * @retun manager. This sets manager roles that allows for admin access
  * @return error. An error message is user tries to access manager roles
@@ -228,6 +224,9 @@ export const userState = createModel<RootModel>()({
     },
   },
   effects: (dispatch) => ({
+    /**
+     * @param data 
+     */
     async login(data: IUser) {
       if (!data.password) {
         throw new Error("Password is required");
@@ -259,6 +258,9 @@ export const userState = createModel<RootModel>()({
       });
       Router.push("/login");
     },
+    /**
+     * @param data 
+     */
     async register(data: IUser) {
       if (!data.password) return;
       await api.user.register(data.username, data.password).then((user) => {
@@ -280,6 +282,9 @@ export const userState = createModel<RootModel>()({
         // user not logged in, do nothing
       }
     },
+    /**
+     * @param response 
+     */
     async handleOAuth(response) {
       try {
         let user = await api.user.verifyOauthToken(response.credential);
@@ -302,6 +307,13 @@ interface NotificationState {
   severity: AlertColor;
 }
 
+/**
+ * Handles the changes for notification activities
+ * @return state
+ * @return open/payload
+ * @retun message
+ * @return severity of message
+*/
 export const notificationState = createModel<RootModel>()({
   state: {
     open: false,
@@ -336,6 +348,10 @@ interface ManagerState {
   shipments: IShipment[];
 }
 
+/**
+ * Handles the changes for manager activities
+ * @return payload
+*/
 export const managerState = createModel<RootModel>()({
   state: {
     inventory: [],

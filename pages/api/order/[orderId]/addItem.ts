@@ -9,6 +9,7 @@ export default async function handler(
   try {
     const orderItem = OrderItem(req.body);
 
+    //adding an item to an order in database
     const id = await database
       .query(
         `
@@ -22,7 +23,8 @@ export default async function handler(
       .then((res) => res.rows[0].order_item_id);
 
     orderItem.id = id;
-
+    
+    //adding an item to an order on website
     await Promise.all(
       orderItem.products.map((product) => {
         return database.query(`
