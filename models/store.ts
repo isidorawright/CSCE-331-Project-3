@@ -382,6 +382,24 @@ export const managerState = createModel<RootModel>()({
       const sales = await api.reports.sales(start, end);
       dispatch.manager.assign({sales});
     },
+    async setExcessReport({
+      end,
+    } : {
+      end : String;
+    }) {
+    const excess = await api.reports.excess(end);
+    dispatch.manager.assign({excess});
+  },
+  async setPairReport({
+    start,
+    end,
+  } : {
+    start : String;
+    end : String;
+  }) {
+  const pairs = await api.reports.pairs(start, end);
+  dispatch.manager.assign({pairs});
+},
     async fetch() {
       const [
         products,

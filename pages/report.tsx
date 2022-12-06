@@ -83,7 +83,6 @@ export default function DataTables({
   const router = useRouter();
 
   const refreshSalesReport = () => {
-    // Add blank row to DB and refresh?
     const start = (
       document.getElementById("outlined-basic salesStartDate") as HTMLInputElement
     )?.value;
@@ -91,6 +90,23 @@ export default function DataTables({
       document.getElementById("outlined-basic salesEndDate") as HTMLInputElement
     )?.value;
     dispatch.manager.setSalesReport({start, end});
+  };
+
+  const refreshExcessReport = () => {
+    const end = (
+      document.getElementById("outlined-basic excessEndDate") as HTMLInputElement
+    )?.value;
+    dispatch.manager.setExcessReport({end});
+  };
+
+  const refreshPairReport = () => {
+    const start = (
+      document.getElementById("outlined-basic pairStartDate") as HTMLInputElement
+    )?.value;
+    const end = (
+      document.getElementById("outlined-basic pairEndDate") as HTMLInputElement
+    )?.value;
+    dispatch.manager.setPairReport({start, end});
   };
 
   return (
@@ -187,6 +203,37 @@ export default function DataTables({
         sx={{ height: "423px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
       />
 
+<div
+        style={{
+          marginTop: 10,
+          paddingLeft: 40,
+          paddingTop: 10,
+          color: theme.palette.primary.main,
+          marginRight: 20,
+        }}
+      >
+        <TextField
+        id="outlined-basic pairStartDate"
+        label="Start Date"
+        sx={{ paddingRight: 2 }}
+        />
+        <TextField
+        id="outlined-basic pairEndDate"
+        label="End Date"
+        sx={{ paddingRight: 2 }}
+        />
+        <div style={{ display: "inline-block", marginLeft: 20, marginTop: 10 }}>
+          <IconButton
+            aria-label="add row"
+            size="small"
+            onClick={() => {
+              refreshPairReport();
+            }}>
+            {<FontAwesomeIcon icon={faRefresh} size="xl" />}
+          </IconButton>
+        </div>
+      </div>
+
       <br />
       <h1
         style={{
@@ -205,6 +252,32 @@ export default function DataTables({
         rowsPerPageOptions={[Infinity]}
         sx={{ height: "420px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
       />
+
+<div
+        style={{
+          marginTop: 10,
+          paddingLeft: 40,
+          paddingTop: 10,
+          color: theme.palette.primary.main,
+          marginRight: 20,
+        }}
+      >
+        <TextField
+        id="outlined-basic excessEndDate"
+        label="End Date"
+        sx={{ paddingRight: 2 }}
+        />
+        <div style={{ display: "inline-block", marginLeft: 20, marginTop: 10 }}>
+          <IconButton
+            aria-label="add row"
+            size="small"
+            onClick={() => {
+              refreshExcessReport();
+            }}>
+            {<FontAwesomeIcon icon={faRefresh} size="xl" />}
+          </IconButton>
+        </div>
+      </div>
 
       <br></br>
       <h1
