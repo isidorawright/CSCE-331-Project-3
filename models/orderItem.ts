@@ -33,7 +33,7 @@ export function OrderItem(data?: IOrderItem, omit?: string[]): IOrderItem {
     menuItem: MenuItem(),
     quantity: 1,
     isDrink: false,
-    selected: false
+    selected: false,
   };
 }
 
