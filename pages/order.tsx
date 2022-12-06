@@ -24,7 +24,10 @@ import Head from "next/head";
 import { ModalType } from '../models/store';
 import { Product } from '../models/product';
 
-
+/**
+ * @param category
+ * @returns the theme to display the menu category titles
+ */
 function MenuCategoryTile({
   category,
 }: {
@@ -62,6 +65,9 @@ function MenuCategoryTile({
   );
 }
 
+/**
+ * @returns the theme to display the menu categories
+ */
 function MenuCategories(): JSX.Element {
   const theme = useTheme<CustomTheme>();
   const dispatch = useDispatch<Dispatch>();
@@ -96,6 +102,9 @@ function MenuCategories(): JSX.Element {
   );
 }
 
+/**
+ * @returns the theme to display the menu items and displays the menu name and price
+ */
 function MenuItems(): JSX.Element {
   const theme = useTheme<CustomTheme>();
   const menu = useSelector<RootState, IMenu>((state) => state.menu);
@@ -148,6 +157,12 @@ interface ReceiptState {
   [key: number]: boolean | undefined
 }
 
+/**
+ * @param order
+ * @returns the theme to display the recepit with all menu items and products listed out of the items selected
+ * as well as the subtotal, tax, and the final total of the order.
+ * Also contains the option buttons to delete an item from the receipt and to clear the entire receipt
+ */
 function Receipt({ order }: { order: IOrder }): JSX.Element {
   const theme = useTheme<CustomTheme>();
   const dispatch = useDispatch<Dispatch>();
@@ -322,6 +337,11 @@ function Receipt({ order }: { order: IOrder }): JSX.Element {
   );
 }
 
+/**
+ * This allows the customer to ba able to choose their options for the pizza. All sections are required except for sauce and cheese.
+ * Also allows for selections to ge toggled as well as have restriction on the number of topping based on which pizza category was selected.
+ * @returns the theme to display the selection of the menu items for the customer to choose from
+ */
 function ConfigurePizza(): JSX.Element {
   const theme = useTheme<CustomTheme>();
   const dispatch = useDispatch<Dispatch>();
@@ -597,6 +617,10 @@ function ConfigurePizza(): JSX.Element {
   );
 }
 
+/**
+ * Allows a customer to be able to add an item to the receipt as well checkout their receipt
+ * @returns the theme to display the add item and checkout buttons and functionality
+ */
 export function CustomerOrder() {
   const theme = useTheme<CustomTheme>();
   const dispatch = useDispatch<Dispatch>();

@@ -39,7 +39,7 @@ const hoursStyle = {
 };
 
 /**
- * This is the setup of the homepage. It contains the title, logo, hours of operation, and implements google maps.
+ * This is the setup of the homepage display. It contains the title, logo, hours of operation, and implements google maps.
  */
 export default function Home() {
   let theme = useTheme();
