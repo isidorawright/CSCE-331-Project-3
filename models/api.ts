@@ -382,8 +382,8 @@ export namespace api {
    * @param endDate
    */
     export async function sales(
-      startDate: String | Date,
-      endDate: String | Date
+      startDate: String,
+      endDate: String,
     ): Promise<ISales[]> {
       const response = await fetch(
         `/api/reports/sales/?startDate=${startDate}&endDate=${endDate}`,

@@ -224,7 +224,6 @@ export default function DataTables({
     const quantity = (
       document.getElementById("outlined-basic quantity") as HTMLInputElement
     )?.value;
-    console.log(name, quantity);
     api.product.insert(name, type, quantity);
 
     dispatch.manager.fetch();

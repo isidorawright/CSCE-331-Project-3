@@ -7,9 +7,14 @@ import { useTheme, CustomTheme } from "@mui/material";
 import { withIronSessionSsr } from "iron-session/next";
 import { IUser, User, UserRole } from "../models/user";
 import { InferGetServerSidePropsType } from "next";
-import { useSelector } from "react-redux";
-import { RootState } from "../models/store";
+import { managerState, RootState } from "../models/store";
 import { useRouter } from "next/router";
+import { TextField } from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faRefresh} from "@fortawesome/free-solid-svg-icons";
+import IconButton from "@mui/material/IconButton";
+import { Dispatch } from "../models/store";
+import { useDispatch, useSelector } from "react-redux";
 
 //Excess Report
 const ExcessReportCols: GridColDef[] = [
@@ -59,12 +64,15 @@ const PairAnalysisCols: GridColDef[] = [
   },
 ];
 
+
 /**
  * Allows for the tables to be populated with information from database
 */
 export default function DataTables({
   user,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const dispatch = useDispatch<Dispatch>();
+
   const excess = useSelector((state: RootState) => state.manager.excess);
   const sales = useSelector((state: RootState) => state.manager.sales);
   const restock = useSelector((state: RootState) => state.manager.restock);
@@ -73,6 +81,17 @@ export default function DataTables({
   console.log(console.error());
   const theme = useTheme<CustomTheme>();
   const router = useRouter();
+
+  const refreshSalesReport = () => {
+    // Add blank row to DB and refresh?
+    const start = (
+      document.getElementById("outlined-basic salesStartDate") as HTMLInputElement
+    )?.value;
+    const end = (
+      document.getElementById("outlined-basic salesEndDate") as HTMLInputElement
+    )?.value;
+    dispatch.manager.setSalesReport({start, end});
+  };
 
   return (
     <div style={{ width: "100%" }}>
@@ -97,6 +116,38 @@ export default function DataTables({
         rowsPerPageOptions={[10]}
         sx={{ height: "423px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
       />
+      <div
+        style={{
+          marginTop: 10,
+          paddingLeft: 40,
+          paddingTop: 10,
+          color: theme.palette.primary.main,
+          marginRight: 20,
+        }}
+      >
+        <TextField
+        id="outlined-basic salesStartDate"
+        label="Start Date"
+        sx={{ paddingRight: 2 }}
+        />
+        <TextField
+        id="outlined-basic salesEndDate"
+        label="End Date"
+        sx={{ paddingRight: 2 }}
+        />
+        <div style={{ display: "inline-block", marginLeft: 20, marginTop: 10 }}>
+          <IconButton
+            aria-label="add row"
+            size="small"
+            onClick={() => {
+              refreshSalesReport();
+              //window.location.reload();
+            }}>
+            {<FontAwesomeIcon icon={faRefresh} size="xl" />}
+          </IconButton>
+        </div>
+      </div>
+      
 
       <br />
       <h1

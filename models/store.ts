@@ -367,8 +367,21 @@ export const managerState = createModel<RootModel>()({
     replace(state, payload: ManagerState) {
       return payload;
     },
+    assign(state, payload : Partial<ManagerState>) {
+      return {...state, ...payload}
+    },
   },
   effects: (dispatch) => ({
+    async setSalesReport({
+        start,
+        end,
+      } : {
+        start : String;
+        end : String;
+      }) {
+      const sales = await api.reports.sales(start, end);
+      dispatch.manager.assign({sales});
+    },
     async fetch() {
       const [
         products,
