@@ -6,7 +6,6 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { CustomTheme, useTheme } from "@mui/material";
-import { useRouter } from "next/router";
 import Head from "next/head";
 import { useDispatch, useSelector } from "react-redux";
 import { Dispatch, RootState } from "../models/store";

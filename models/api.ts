@@ -7,7 +7,7 @@ import { IExcess, Excess } from "./excess";
 import { ISales, Sale } from "./sales";
 import { IRestock, Restock } from "./restock";
 import { IPair, Pair } from "./pair";
-import { IShipment, Shipment } from "./shipment";
+import database from "./database";
 
 /**
  * This document is to call the different api's
@@ -49,17 +49,21 @@ export namespace api {
    * Calls api to insert a product into the product array
    * @return product from the product id
    */
-    export async function insert(product: IProduct): Promise<IProduct> {
-      const response = await fetch("/api/menu/products", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(product),
+    export async function insert(name: String, type: String, quantity: String){
+      if(type != "Drink" || "Veggies" || "Crust" || "Sauce" || "Cheese" || "Drizzle" || "Meat"){
+        const response = await fetch(`/api/product/?productName=${name}&quantityInStock=${quantity}&productTypeId=${'8'}`, {
+          method: "POST"
+        });
+        return;
+      }
+
+      const typeId = await fetch(`/api/product/?productType=${type}`, {
+        method: "FETCH"
       });
-      const { id } = await response.json();
-      product.id = id;
-      return product;
+      const response = await fetch(`/api/product/?productName=${name}&productType=${typeId}&quantityInStock=${quantity}`, {
+        method: "POST"
+      });
+      return;
     }
   /**
    * Calls api to get all the products in stock

@@ -1,4 +1,4 @@
-import { Client, Pool } from "pg";
+import { Pool } from "pg";
 
 /**
  * This class contains the information related to the database and the connection to the website
