@@ -1,5 +1,6 @@
 import { Box, Button } from "@mui/material";
 import { useEffect } from "react";
+import store from "../models/store";
 
 export function OauthLogin() {
   useEffect(() => {
@@ -7,6 +8,7 @@ export function OauthLogin() {
       document.getElementById("oauth-login"),
       { theme: "outline", size: "large" } // customization attributes
     );
+    
   });
   return <Button fullWidth sx={{ mt: 3, mb: 2 }} id="oauth-login"></Button>;
 }

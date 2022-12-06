@@ -446,13 +446,7 @@ if (typeof window !== "undefined") {
 
 export default store;
 
-function _initializeStore(store: Store) {
-  Promise.all([
-    store.dispatch.menu.load().catch((e) => {}),
-    store.dispatch.manager.fetch().catch((e) => {}),
-    store.dispatch.user.fetch().catch((e) => {}),
-  ]);
-
+function initializeOauth() {
   try {
     (window as any).google.accounts.id.initialize({
       client_id:
@@ -463,6 +457,25 @@ function _initializeStore(store: Store) {
       (window as any).google.accounts.id.prompt();
     }
   } catch (e) {}
+}
+
+function _initializeStore(store: Store) {
+  Promise.all([
+    store.dispatch.menu.load().catch((e) => {}),
+    store.dispatch.manager.fetch().catch((e) => {}),
+    store.dispatch.user.fetch().catch((e) => {}),
+  ]);
+
+  if (typeof window !== "undefined") {
+    if ((window as any).google) {
+      initializeOauth();
+    } else {
+      const gsiClient = document.getElementById("gsi-client");
+      if (gsiClient) {
+        gsiClient.addEventListener("load", initializeOauth);
+      }
+    }
+  }
 }
 
 export const initializeStore = once(_initializeStore);

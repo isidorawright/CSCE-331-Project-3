@@ -33,7 +33,7 @@ export default class MyDocument extends Document {
             async
             defer
           />
-          <script src="https://accounts.google.com/gsi/client" async defer />
+          <script src="https://accounts.google.com/gsi/client" async defer id="gsi-client" />
         </Head>
         <body>
           <Main />
