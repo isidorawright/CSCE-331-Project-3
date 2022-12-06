@@ -2,6 +2,11 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import database from "../../models/database";
 import { Order } from "../../models/order";
 
+/**
+ * GET, FETCH, and POST requests the user may make for orders and their respective logic
+ * @param req
+ * @param res
+ */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method == "GET" || req.method == "FETCH"){
     const response = await database.query(

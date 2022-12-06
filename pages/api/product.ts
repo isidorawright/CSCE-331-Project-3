@@ -1,6 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import database from "../../models/database";
 
+/**
+ * GET, FETCH, PUT, and POST requests the user may make for products and their respective logic
+ * @param req
+ * @param res
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

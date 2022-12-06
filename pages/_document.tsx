@@ -4,6 +4,13 @@ import createEmotionServer from "@emotion/server/create-instance";
 import theme from "../styles/theme";
 import createEmotionCache from "../util/createEmotionCache";
 
+/**
+ * @ref https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap
+ * @ref https://fonts.googleapis.com/icon?family=Material+Icons
+ * @ref https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css
+ * @ref https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit
+ * @ref https://accounts.google.com/gsi/client
+ */
 export default class MyDocument extends Document {
   render() {
     return (

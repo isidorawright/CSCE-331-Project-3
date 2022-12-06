@@ -59,6 +59,9 @@ const PairAnalysisCols: GridColDef[] = [
   },
 ];
 
+/**
+ * Allows for the tables to be populated with information from database
+*/
 export default function DataTables({
   user,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -165,6 +168,7 @@ export default function DataTables({
   );
 }
 
+//Make sure that the user that is accessing the page is a manager. Only allow access is the login is a manager
 export const getServerSideProps = withIronSessionSsr(
   function (context: { req: any; res: any }) {
     const { req, res } = context;

@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { withIronSessionApiRoute } from "iron-session/next";
 
 export default withIronSessionApiRoute(
+  //getting stauts of user
   async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.session.user === undefined) {
       res.status(401).end();

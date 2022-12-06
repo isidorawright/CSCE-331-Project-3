@@ -4,6 +4,22 @@ import database from "../../models/database";
 import { IMenu, MenuCategory } from "../../models/menu";
 //import groupby from 'nestedGroupByCode';
 
+/**
+ * Gets the menu category, product from each category, product type of each product, and the item name for each category
+ * and groups them by category name, filters them by menu item name, and returns all the products
+ * @param req
+ * @param res
+ * @return category id
+ * @return category name
+ * @return menu item id
+ * @return menu item name
+ * @return menu item price
+ * @return product name
+ * @return product id
+ * @return quantity in stock
+ * @return conversion factor
+ * @return product type name
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

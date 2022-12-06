@@ -5,6 +5,12 @@ import database from "../../../models/database";
 import { User, UserRole } from "../../../models/user";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+/**
+ * Must verify google account
+ * @param token 
+ * @returns payload
+ */
 async function verify(token: string) {
   const ticket = await client.verifyIdToken({
     idToken: token,
@@ -17,6 +23,10 @@ async function verify(token: string) {
 }
 
 export default withIronSessionApiRoute(
+  /**
+   * @param req 
+   * @param res
+   */
   async function handler(req: NextApiRequest, res: NextApiResponse) {
     console.log(req.session.user);
     const credential = req.query.credential;

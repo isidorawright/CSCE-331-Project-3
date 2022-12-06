@@ -8,6 +8,8 @@ import { withIronSessionApiRoute } from "iron-session/next";
  * Allows a user to register an account as long as they have manager (admin) priviledge
  * Also specifies the username and password requirements
  * If username already exists or does not have priviledge, then give an error message
+ * @param req
+ * @param res
  */
 export default withIronSessionApiRoute(
   async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -29,7 +31,6 @@ export default withIronSessionApiRoute(
         .then((result) => result.rows[0].count);
 
       if (typeof userExists === "string") {
-        // why the heck is count returning a string...
         userExists = parseInt(userExists);
       }
 

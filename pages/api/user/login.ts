@@ -5,6 +5,11 @@ import { User, UserRole } from "../../../models/user";
 import { withIronSessionApiRoute } from "iron-session/next";
 
 export default withIronSessionApiRoute(
+  /**
+   * @param req 
+   * @param res 
+   * @returns user stauts
+   */
   async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
       const { username, password } = req.body;

@@ -12,6 +12,10 @@ import { Dispatch, RootState } from "../models/store";
 import { User, UserRole } from "../models/user";
 import { OauthLogin } from "../components/oauth";
 
+/**
+ * Allows a manager to sign if if have admin priviledge and the correct credentials
+ * @return css for the login forum/page and messages
+ */
 export default function SignIn() {
   const theme = useTheme<CustomTheme>();
 
@@ -90,12 +94,6 @@ export default function SignIn() {
             padding: theme.spacing(5),
           }}
         >
-          {/* <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5" sx={{color: "white"}}>
-            {registering ? "Sign up" : "Sign in"}
-          </Typography> */}
           <Box
             component="form"
             onSubmit={handleSubmit}
@@ -143,10 +141,6 @@ export default function SignIn() {
                 }}
               />
             )}
-            {/* <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            /> */}
             <Button
               type="submit"
               fullWidth
@@ -182,20 +176,6 @@ export default function SignIn() {
                     : "Don't have an account? Sign up"}
                 </Typography>
               </Grid>
-              {/* <Grid item xs={12} sx={{ textAlign: "center" }}>
-                <Typography
-                  variant="body2"
-                  onClick={() => {
-                    setError("too bad, write it down next time");
-                  }}
-                  sx={{
-                    cursor: "pointer",
-                    color: "white",
-                  }}
-                >
-                  Forgot password?
-                </Typography>
-              </Grid> */}
             </Grid>
           </Box>
         </Box>

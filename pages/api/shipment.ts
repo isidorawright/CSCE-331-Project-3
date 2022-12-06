@@ -3,7 +3,12 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import database from "../../models/database";
 import { IShipment, Shipment } from "../../models/shipment";
 import { IProduct, Product } from "../../models/product";
-  
+
+/**
+ * GET and POST requests the user may make for shipments and their respective logic
+ * @param req
+ * @param res
+ */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
         // get all shipments
