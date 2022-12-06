@@ -138,6 +138,12 @@ export const orderState = createModel<RootModel>()({
         orderItems: state.orderItems.filter((item) => !item.selected),
       };
     },
+    calculateTotals(state) {
+      Order.calculateTotals(state);
+      return {
+        ...state,
+      };
+    },
   },
   effects: (dispatch) => ({
     async submit(order: IOrder) {

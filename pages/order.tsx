@@ -278,6 +278,7 @@ function Receipt({ order }: { order: IOrder }): JSX.Element {
                 onClick={() => {
                   if (order.orderItems.some(item => item.selected)) {
                     dispatch.order.removeItems();
+                    dispatch.order.calculateTotals();
                     dispatch.notifications.setMessage({
                       message: "Item(s) Deleted",
                       severity: 'success'
