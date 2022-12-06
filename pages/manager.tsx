@@ -280,23 +280,8 @@ export default function DataTables({
 export const getServerSideProps = withIronSessionSsr(
   function (context: { req: any; res: any }) {
     const { req, res } = context;
-    const user: IUser | undefined = req.session.user;
+    const user: IUser = req.session.user;
 
-    if (user === undefined || !user.authenticated) {
-      res.setHeader("location", "/login");
-      res.statusCode = 302;
-      res.end();
-      return {
-        props: {
-          user: User({
-            username: "",
-            authenticated: false,
-            role: UserRole.CUSTOMER,
-            id: -1,
-          }),
-        },
-      };
-    }
 
     if (user.role !== UserRole.MANAGER) {
       res.setHeader("location", "/login");
