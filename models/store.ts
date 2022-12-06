@@ -125,26 +125,19 @@ export const orderState = createModel<RootModel>()({
     toggleSelectOrderItem(state, id: number) {
       return {
         ...state,
-        orderItems: state.orderItems.map(
-          item => {
-            item.selected =
-              item.id == id
-              ? !item.selected
-              : item.selected;
+        orderItems: state.orderItems.map((item) => {
+          item.selected = item.id == id ? !item.selected : item.selected;
 
-            return item;
-          }
-        )
+          return item;
+        }),
       };
     },
     removeItems(state) {
       return {
         ...state,
-        orderItems: state.orderItems.filter(
-          item => !item.selected
-        )
-      }
-    }
+        orderItems: state.orderItems.filter((item) => !item.selected),
+      };
+    },
   },
   effects: (dispatch) => ({
     async submit(order: IOrder) {
@@ -153,7 +146,7 @@ export const orderState = createModel<RootModel>()({
       dispatch.order.reset();
       dispatch.notifications.setMessage({
         message: "Order Placed",
-        severity: 'success'
+        severity: "success",
       });
       dispatch.notifications.setOpen(true);
     },
@@ -269,24 +262,24 @@ export const notificationState = createModel<RootModel>()({
   state: {
     open: false,
     message: "",
-    severity: "info"
+    severity: "info",
   } as NotificationState,
   reducers: {
     setOpen(state, payload: boolean) {
       return {
         ...state,
-        open: payload
+        open: payload,
       };
     },
     setMessage(state, payload) {
       return {
         ...state,
         message: payload.message,
-        severity: payload.severity
-      }
-    }
-  }
-})
+        severity: payload.severity,
+      };
+    },
+  },
+});
 
 interface ManagerState {
   menuItems: IMenuItem[];
@@ -390,35 +383,34 @@ export const managerState = createModel<RootModel>()({
 });
 
 export enum ModalType {
-  checkout = "checkout"
+  checkout = "checkout",
 }
 
 export interface ModalState {
-  type: ModalType,
-  open: boolean
+  type: ModalType;
+  open: boolean;
 }
 
 export const modalState = createModel<RootModel>()({
   state: {
     type: ModalType.checkout,
-    open: false
+    open: false,
   } as ModalState,
   reducers: {
     setType(state, type: ModalType) {
       return {
         ...state,
-        type
-      }
+        type,
+      };
     },
     setOpen(state, open: boolean) {
       return {
         ...state,
-        open
-      }
-    }
-  }
-})
-
+        open,
+      };
+    },
+  },
+});
 
 export interface RootModel extends Models<RootModel> {
   drawer: typeof drawerState;
@@ -455,15 +447,12 @@ if (typeof window !== "undefined") {
 export default store;
 
 function _initializeStore(store: Store) {
-  try {
-    Promise.all([
-      store.dispatch.menu.load(),
-      store.dispatch.manager.fetch(),
-      store.dispatch.user.fetch(),
-    ]);
-  } catch (e) {
-    console.log(e);
-  }
+  Promise.all([
+    store.dispatch.menu.load().catch((e) => {}),
+    store.dispatch.manager.fetch().catch((e) => {}),
+    store.dispatch.user.fetch().catch((e) => {}),
+  ]);
+
   try {
     (window as any).google.accounts.id.initialize({
       client_id:

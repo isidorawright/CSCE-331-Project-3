@@ -96,8 +96,8 @@ function Row(props: { row: ReturnType<typeof Shipment> }) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
   const [fulfilled, setFulfilled] = React.useState(row.fulfilled);
-  const checkmark = <FontAwesomeIcon icon={faCircleCheck} size="m" />;
-  const xmark = <FontAwesomeIcon icon={faXmark} size="m" />; 
+  const checkmark = <FontAwesomeIcon icon={faCircleCheck} size="1x" />;
+  const xmark = <FontAwesomeIcon icon={faXmark} size="1x" />; 
   
 
   let fulfill = (row : IShipment) => {
@@ -154,7 +154,7 @@ function Row(props: { row: ReturnType<typeof Shipment> }) {
                   {row.products.map((product) => (
                     <TableRow key={product.id}>
                       <TableCell>{product.productName}</TableCell>
-                      <TableCell id="shipment_quanity" align="right" contenteditable="true">
+                      <TableCell id="shipment_quanity" align="right" contentEditable="true">
                         {product.quantityInStock}
                       </TableCell>
                     </TableRow>
