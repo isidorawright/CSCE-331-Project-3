@@ -310,53 +310,8 @@ export const managerState = createModel<RootModel>()({
     shipments: [],
   } as ManagerState,
   reducers: {
-    setInventory(state, payload: IProduct[]) {
-      return {
-        ...state,
-        inventory: payload,
-      };
-    },
-    setMenuItems(state, payload: IMenuItem[]) {
-      return {
-        ...state,
-        menuItems: payload,
-      };
-    },
-    setOrders(state, payload: IOrder[]) {
-      return {
-        ...state,
-        orders: payload,
-      };
-    },
-    setExcess(state, payload: IExcess[]) {
-      return {
-        ...state,
-        excess: payload,
-      };
-    },
-    setSale(state, payload: ISales[]) {
-      return {
-        ...state,
-        sales: payload,
-      };
-    },
-    setRestock(state, payload: IRestock[]) {
-      return {
-        ...state,
-        restock: payload,
-      };
-    },
-    setPairs(state, payload: IPair[]) {
-      return {
-        ...state,
-        pairs: payload,
-      };
-    },
-    setShipments(state, payload: IShipment[]) {
-      return {
-        ...state,
-        shipments: payload,
-      };
+    replace(state, payload: ManagerState) {
+      return payload;
     },
   },
   effects: (dispatch) => ({
@@ -380,29 +335,16 @@ export const managerState = createModel<RootModel>()({
         api.reports.pairs("08-04-22", "01-01-23"),
         api.shipment.getAllShipments(),
       ]);
-      // const products = await api.product.getAll();
-      dispatch.manager.setInventory(products);
-
-      // const menuItems = await api.menu.getMenuItems();
-      dispatch.manager.setMenuItems(menuItems);
-
-      // const orders = await api.order.getAllOrders();
-      dispatch.manager.setOrders(orders);
-
-      // const excessItems = await api.reports.excess("01-01-20");
-      dispatch.manager.setExcess(excessItems);
-
-      // const salesItems = await api.reports.sales("08-04-22", "01-01-23");
-      dispatch.manager.setSale(salesItems);
-
-      // const restockItems = await api.reports.restock();
-      dispatch.manager.setRestock(restockItems);
-
-      // const pairsItems = await api.reports.pairs("08-04-22", "01-01-23");
-      dispatch.manager.setPairs(pairsItems);
-
-      // const shipments = await api.shipment.getAllShipments();
-      dispatch.manager.setShipments(shipments);
+      dispatch.manager.replace({
+        inventory: products,
+        menuItems,
+        orders,
+        excess: excessItems,
+        sales: salesItems,
+        restock: restockItems,
+        pairs: pairsItems,
+        shipments,
+      });
     },
   }),
 });
