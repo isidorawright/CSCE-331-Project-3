@@ -9,24 +9,46 @@ import { IRestock, Restock } from "./restock";
 import { IPair, Pair } from "./pair";
 import { IShipment, Shipment } from "./shipment";
 
+/**
+ * This document is to call the different api's
+ */
+
 export namespace api {
+  /**
+   * Calls api to get the menu item categories
+   */
   export async function getMenuCategories(): Promise<IMenuCategory[]> {
     const response = await fetch("/api/menu/categories");
     const json = await response.json();
     return json.items.map((c: IMenuCategory) => MenuCategory(c));
   }
+
+  /**
+   * Calls api to get the products
+   * @return products array
+   */
   export async function getProducts(): Promise<IProduct[]> {
     const response = await fetch("/api/menu/products");
     const json = await response.json();
     return json.items.map((p: IProduct) => Product(p));
   }
+  /**
+   * Calls api to get the menu (menu item along with the prices)
+   */
   export async function getMenu(): Promise<IMenu> {
     const response = await fetch("/api/menus");
     const json = await response.json();
 
     return Menu(json);
   }
+  /**
+   * Calls api for product related activity
+   */
   export namespace product {
+  /**
+   * Calls api to insert a product into the product array
+   * @return product from the product id
+   */
     export async function insert(product: IProduct): Promise<IProduct> {
       const response = await fetch("/api/menu/products", {
         method: "POST",
@@ -39,6 +61,14 @@ export namespace api {
       product.id = id;
       return product;
     }
+  /**
+   * Calls api to get all the products in stock
+   * @return product id
+   * @return product type
+   * @return quantity in stock
+   * @retun conversion factor
+   * @return product type id
+   */
     export async function getAll(): Promise<IProduct[]> {
       const response = await fetch("/api/product");
       const body = await response.json();
@@ -54,10 +84,18 @@ export namespace api {
         };
       });
     }
+  /**
+   * Calls api to update the quantity in inventory
+   */
     export async function updateQuantity(name: String, quantity: number) {
       const response = await fetch(`/api/product/?quantity=${quantity}&productName=${name}`, {method: "PUT"});
     }
   }
+  /**
+   * Calls api to get menu items
+   * @return menu item id
+   * @return menu item price
+   */
   export namespace menu {
     export async function getMenuItems(): Promise<IMenuItem[]> {
       const response = await fetch("/api/menuItem");
@@ -74,6 +112,12 @@ export namespace api {
         };
       });
     }
+  /**
+   * Calls api to create a new menu item
+   * @param name
+   * @param price
+   * @return response from json
+   */
     export async function createMenuItem(
       name: String,
       price: String
@@ -84,7 +128,11 @@ export namespace api {
       );
       return await response.json();
     }
-
+  /**
+   * Calls api to update the menu item price
+   * @param name
+   * @param price
+   */
     export async function updateMenuItemPrice(
       name: String,
       price: String
@@ -96,6 +144,11 @@ export namespace api {
       return await response.json();
     }
   }
+  /**
+   * Calls api to get menu categories
+   * @param id
+   * @return menu item categories
+   */
   export namespace category {
     export async function find(id: number): Promise<IMenuCategory> {
       const response = await fetch(`/api/menu/category/${id}`);
@@ -104,12 +157,10 @@ export namespace api {
       return MenuCategory(json);
     }
   }
-  /*export async function getUser(): Promise<> {
-    const response = await fetch("api/user");
-    const json = await response.json;
-    return json.items.map((u: ))
-  }*/
-
+  /**
+   * Calls api to verify user credentials
+   * @param credential
+   */
   export namespace user {
     export async function verifyOauthToken(credential: string): Promise<IUser> {
       const response = await fetch(
@@ -118,6 +169,11 @@ export namespace api {
       const json = await response.json();
       return User(json);
     }
+   /**
+   * Calls api to allow a user to login. If invalid, then print a message. If valid, allows access.
+   * @param username
+   * @param password
+   */
     export async function login(
       username: string,
       password: string
@@ -135,6 +191,11 @@ export namespace api {
       const json = await response.json();
       return User(json);
     }
+  /**
+   * Calls api to allow a user to register a manager account
+   * @param username
+   * @param password
+   */
     export async function register(
       username: string,
       password: string
@@ -153,6 +214,9 @@ export namespace api {
       const json = await response.json();
       return User(json);
     }
+  /**
+   * Calls api to logout of system
+   */
     export async function logout(): Promise<void> {
       const response = await fetch("/api/user/logout", {
         method: "POST",
@@ -166,20 +230,33 @@ export namespace api {
       }
       return;
     }
+  /**
+   * Calls api to fetch the account of a user
+   */
     export async function fetchAccount(): Promise<IUser> {
       const response = await fetch("/api/user/current");
       const json = await response.json();
       return User(json);
     }
   }
-
+  /**
+   * Calls api for all shipment related activities
+   */
   export namespace shipment {
     // Shipment Collection
+  /**
+   * Calls api to get all the shipments
+   * @return all shipments
+   */
     export async function getAllShipments() {
       const response = await fetch(`/api/shipment/`, { method: "GET" });
       return await response.json();
     }
-
+  /**
+   * Calls api to create a shipment
+   * @param shipmentDate
+   * @param fulfilled
+   */
     export async function createShipment(
       shipmentDate: String | Date,
       fulfilled: boolean
@@ -192,12 +269,22 @@ export namespace api {
     }
 
     // Indiviudal Shipments
+  /**
+   * Calls api to get a specific shipment
+   * @param shipmentId
+   */
     export async function getShipment(shipmentId: number) {
       const response = await fetch(`/api/shipment/${shipmentId}`, {
         method: "GET",
       });
       return await response.json();
     }
+  /**
+   * Calls api to update a shipment
+   * @param shipmentId
+   * @param shipmentDate
+   * @param fulfilled
+   */
     export async function updateShipment(
       shipmentId: number,
       shipmentDate: String | Date,
@@ -209,6 +296,10 @@ export namespace api {
       );
       return await response.json();
     }
+  /**
+   * Calls api to delete a shipment
+   * @param shipmentId
+   */
     export async function deleteShipment(shipmentId: number) {
       const response = await fetch(`/api/shipment/${shipmentId}`, {
         method: "DELETE",
@@ -217,6 +308,11 @@ export namespace api {
     }
 
     // Shipment Products
+  /**
+   * Calls api to get a product from a specific shipment
+   * @param shipmentId
+   * @param productId
+   */
     export async function getProduct(shipmentId: number, productId: number) {
       const response = await fetch(
         `/api/shipment/${shipmentId}/product/${productId}`,
@@ -224,6 +320,12 @@ export namespace api {
       );
       return await response.json();
     }
+  /**
+   * Calls api to create a product for a shipment
+   * @param shipmentId
+   * @param productId
+   * @param quantity
+   */
     export async function createProduct(
       shipmentId: number,
       productId: number,
@@ -235,6 +337,12 @@ export namespace api {
       );
       return await response.json();
     }
+  /**
+   * Calls api to update products in shipment
+   * @param shipmentId
+   * @param productId
+   * @param quantity
+   */
     export async function updateProduct(
       shipmentId: number,
       productId: number,
@@ -246,6 +354,11 @@ export namespace api {
       );
       return await response.json();
     }
+  /**
+   * Calls api to delete a product in shipment
+   * @param shipmentId
+   * @param productId
+   */
     export async function deleteProduct(shipmentId: number, productId: number) {
       const response = await fetch(
         `/api/shipment/${shipmentId}/product/${productId}`,
@@ -254,9 +367,16 @@ export namespace api {
       return await response.json();
     }
   }
-
+  /**
+   * Calls api for all the report realted acitivity
+   */
   export namespace reports {
-    // Returns a list of all products and dollar amount sold between startDate and endDate
+  /**
+   * Calls api to update products in shipment
+   * @return a list of all products and dollar amount sold between startDate and endDate
+   * @param startDate
+   * @param endDate
+   */
     export async function sales(
       startDate: String | Date,
       endDate: String | Date
@@ -265,7 +385,6 @@ export namespace api {
         `/api/reports/sales/?startDate=${startDate}&endDate=${endDate}`,
         { method: "GET" }
       );
-      //return response.json();
 
       const body = (await response.json()) as { [key: string]: string };
 
@@ -276,7 +395,10 @@ export namespace api {
         });
       });
     }
-    // Returns a list of products whose inventory has fallen below the restock threshold
+  /**
+   * Calls api to update products in shipment
+   * @return a list of products whose inventory has fallen below the restock threshold
+   */
     export async function restock(): Promise<IRestock[]> {
       const response = await fetch(`/api/reports/restock`, { method: "GET" });
 
@@ -289,7 +411,11 @@ export namespace api {
         });
       });
     }
-    // Returns list of products and percent of their invetory sold for products which have sold less than 10% of thier stock up to a given date
+  /**
+   * Calls api to update products in shipment
+   * @return a list of products and percent of their invetory sold for products which have sold less than 10% of thier stock up to a given date
+   * @param date
+   */
     export async function excess(date: String | Date): Promise<IExcess[]> {
       const response = await fetch(`/api/reports/excess/?date=${date}`, {
         method: "GET",
@@ -304,7 +430,12 @@ export namespace api {
         });
       });
     }
-    // Returns a list of all menu items which commonly sold together between startDate and endDate, along with the frequency of these combinations
+  /**
+   * Calls api to update products in shipment
+   * @return a list of all menu items which commonly sold together between startDate and endDate, along with the frequency of these combinations
+   * @param startDate
+   * @param endDate
+   */
     export async function pairs(
       startDate: String | Date,
       endDate: String | Date
@@ -324,8 +455,14 @@ export namespace api {
       });
     }
   }
-
+  /**
+   * Calls api related to all order functionality
+   */
   export namespace order {
+  /**
+   * Calls api to submit an order
+   * @param order
+   */
     export async function submit(order: IOrder) {
       await fetch("/api/order/submit", {
         method: "POST",
@@ -335,7 +472,13 @@ export namespace api {
         body: JSON.stringify(order),
       });
     }
-
+  /**
+   * Calls api to get all orders
+   * @return order id
+   * @return order date
+   * @return order total
+   * @return count
+   */
     export async function getAllOrders(): Promise<IOrder[]> {
       const response = await fetch("/api/order");
       const body = await response.json();

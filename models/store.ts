@@ -16,6 +16,9 @@ import { IPair } from "./pair";
 import { IShipment } from "./shipment";
 import { AlertColor } from "@mui/material";
 
+/**
+ * The store.ts document creates all the root models for the website
+ */
 export interface drawerState {
   open: boolean;
 }
@@ -25,7 +28,9 @@ export const drawerState = createModel<RootModel>()({
     open: false,
   } as drawerState, // initial state
   reducers: {
-    // handle state changes with pure functions
+    /**
+    * This handles state changes with pure functions
+    */
     toggle(state) {
       return { ...state, open: !state.open };
     },
@@ -39,6 +44,13 @@ export const drawerState = createModel<RootModel>()({
   effects: (dispatch) => ({}),
 });
 
+/**
+ * Handles the changes for the menu, menu items,cmenu categories, and the products for each one
+ * @return payload
+ * @return state
+ * @return c, which is the category
+ * @retun categories array
+*/
 export const menuState = createModel<RootModel>()({
   state: Menu(), // initial state
   reducers: {
@@ -85,6 +97,10 @@ export const menuState = createModel<RootModel>()({
       };
     },
   },
+  /**
+   * Calls the api and replaces the old with the new
+   * @param dispatch 
+   */
   effects: (dispatch) => ({
     async load() {
       const menu = await api.getMenu();
@@ -93,6 +109,13 @@ export const menuState = createModel<RootModel>()({
   }),
 });
 
+/**
+ * Handles the changes for orders activities
+ * @return payload
+ * @return state for orders and menu items
+ * @return item, which is the menu item selected
+ * @retun order items array
+*/
 export const orderState = createModel<RootModel>()({
   state: Order(),
   reducers: {
@@ -145,6 +168,10 @@ export const orderState = createModel<RootModel>()({
       };
     },
   },
+  /**
+   * Updates the changes as well as notifies the user that an oder was placed successfully
+   * @param dispatch 
+   */
   effects: (dispatch) => ({
     async submit(order: IOrder) {
       await api.order.submit(order);
@@ -165,7 +192,18 @@ interface UserState {
   manager: boolean;
   error: string;
 }
-
+/**
+ * Handles the changes for user activities
+ * @param user
+ * @param loggedIn
+ * @param manager
+ * @param error
+ * @return payload/user
+ * @return state for orders and menu items
+ * @return loggedin. boolean true or false
+ * @retun manager. This sets manager roles that allows for admin access
+ * @return error. An error message is user tries to access manager roles
+*/
 export const userState = createModel<RootModel>()({
   state: {
     user: User(),

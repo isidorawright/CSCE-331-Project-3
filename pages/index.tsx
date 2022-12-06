@@ -3,6 +3,9 @@ import { Container, Typography, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
 import Head from "next/head";
 
+/**
+ * The css theme of the homepage banner
+ */
 const HomePageBanner = styled(Box)(({ theme }) => {
   return {
     backgroundImage: `url("/spin_stone_banner_inverted.png")`,
@@ -22,7 +25,9 @@ const dayStyle = {
   textAlign: "right" as "right",
   color: "white",
 };
-
+/**
+ * The css theme of the hours of operation box
+ */
 const hoursStyle = {
   width: "80%",
   maxWidth: "calc(90% - 100px)",
@@ -33,6 +38,9 @@ const hoursStyle = {
   color: "white",
 };
 
+/**
+ * This is the setup of the homepage. It contains the title, logo, hours of operation, and implements google maps.
+ */
 export default function Home() {
   let theme = useTheme();
 

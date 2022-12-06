@@ -9,6 +9,10 @@ export interface IMenuCategory {
   menuItemCount?: number;
 }
 
+ /**
+  * Returns the category of a product
+  * @return the menu category of a product or null if it does not exist
+  */
 export function MenuCategory(
   category?: IMenuCategory,
   omit?: string[]

@@ -4,6 +4,11 @@ import database from "../../../models/database";
 import { User, UserRole } from "../../../models/user";
 import { withIronSessionApiRoute } from "iron-session/next";
 
+/**
+ * Allows a user to register an account as long as they have manager (admin) priviledge
+ * Also specifies the username and password requirements
+ * If username already exists or does not have priviledge, then give an error message
+ */
 export default withIronSessionApiRoute(
   async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
