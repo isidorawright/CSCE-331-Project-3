@@ -125,26 +125,25 @@ export const orderState = createModel<RootModel>()({
     toggleSelectOrderItem(state, id: number) {
       return {
         ...state,
-        orderItems: state.orderItems.map(
-          item => {
-            item.selected =
-              item.id == id
-              ? !item.selected
-              : item.selected;
+        orderItems: state.orderItems.map((item) => {
+          item.selected = item.id == id ? !item.selected : item.selected;
 
-            return item;
-          }
-        )
+          return item;
+        }),
       };
     },
     removeItems(state) {
       return {
         ...state,
-        orderItems: state.orderItems.filter(
-          item => !item.selected
-        )
-      }
-    }
+        orderItems: state.orderItems.filter((item) => !item.selected),
+      };
+    },
+    calculateTotals(state) {
+      Order.calculateTotals(state);
+      return {
+        ...state,
+      };
+    },
   },
   effects: (dispatch) => ({
     async submit(order: IOrder) {
@@ -153,7 +152,7 @@ export const orderState = createModel<RootModel>()({
       dispatch.order.reset();
       dispatch.notifications.setMessage({
         message: "Order Placed",
-        severity: 'success'
+        severity: "success",
       });
       dispatch.notifications.setOpen(true);
     },
@@ -269,24 +268,24 @@ export const notificationState = createModel<RootModel>()({
   state: {
     open: false,
     message: "",
-    severity: "info"
+    severity: "info",
   } as NotificationState,
   reducers: {
     setOpen(state, payload: boolean) {
       return {
         ...state,
-        open: payload
+        open: payload,
       };
     },
     setMessage(state, payload) {
       return {
         ...state,
         message: payload.message,
-        severity: payload.severity
-      }
-    }
-  }
-})
+        severity: payload.severity,
+      };
+    },
+  },
+});
 
 interface ManagerState {
   menuItems: IMenuItem[];
@@ -362,63 +361,81 @@ export const managerState = createModel<RootModel>()({
   },
   effects: (dispatch) => ({
     async fetch() {
-      const products = await api.product.getAll();
+      const [
+        products,
+        menuItems,
+        orders,
+        excessItems,
+        salesItems,
+        restockItems,
+        pairsItems,
+        shipments,
+      ] = await Promise.all([
+        api.product.getAll(),
+        api.menu.getMenuItems(),
+        api.order.getAllOrders(),
+        api.reports.excess("01-01-20"),
+        api.reports.sales("08-04-22", "01-01-23"),
+        api.reports.restock(),
+        api.reports.pairs("08-04-22", "01-01-23"),
+        api.shipment.getAllShipments(),
+      ]);
+      // const products = await api.product.getAll();
       dispatch.manager.setInventory(products);
 
-      const menuItems = await api.menu.getMenuItems();
+      // const menuItems = await api.menu.getMenuItems();
       dispatch.manager.setMenuItems(menuItems);
 
-      const orders = await api.order.getAllOrders();
+      // const orders = await api.order.getAllOrders();
       dispatch.manager.setOrders(orders);
 
-      const excessItems = await api.reports.excess("01-01-20");
+      // const excessItems = await api.reports.excess("01-01-20");
       dispatch.manager.setExcess(excessItems);
 
-      const salesItems = await api.reports.sales("08-04-22", "01-01-23");
+      // const salesItems = await api.reports.sales("08-04-22", "01-01-23");
       dispatch.manager.setSale(salesItems);
 
-      const restockItems = await api.reports.restock();
+      // const restockItems = await api.reports.restock();
       dispatch.manager.setRestock(restockItems);
 
-      const pairsItems = await api.reports.pairs("08-04-22", "01-01-23");
+      // const pairsItems = await api.reports.pairs("08-04-22", "01-01-23");
       dispatch.manager.setPairs(pairsItems);
 
-      const shipments = await api.shipment.getAllShipments();
+      // const shipments = await api.shipment.getAllShipments();
       dispatch.manager.setShipments(shipments);
     },
   }),
 });
 
 export enum ModalType {
-  checkout = "checkout"
+  checkout = "checkout",
 }
 
 export interface ModalState {
-  type: ModalType,
-  open: boolean
+  type: ModalType;
+  open: boolean;
 }
 
 export const modalState = createModel<RootModel>()({
   state: {
     type: ModalType.checkout,
-    open: false
+    open: false,
   } as ModalState,
   reducers: {
     setType(state, type: ModalType) {
       return {
         ...state,
-        type
-      }
+        type,
+      };
     },
     setOpen(state, open: boolean) {
       return {
         ...state,
-        open
-      }
-    }
-  }
-})
-
+        open,
+      };
+    },
+  },
+});
 
 export interface RootModel extends Models<RootModel> {
   drawer: typeof drawerState;
@@ -454,16 +471,7 @@ if (typeof window !== "undefined") {
 
 export default store;
 
-function _initializeStore(store: Store) {
-  try {
-    Promise.all([
-      store.dispatch.menu.load(),
-      store.dispatch.manager.fetch(),
-      store.dispatch.user.fetch(),
-    ]);
-  } catch (e) {
-    console.log(e);
-  }
+function initializeOauth() {
   try {
     (window as any).google.accounts.id.initialize({
       client_id:
@@ -474,6 +482,44 @@ function _initializeStore(store: Store) {
       (window as any).google.accounts.id.prompt();
     }
   } catch (e) {}
+}
+
+let googleTranslateElementInit = once(() => {
+  try {
+    new (window as any).google.translate.TranslateElement(
+      {
+        pageLanguage: "en",
+        layout: (window as any).google.translate.TranslateElement.InlineLayout
+          .SIMPLE,
+      },
+      "google_translate_element"
+    );
+  } catch (e) {
+    console.error(e);
+  }
+});
+
+function _initializeStore(store: Store) {
+  Promise.all([
+    store.dispatch.menu.load().catch((e) => {}),
+    store.dispatch.manager.fetch().catch((e) => {}),
+    store.dispatch.user.fetch().catch((e) => {}),
+  ]);
+
+  if (typeof window !== "undefined") {
+    if ((window as any).google) {
+      initializeOauth();
+      googleTranslateElementInit();
+    } else {
+      const gsiClient = document.getElementById("gsi-client");
+      if (gsiClient) {
+        gsiClient.addEventListener("load", () => {
+          initializeOauth();
+          googleTranslateElementInit();
+        });
+      }
+    }
+  }
 }
 
 export const initializeStore = once(_initializeStore);

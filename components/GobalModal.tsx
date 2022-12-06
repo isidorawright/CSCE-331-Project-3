@@ -8,6 +8,7 @@ import { Dispatch, RootState } from '../models/store';
 import { Stack, Grid, TextField } from '@mui/material';
 import { ModalType } from '../models/store';
 
+
 const style = {
   position: 'absolute' as 'absolute',
   top: '50%',
@@ -26,22 +27,35 @@ export function CheckoutModal() {
   const dispatch = useDispatch<Dispatch>();
   const order = useSelector((state: RootState) => state.order);
 
-  return <Stack>
-    <TextField
-      required
-      fullWidth
-      name="name"
-      label="Order Name"
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    dispatch.order.submit(order);
+    dispatch.modal.setOpen(false);
+  }
 
-    />
-    <Grid container>
-      <Grid item>
-        <Button onClick={() => dispatch.order.submit(order)}>Credit Card</Button>
+  return <Stack>
+    <Box
+      component="form"
+      onSubmit={onSubmit}
+    >
+      <TextField
+        required
+        fullWidth
+        name="name"
+        label="Order Name"
+        sx={{
+          mb: "12px"
+        }}
+      />
+      <Typography variant="h6" component="h6" sx={{mb: "12px"}}> Payment Method: </Typography>
+      <Grid container spacing={2}>
+        <Grid item>
+          <Button type="submit">Credit Card</Button>
+        </Grid>
+        <Grid item>
+          <Button type="submit">Cash</Button>
+        </Grid>
       </Grid>
-      <Grid item>
-        <Button onClick={() => dispatch.order.submit(order)}>Cash</Button>
-      </Grid>
-    </Grid>
+    </Box>
   </Stack>
 }
 

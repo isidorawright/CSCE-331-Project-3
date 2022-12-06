@@ -9,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         join order_item on order_item.order_id = "order".order_id
         where order_date between '2022-10-01' and current_date
         group by "order".order_id
-        order by order_date desc`
+        order by order_date desc, "order".order_id desc`
       )
       res.status(200).send(response.rows);
       return;

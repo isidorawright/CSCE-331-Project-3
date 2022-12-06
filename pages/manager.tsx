@@ -97,8 +97,8 @@ function Row(props: { row: ReturnType<typeof Shipment> }) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
   const [fulfilled, setFulfilled] = React.useState(row.fulfilled);
-  const checkmark = <FontAwesomeIcon icon={faCircleCheck} size="lg" />;
-  const xmark = <FontAwesomeIcon icon={faXmark} size="lg" />; 
+  const checkmark = <FontAwesomeIcon icon={faCircleCheck} size="1x" />;
+  const xmark = <FontAwesomeIcon icon={faXmark} size="1x" />; 
   
 
   let fulfill = (row : IShipment) => {
@@ -328,23 +328,8 @@ export default function DataTables({
 export const getServerSideProps = withIronSessionSsr(
   function (context: { req: any; res: any }) {
     const { req, res } = context;
-    const user: IUser | undefined = req.session.user;
+    const user: IUser = req.session.user;
 
-    if (user === undefined || !user.authenticated) {
-      res.setHeader("location", "/login");
-      res.statusCode = 302;
-      res.end();
-      return {
-        props: {
-          user: User({
-            username: "",
-            authenticated: false,
-            role: UserRole.CUSTOMER,
-            id: -1,
-          }),
-        },
-      };
-    }
 
     if (user.role !== UserRole.MANAGER) {
       res.setHeader("location", "/login");
