@@ -43,7 +43,6 @@ export namespace OrderItem {
       // order.id === other.id &&
       order.orderId === other.orderId &&
       order.menuItemId === other.menuItemId &&
-      order.quantity === other.quantity &&
       order.isDrink === other.isDrink &&
       order.products.length === other.products.length &&
       order.products.every((p, i) => Product.equals(p, other.products[i]))
