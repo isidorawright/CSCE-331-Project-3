@@ -203,9 +203,10 @@ export default function DataTables({
   const addInventoryRow = () => {
     // Add blank row to DB and refresh?
     const name = (document.getElementById("outlined-basic product_name") as HTMLInputElement)?.value
+    const type = (document.getElementById("outlined-basic product_type") as HTMLInputElement)?.value
     const quantity = (document.getElementById("outlined-basic quantity") as HTMLInputElement)?.value
     console.log(name, quantity);
-    api.product.insert(name, Number(quantity));
+    api.product.insert(name, type, quantity);
 
     dispatch.manager.fetch();
   }
@@ -249,16 +250,21 @@ export default function DataTables({
       <div
         style={{marginTop: 10, paddingLeft: 40, paddingTop: 10, color: theme.palette.primary.main, marginRight:20}}
       >
-        <TextField id="outlined-basic product_name"  style={{}}/>
-        <TextField id="outlined-basic quantity" style={{}} />
+        <TextField id="outlined-basic product_name" label="Product Name" sx={{paddingRight: 2}}/>
+        <TextField id="outlined-basic product_type" label="Product Type" sx={{paddingRight: 2}}/>
+        <TextField id="outlined-basic quantity" label="Quantity"/>
         <div style={{display: "inline-block", marginLeft:20, marginTop:10}}>
           <IconButton 
             aria-label="add row"
             size="small"
-            onClick={() => addInventoryRow()}
+            onClick={() => {
+                addInventoryRow();
+                window.location.reload();
+              }
+            }
           >
             {<FontAwesomeIcon icon={faPlusCircle} size="xl"/>}
-            <div  style={{marginLeft:20, fontSize:15}}>Insert New</div>
+            <div  style={{marginLeft:20, fontSize:15}}>Add New Product</div>
           </IconButton>
         </div>
       </div>
@@ -286,16 +292,20 @@ export default function DataTables({
       <div
         style={{marginTop: 10, paddingLeft: 40, paddingTop: 10, color: theme.palette.primary.main, marginRight:20}}
       >
-        <TextField id="outlined-basic item_name"  style={{}}/>
-        <TextField id="outlined-basic cost" style={{}} />
+        <TextField id="outlined-basic item_name" label="Item Name" sx={{paddingRight: 2}}/>
+        <TextField id="outlined-basic cost" label="Price ($)"/>
         <div style={{display: "inline-block", marginLeft:20, marginTop:10}}>
           <IconButton 
             aria-label="add row"
             size="small"
-            onClick={() => addMenuRow()}
+            onClick={() => {
+              addMenuRow();
+              window.location.reload();
+            }
+          }
           >
             {<FontAwesomeIcon icon={faPlusCircle} size="xl"/>}
-            <div  style={{marginLeft:20, fontSize:15}}>Insert New</div>
+            <div  style={{marginLeft:20, fontSize:15}}>Add New Item</div>
           </IconButton>
         </div>
       </div>

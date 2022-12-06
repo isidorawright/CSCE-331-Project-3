@@ -1,4 +1,4 @@
-import { Client, Pool } from "pg";
+import { Pool } from "pg";
 
 class Database extends Pool {
   connected: boolean = false;

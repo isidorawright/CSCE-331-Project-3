@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import database from "../../models/database";
-import { IProduct } from "../../models/product";
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,14 +8,25 @@ export default async function handler(
   if (req.method === "POST"){
     await database
       .query(
-        `insert into product (product_name, quantity_in_stock, conversion_factor, product_type_id) values ('${req.query.productName}', '${req.query.quantityInStock}', '1', '8') returning product_id`
+        `insert into product (product_name, quantity_in_stock, conversion_factor, product_type_id) values ('${req.query.productName}', '${req.query.quantityInStock}', '1', '${req.query.productTypeId}') returning product_id`
       );
 
     res.status(200).send("");
     return;
   }
 
-  else if (req.method == "GET" || req.method == "FETCH"){
+  else if (req.method == "FETCH") {
+    const response = await database.query(
+      `SELECT DISTINCT product.product_type_id FROM product
+	    JOIN product_type ON product_type.product_type_id = product.product_type_id
+	    WHERE product_type_name='${req.query.productType}'`
+    )
+    
+    res.status(200).send(response.rows);
+    return;
+  }
+
+  else if (req.method == "GET"){
     const response = await database.query(
         `SELECT product.product_id, product.product_name, product_type.product_type_name, product.quantity_in_stock, product.conversion_factor
         FROM product 

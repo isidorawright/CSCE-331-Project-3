@@ -7,7 +7,7 @@ import { IExcess, Excess } from "./excess";
 import { ISales, Sale } from "./sales";
 import { IRestock, Restock } from "./restock";
 import { IPair, Pair } from "./pair";
-import { IShipment, Shipment } from "./shipment";
+import database from "./database";
 
 export namespace api {
   export async function getMenuCategories(): Promise<IMenuCategory[]> {
@@ -27,8 +27,18 @@ export namespace api {
     return Menu(json);
   }
   export namespace product {
-    export async function insert(name: String, quantity: Number){
-      const response = await fetch(`/api/product/?productName=${name}&quantityInStock=${quantity}`, {
+    export async function insert(name: String, type: String, quantity: String){
+      if(type != "Drink" || "Veggies" || "Crust" || "Sauce" || "Cheese" || "Drizzle" || "Meat"){
+        const response = await fetch(`/api/product/?productName=${name}&quantityInStock=${quantity}&productTypeId=${'8'}`, {
+          method: "POST"
+        });
+        return;
+      }
+
+      const typeId = await fetch(`/api/product/?productType=${type}`, {
+        method: "FETCH"
+      });
+      const response = await fetch(`/api/product/?productName=${name}&productType=${typeId}&quantityInStock=${quantity}`, {
         method: "POST"
       });
       return;
