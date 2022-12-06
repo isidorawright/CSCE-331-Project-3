@@ -27,17 +27,11 @@ export namespace api {
     return Menu(json);
   }
   export namespace product {
-    export async function insert(product: IProduct): Promise<IProduct> {
-      const response = await fetch("/api/menu/products", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(product),
+    export async function insert(name: String, quantity: Number){
+      const response = await fetch(`/api/product/?productName=${name}&quantityInStock=${quantity}`, {
+        method: "POST"
       });
-      const { id } = await response.json();
-      product.id = id;
-      return product;
+      return;
     }
     export async function getAll(): Promise<IProduct[]> {
       const response = await fetch("/api/product");

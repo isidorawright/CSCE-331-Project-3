@@ -35,8 +35,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck, faXmark, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { IShipment, Shipment } from "../models/shipment";
 import { api } from "../models/api";
-import {MenuItem, IMenuItem} from "../models/menuItem"
-import {Dispatch} from "../models/store"
+import {MenuItem, IMenuItem} from "../models/menuItem";
+import {Product, IProduct} from "../models/product";
+import {Dispatch} from "../models/store";
 import { InputLabel } from "@mui/material";
 import { TextField } from "@mui/material";
 
@@ -199,6 +200,16 @@ export default function DataTables({
     dispatch.manager.fetch();
   }
 
+  const addInventoryRow = () => {
+    // Add blank row to DB and refresh?
+    const name = (document.getElementById("outlined-basic product_name") as HTMLInputElement)?.value
+    const quantity = (document.getElementById("outlined-basic quantity") as HTMLInputElement)?.value
+    console.log(name, quantity);
+    api.product.insert(name, Number(quantity));
+
+    dispatch.manager.fetch();
+  }
+
   const processRowUpdateMenu = (newRow : GridRowModel) => {
     api.menu.updateMenuItemPrice(newRow.name, newRow.price);
     return newRow;
@@ -234,6 +245,23 @@ export default function DataTables({
         rowsPerPageOptions={[Infinity]}
         sx={{ height: "420px", marginLeft: 5, marginRight: 5, marginTop: 1 }}
       />
+
+      <div
+        style={{marginTop: 10, paddingLeft: 40, paddingTop: 10, color: theme.palette.primary.main, marginRight:20}}
+      >
+        <TextField id="outlined-basic product_name"  style={{}}/>
+        <TextField id="outlined-basic quantity" style={{}} />
+        <div style={{display: "inline-block", marginLeft:20, marginTop:10}}>
+          <IconButton 
+            aria-label="add row"
+            size="small"
+            onClick={() => addInventoryRow()}
+          >
+            {<FontAwesomeIcon icon={faPlusCircle} size="xl"/>}
+            <div  style={{marginLeft:20, fontSize:15}}>Insert New</div>
+          </IconButton>
+        </div>
+      </div>
 
       <br />
       <h1
