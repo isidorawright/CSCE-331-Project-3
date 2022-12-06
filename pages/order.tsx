@@ -332,6 +332,21 @@ function Receipt({ order }: { order: IOrder }): JSX.Element {
             </Button>
           </Grid>
         ) : null}
+        {order.orderItems.length ? (
+            <Grid item>
+              <Button
+                variant="contained"
+                color="primary"
+                fullWidth
+                onClick={() => {
+                  dispatch.modal.setType(ModalType.checkout);
+                  dispatch.modal.setOpen(true);
+                }}
+              >
+                Checkout
+              </Button>
+            </Grid>
+          ) : null}
       </Grid>
     </Paper>
   );
@@ -704,23 +719,6 @@ export function CustomerOrder() {
                 }}
               >
                 Add Item
-              </Button>
-            </Grid>
-          ) : null}
-          
-
-          {order.orderItems.length ? (
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                onClick={() => {
-                  dispatch.modal.setType(ModalType.checkout);
-                  dispatch.modal.setOpen(true);
-                }}
-              >
-                Checkout
               </Button>
             </Grid>
           ) : null}
