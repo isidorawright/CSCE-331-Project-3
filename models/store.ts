@@ -361,28 +361,47 @@ export const managerState = createModel<RootModel>()({
   },
   effects: (dispatch) => ({
     async fetch() {
-      const products = await api.product.getAll();
+      const [
+        products,
+        menuItems,
+        orders,
+        excessItems,
+        salesItems,
+        restockItems,
+        pairsItems,
+        shipments,
+      ] = await Promise.all([
+        api.product.getAll(),
+        api.menu.getMenuItems(),
+        api.order.getAllOrders(),
+        api.reports.excess("01-01-20"),
+        api.reports.sales("08-04-22", "01-01-23"),
+        api.reports.restock(),
+        api.reports.pairs("08-04-22", "01-01-23"),
+        api.shipment.getAllShipments(),
+      ]);
+      // const products = await api.product.getAll();
       dispatch.manager.setInventory(products);
 
-      const menuItems = await api.menu.getMenuItems();
+      // const menuItems = await api.menu.getMenuItems();
       dispatch.manager.setMenuItems(menuItems);
 
-      const orders = await api.order.getAllOrders();
+      // const orders = await api.order.getAllOrders();
       dispatch.manager.setOrders(orders);
 
-      const excessItems = await api.reports.excess("01-01-20");
+      // const excessItems = await api.reports.excess("01-01-20");
       dispatch.manager.setExcess(excessItems);
 
-      const salesItems = await api.reports.sales("08-04-22", "01-01-23");
+      // const salesItems = await api.reports.sales("08-04-22", "01-01-23");
       dispatch.manager.setSale(salesItems);
 
-      const restockItems = await api.reports.restock();
+      // const restockItems = await api.reports.restock();
       dispatch.manager.setRestock(restockItems);
 
-      const pairsItems = await api.reports.pairs("08-04-22", "01-01-23");
+      // const pairsItems = await api.reports.pairs("08-04-22", "01-01-23");
       dispatch.manager.setPairs(pairsItems);
 
-      const shipments = await api.shipment.getAllShipments();
+      // const shipments = await api.shipment.getAllShipments();
       dispatch.manager.setShipments(shipments);
     },
   }),
@@ -465,6 +484,21 @@ function initializeOauth() {
   } catch (e) {}
 }
 
+let googleTranslateElementInit = once(() => {
+  try {
+    new (window as any).google.translate.TranslateElement(
+      {
+        pageLanguage: "en",
+        layout: (window as any).google.translate.TranslateElement.InlineLayout
+          .SIMPLE,
+      },
+      "google_translate_element"
+    );
+  } catch (e) {
+    console.error(e);
+  }
+});
+
 function _initializeStore(store: Store) {
   Promise.all([
     store.dispatch.menu.load().catch((e) => {}),
@@ -475,10 +509,14 @@ function _initializeStore(store: Store) {
   if (typeof window !== "undefined") {
     if ((window as any).google) {
       initializeOauth();
+      googleTranslateElementInit();
     } else {
       const gsiClient = document.getElementById("gsi-client");
       if (gsiClient) {
-        gsiClient.addEventListener("load", initializeOauth);
+        gsiClient.addEventListener("load", () => {
+          initializeOauth();
+          googleTranslateElementInit();
+        });
       }
     }
   }

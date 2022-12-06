@@ -17,26 +17,12 @@ import { GlobalModal } from "../components/GobalModal";
 
 const clientSideEmotionCache = createEmotionCache();
 
-let googleTranslateElementInit = once(() => {
-  try {
-    new (window as any).google.translate.TranslateElement(
-      {
-        pageLanguage: "en",
-        layout: (window as any).google.translate.TranslateElement.InlineLayout
-          .SIMPLE,
-      },
-      "google_translate_element"
-    );
-  } catch (e) {
-    console.error(e);
-  }
-});
+
 
 export default function MyApp(props: any) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   React.useEffect(() => {
     initializeStore(store);
-    googleTranslateElementInit();
   });
   return (
     <Provider store={store}>
