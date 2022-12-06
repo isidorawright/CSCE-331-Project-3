@@ -68,6 +68,7 @@ export default async function handler(
                     conversionFactor: row.conversion_factor,
                     productTypeId: row.product_type_id,
                     productType: row.product_type_name,
+                    optional: row.optional,
                   }))
                 : [],
             };

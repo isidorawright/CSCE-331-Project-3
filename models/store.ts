@@ -29,8 +29,8 @@ export const drawerState = createModel<RootModel>()({
   } as drawerState, // initial state
   reducers: {
     /**
-    * This handles state changes with pure functions
-    */
+     * This handles state changes with pure functions
+     */
     toggle(state) {
       return { ...state, open: !state.open };
     },
@@ -50,7 +50,7 @@ export const drawerState = createModel<RootModel>()({
  * @return state
  * @return c, which is the category
  * @retun categories array
-*/
+ */
 export const menuState = createModel<RootModel>()({
   state: Menu(), // initial state
   reducers: {
@@ -99,7 +99,7 @@ export const menuState = createModel<RootModel>()({
   },
   /**
    * Calls the api and replaces the old with the new
-   * @param dispatch 
+   * @param dispatch
    */
   effects: (dispatch) => ({
     async load() {
@@ -115,7 +115,7 @@ export const menuState = createModel<RootModel>()({
  * @return state for orders and menu items
  * @return item, which is the menu item selected
  * @retun order items array
-*/
+ */
 export const orderState = createModel<RootModel>()({
   state: Order(),
   reducers: {
@@ -137,7 +137,7 @@ export const orderState = createModel<RootModel>()({
           quantity: 1,
           isDrink: false,
           products: menuItem.products
-            .filter((p) => p.selected)
+            .filter((p) => p.selected || !p.optional)
             .map((p) => Product(p)),
           id: new Date().getTime(),
         })
@@ -170,7 +170,7 @@ export const orderState = createModel<RootModel>()({
   },
   /**
    * Updates the changes as well as notifies the user that an oder was placed successfully
-   * @param dispatch 
+   * @param dispatch
    */
   effects: (dispatch) => ({
     async submit(order: IOrder) {
@@ -199,7 +199,7 @@ interface UserState {
  * @return loggedin. boolean true or false
  * @retun manager. This sets manager roles that allows for admin access
  * @return error. An error message is user tries to access manager roles
-*/
+ */
 export const userState = createModel<RootModel>()({
   state: {
     user: User(),
@@ -225,7 +225,7 @@ export const userState = createModel<RootModel>()({
   },
   effects: (dispatch) => ({
     /**
-     * @param data 
+     * @param data
      */
     async login(data: IUser) {
       if (!data.password) {
@@ -259,7 +259,7 @@ export const userState = createModel<RootModel>()({
       Router.push("/login");
     },
     /**
-     * @param data 
+     * @param data
      */
     async register(data: IUser) {
       if (!data.password) return;
@@ -283,7 +283,7 @@ export const userState = createModel<RootModel>()({
       }
     },
     /**
-     * @param response 
+     * @param response
      */
     async handleOAuth(response) {
       try {
@@ -313,7 +313,7 @@ interface NotificationState {
  * @return open/payload
  * @retun message
  * @return severity of message
-*/
+ */
 export const notificationState = createModel<RootModel>()({
   state: {
     open: false,
@@ -351,7 +351,7 @@ interface ManagerState {
 /**
  * Handles the changes for manager activities
  * @return payload
-*/
+ */
 export const managerState = createModel<RootModel>()({
   state: {
     inventory: [],

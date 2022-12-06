@@ -7,10 +7,11 @@ export interface IProduct {
 
   productType?: string;
   selected?: boolean;
+  optional?: boolean;
 }
 
 /**
- * @param product 
+ * @param product
  * @returns product or null if it does not exist
  */
 export function Product(product?: IProduct): IProduct {

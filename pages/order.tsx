@@ -10,7 +10,7 @@ import {
   Paper,
   Typography,
   useTheme,
-  Stack
+  Stack,
 } from "@mui/material";
 import LocalPizzaIcon from "@mui/icons-material/LocalPizza";
 import SportsBarIcon from "@mui/icons-material/SportsBar";
@@ -21,8 +21,8 @@ import { IOrder } from "../models/order";
 import { Money } from "../util/money";
 import { useDispatch, useSelector } from "react-redux";
 import Head from "next/head";
-import { ModalType } from '../models/store';
-import { Product } from '../models/product';
+import { ModalType } from "../models/store";
+import { Product } from "../models/product";
 
 /**
  * @param category
@@ -50,12 +50,12 @@ function MenuCategoryTile({
         justifyContent="center"
         alignItems="center"
       >
-        {
-          category.name == "Pizza"
-          ? <LocalPizzaIcon fontSize="small" />
-          : <SportsBarIcon fontSize="small" />
-        }
-        
+        {category.name == "Pizza" ? (
+          <LocalPizzaIcon fontSize="small" />
+        ) : (
+          <SportsBarIcon fontSize="small" />
+        )}
+
         <Typography variant="subtitle1">{category.name}</Typography>
         <Typography variant="subtitle1" fontWeight="bold">
           {category.menuItems.length} Items
@@ -154,7 +154,7 @@ function MenuItems(): JSX.Element {
 }
 
 interface ReceiptState {
-  [key: number]: boolean | undefined
+  [key: number]: boolean | undefined;
 }
 
 /**
@@ -183,21 +183,20 @@ function Receipt({ order }: { order: IOrder }): JSX.Element {
             key={item.id}
           >
             <Grid
-              container item direction="column"
+              container
+              item
+              direction="column"
               sx={{
                 color: item.selected ? theme.palette.primary.main : "",
                 cursor: "pointer",
                 ":hover": {
-                  color: theme.palette.primary.main
+                  color: theme.palette.primary.main,
                 },
                 padding: theme.spacing(1),
               }}
-              onClick={
-                () => {
-                  dispatch.order.toggleSelectOrderItem(item.id)
-                }
-              }
-
+              onClick={() => {
+                dispatch.order.toggleSelectOrderItem(item.id);
+              }}
             >
               <Grid container item>
                 <Grid item flexGrow={1}>
@@ -209,19 +208,15 @@ function Receipt({ order }: { order: IOrder }): JSX.Element {
                 <Grid item>
                   <Stack>
                     <Typography variant="subtitle1" fontWeight="bold">
-                      {
-                        Money.of(item.menuItem.price)
-                          .mul(item.quantity)
-                          .toString()
-                      }
+                      {Money.of(item.menuItem.price)
+                        .mul(item.quantity)
+                        .toString()}
                     </Typography>
-                    {
-                      item.quantity > 1 ? (
-                        <Typography variant="subtitle1" fontWeight="bold">
-                          {`x ${item.quantity}`}
-                        </Typography>
-                      ) : null
-                    }
+                    {item.quantity > 1 ? (
+                      <Typography variant="subtitle1" fontWeight="bold">
+                        {`x ${item.quantity}`}
+                      </Typography>
+                    ) : null}
                   </Stack>
                 </Grid>
               </Grid>
@@ -246,7 +241,7 @@ function Receipt({ order }: { order: IOrder }): JSX.Element {
             </Grid>
           </Grid>
         ))}
-        <Grid item sx={{padding: theme.spacing(1)}}>
+        <Grid item sx={{ padding: theme.spacing(1) }}>
           <Box display="grid" gridTemplateColumns="repeat(12, 1fr)">
             <Box gridColumn="span 6">
               <Typography variant="subtitle1" fontWeight="bold">
@@ -284,35 +279,33 @@ function Receipt({ order }: { order: IOrder }): JSX.Element {
         </Grid>
       </Grid>
       <Grid container justifyContent="end" spacing={2} padding="12px 0px">
-        {
-          order.orderItems.length ? (
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  if (order.orderItems.some(item => item.selected)) {
-                    dispatch.order.removeItems();
-                    dispatch.order.calculateTotals();
-                    dispatch.notifications.setMessage({
-                      message: "Item(s) Deleted",
-                      severity: 'success'
-                    });
-                    dispatch.notifications.setOpen(true);
-                  } else {
-                    dispatch.notifications.setMessage({
-                      message: "Must select at least 1 item",
-                      severity: 'warning'
-                    });
-                    dispatch.notifications.setOpen(true);
-                  }
-                }}
-              >
-                Delete
-              </Button>
-            </Grid>
-          ) : null
-        }
+        {order.orderItems.length ? (
+          <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                if (order.orderItems.some((item) => item.selected)) {
+                  dispatch.order.removeItems();
+                  dispatch.order.calculateTotals();
+                  dispatch.notifications.setMessage({
+                    message: "Item(s) Deleted",
+                    severity: "success",
+                  });
+                  dispatch.notifications.setOpen(true);
+                } else {
+                  dispatch.notifications.setMessage({
+                    message: "Must select at least 1 item",
+                    severity: "warning",
+                  });
+                  dispatch.notifications.setOpen(true);
+                }
+              }}
+            >
+              Delete
+            </Button>
+          </Grid>
+        ) : null}
         {order.orderItems.length ? (
           <Grid item>
             <Button
@@ -321,7 +314,7 @@ function Receipt({ order }: { order: IOrder }): JSX.Element {
               onClick={() => {
                 dispatch.notifications.setMessage({
                   message: "Order Cleared",
-                  severity: 'success'
+                  severity: "success",
                 });
                 dispatch.notifications.setOpen(true);
                 dispatch.order.reset();
@@ -333,20 +326,20 @@ function Receipt({ order }: { order: IOrder }): JSX.Element {
           </Grid>
         ) : null}
         {order.orderItems.length ? (
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                onClick={() => {
-                  dispatch.modal.setType(ModalType.checkout);
-                  dispatch.modal.setOpen(true);
-                }}
-              >
-                Checkout
-              </Button>
-            </Grid>
-          ) : null}
+          <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={() => {
+                dispatch.modal.setType(ModalType.checkout);
+                dispatch.modal.setOpen(true);
+              }}
+            >
+              Checkout
+            </Button>
+          </Grid>
+        ) : null}
       </Grid>
     </Paper>
   );
@@ -379,7 +372,7 @@ function ConfigurePizza(): JSX.Element {
 
   return (
     <Paper sx={{ padding: theme.spacing(3), height: "100%" }}>
-      <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: "12px"}}>
+      <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: "12px" }}>
         Select Crust *
       </Typography>
       <Grid container spacing={2}>
@@ -399,21 +392,17 @@ function ConfigurePizza(): JSX.Element {
                   color: product.selected
                     ? theme.palette.primary.contrastText
                     : "black",
-                  cursor: "pointer"
+                  cursor: "pointer",
                 }}
                 onClick={() => {
                   let Chosen = menuItem.products.filter(function (product) {
-                    return (product.productTypeId == 7 && product.selected);
-                  })
-                  if (
-                    Chosen.length < 1 ||
-                    product.selected
-                  ) {
+                    return product.productTypeId == 7 && product.selected;
+                  });
+                  if (Chosen.length < 1 || product.selected) {
                     if (product != Chosen[0]) {
                       dispatch.menu.toggleMenuItemProduct(product);
                     }
-                  }
-                  else {
+                  } else {
                     if (product != Chosen[0]) {
                       dispatch.menu.toggleMenuItemProduct(product);
                       dispatch.menu.toggleMenuItemProduct(Chosen[0]);
@@ -453,21 +442,17 @@ function ConfigurePizza(): JSX.Element {
                   color: product.selected
                     ? theme.palette.primary.contrastText
                     : "black",
-                  cursor: "pointer"
+                  cursor: "pointer",
                 }}
                 onClick={() => {
                   let Chosen = menuItem.products.filter(function (product) {
-                    return (product.productTypeId == 3 && product.selected);
-                  })
-                  if (
-                    Chosen.length < 1 ||
-                    product.selected
-                  ) {
+                    return product.productTypeId == 3 && product.selected;
+                  });
+                  if (Chosen.length < 1 || product.selected) {
                     dispatch.menu.toggleMenuItemProduct(product);
-                  }
-                  else {
+                  } else {
                     dispatch.menu.toggleMenuItemProduct(product);
-                    dispatch.menu.toggleMenuItemProduct(Chosen[0])
+                    dispatch.menu.toggleMenuItemProduct(Chosen[0]);
                   }
                 }}
               >
@@ -503,20 +488,17 @@ function ConfigurePizza(): JSX.Element {
                   color: product.selected
                     ? theme.palette.primary.contrastText
                     : "black",
-                  cursor: "pointer"
+                  cursor: "pointer",
                 }}
                 onClick={() => {
                   let Chosen = menuItem.products.filter(function (product) {
-                    return (product.productTypeId == 4 && product.selected);
-                  })
-                  if (
-                    Chosen.length < 1 ||
-                    product.selected
-                  ) {
+                    return product.productTypeId == 4 && product.selected;
+                  });
+                  if (Chosen.length < 1 || product.selected) {
                     dispatch.menu.toggleMenuItemProduct(product);
                   } else {
                     dispatch.menu.toggleMenuItemProduct(product);
-                    dispatch.menu.toggleMenuItemProduct(Chosen[0])
+                    dispatch.menu.toggleMenuItemProduct(Chosen[0]);
                   }
                 }}
               >
@@ -529,16 +511,27 @@ function ConfigurePizza(): JSX.Element {
       </Grid>
 
       <>
-        {maxToppings != 0 ?
-          (
-            <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: "12px", marginTop: "24px"}}>Select Toppings *</Typography>
-          ) :
-          <Typography sx={{ marginBottom: "12px", marginTop: "24px" }}></Typography>}
+        {maxToppings != 0 ? (
+          <Typography
+            variant="h6"
+            fontWeight="bold"
+            sx={{ marginBottom: "12px", marginTop: "24px" }}
+          >
+            Select Toppings *
+          </Typography>
+        ) : (
+          <Typography
+            sx={{ marginBottom: "12px", marginTop: "24px" }}
+          ></Typography>
+        )}
       </>
       <Grid container spacing={2}>
         {menuItem.products
           .filter(function (product) {
-            return ((product.productTypeId == 5 || product.productTypeId == 6) && maxToppings != 0);
+            return (
+              (product.productTypeId == 5 || product.productTypeId == 6) &&
+              maxToppings != 0
+            );
           })
           .map((product, index) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
@@ -556,30 +549,28 @@ function ConfigurePizza(): JSX.Element {
                 }}
                 onClick={() => {
                   let Chosen = menuItem.products.filter(function (product) {
-                    return ((product.productTypeId == 5 || product.productTypeId == 6) && product.selected);
-                  })
-                  if (maxToppings != 1) {
-                    if (
-                      Chosen.length < maxToppings ||
+                    return (
+                      (product.productTypeId == 5 ||
+                        product.productTypeId == 6) &&
                       product.selected
-                    ) {
+                    );
+                  });
+                  if (maxToppings != 1) {
+                    if (Chosen.length < maxToppings || product.selected) {
                       dispatch.menu.toggleMenuItemProduct(product);
                     } else {
                       dispatch.notifications.setMessage({
                         message: "Choose up to 4 toppings",
-                        severity: 'warning'
+                        severity: "warning",
                       });
                       dispatch.notifications.setOpen(true);
                     }
                   } else {
-                    if (
-                      Chosen.length < 1 ||
-                      product.selected
-                    ) {
+                    if (Chosen.length < 1 || product.selected) {
                       dispatch.menu.toggleMenuItemProduct(product);
                     } else {
                       dispatch.menu.toggleMenuItemProduct(product);
-                      dispatch.menu.toggleMenuItemProduct(Chosen[0])
+                      dispatch.menu.toggleMenuItemProduct(Chosen[0]);
                     }
                   }
                 }}
@@ -616,7 +607,7 @@ function ConfigurePizza(): JSX.Element {
                   color: product.selected
                     ? theme.palette.primary.contrastText
                     : "black",
-                  cursor: "pointer"
+                  cursor: "pointer",
                 }}
                 onClick={() => dispatch.menu.toggleMenuItemProduct(product)}
               >
@@ -627,7 +618,7 @@ function ConfigurePizza(): JSX.Element {
             </Grid>
           ))}
       </Grid>
-      <Typography sx={{padding: theme.spacing(2)}}>* Required</Typography>
+      <Typography sx={{ padding: theme.spacing(2) }}>* Required</Typography>
     </Paper>
   );
 }
@@ -647,15 +638,15 @@ export function CustomerOrder() {
     ? MenuCategory.activeItem(activeCategory)
     : null;
 
-  menu.configuringPizza = true;
+  menu.configuringPizza = activeCategory?.name == "Pizza";
 
   const minToppings =
     {
       "1 Topping Pizza": 1,
       "2-4 Topping Pizza": 2,
       "Original Cheese Pizza": 0,
-      "default": 0
-    }[activeItem?.name || "default"] || 0
+      default: 0,
+    }[activeItem?.name || "default"] || 0;
 
   return (
     <Container maxWidth="lg" sx={{ paddingTop: theme.spacing(3), flexGrow: 1 }}>
@@ -685,33 +676,46 @@ export function CustomerOrder() {
                 variant="contained"
                 color="primary"
                 onClick={() => {
-                  let chosenCrust = activeItem.products.filter(function (product) {
-                    return (product.productTypeId == 7 && product.selected);
-                  })
-                  let chosenToppings = activeItem.products.filter(function (product) {
-                    return ((product.productTypeId == 5 || product.productTypeId == 6) && product.selected);
-                  })
-                  if ((activeCategory?.name != "Pizza") 
-                  || ((chosenCrust.length > 0) && (chosenToppings.length >= minToppings))) {
+                  let chosenCrust = activeItem.products.filter(function (
+                    product
+                  ) {
+                    return product.productTypeId == 7 && product.selected;
+                  });
+                  let chosenToppings = activeItem.products.filter(function (
+                    product
+                  ) {
+                    return (
+                      (product.productTypeId == 5 ||
+                        product.productTypeId == 6) &&
+                      product.selected
+                    );
+                  });
+                  if (
+                    activeCategory?.name != "Pizza" ||
+                    (chosenCrust.length > 0 &&
+                      chosenToppings.length >= minToppings)
+                  ) {
                     dispatch.notifications.setMessage({
                       message: "Item Added",
-                      severity: 'success'
+                      severity: "success",
                     });
                     dispatch.notifications.setOpen(true);
                     dispatch.order.addItem(activeItem);
                     dispatch.menu.reset();
                   } else {
-                    if (chosenCrust.length <= 0){
+                    if (chosenCrust.length <= 0) {
                       dispatch.notifications.setMessage({
                         message: `Please select a crust option`,
-                        severity: 'warning'
+                        severity: "warning",
                       });
                       dispatch.notifications.setOpen(true);
                     }
                     if (chosenToppings.length < minToppings) {
                       dispatch.notifications.setMessage({
-                        message: `Please select at least ${minToppings - chosenToppings.length} more toppings`,
-                        severity: 'warning'
+                        message: `Please select at least ${
+                          minToppings - chosenToppings.length
+                        } more toppings`,
+                        severity: "warning",
                       });
                       dispatch.notifications.setOpen(true);
                     }
