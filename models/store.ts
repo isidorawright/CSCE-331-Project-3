@@ -15,6 +15,7 @@ import { IRestock } from "./restock";
 import { IPair } from "./pair";
 import { IShipment } from "./shipment";
 import { AlertColor } from "@mui/material";
+import { ActionButtonType } from "../components/ActionButton";
 
 /**
  * The store.ts document creates all the root models for the website
@@ -367,39 +368,23 @@ export const managerState = createModel<RootModel>()({
     replace(state, payload: ManagerState) {
       return payload;
     },
-    assign(state, payload : Partial<ManagerState>) {
-      return {...state, ...payload}
+    assign(state, payload: Partial<ManagerState>) {
+      return { ...state, ...payload };
     },
   },
   effects: (dispatch) => ({
-    async setSalesReport({
-        start,
-        end,
-      } : {
-        start : String;
-        end : String;
-      }) {
+    async setSalesReport({ start, end }: { start: String; end: String }) {
       const sales = await api.reports.sales(start, end);
-      dispatch.manager.assign({sales});
+      dispatch.manager.assign({ sales });
     },
-    async setExcessReport({
-      end,
-    } : {
-      end : String;
-    }) {
-    const excess = await api.reports.excess(end);
-    dispatch.manager.assign({excess});
-  },
-  async setPairReport({
-    start,
-    end,
-  } : {
-    start : String;
-    end : String;
-  }) {
-  const pairs = await api.reports.pairs(start, end);
-  dispatch.manager.assign({pairs});
-},
+    async setExcessReport({ end }: { end: String }) {
+      const excess = await api.reports.excess(end);
+      dispatch.manager.assign({ excess });
+    },
+    async setPairReport({ start, end }: { start: String; end: String }) {
+      const pairs = await api.reports.pairs(start, end);
+      dispatch.manager.assign({ pairs });
+    },
     async fetch() {
       const [
         products,
@@ -464,6 +449,33 @@ export const modalState = createModel<RootModel>()({
   },
 });
 
+export interface ActionButtonState {
+  open: boolean;
+  type: ActionButtonType;
+}
+
+export const actionButtonState = createModel<RootModel>()({
+  state: {
+    open: false,
+    type: ActionButtonType.updateManager,
+  } as ActionButtonState,
+  reducers: {
+    setOpen(state, open: boolean) {
+      return {
+        ...state,
+        open,
+      };
+    },
+    setType(state, type: ActionButtonType) {
+      return {
+        ...state,
+        type,
+      };
+    },
+  },
+  effects: (dispatch) => ({}),
+});
+
 export interface RootModel extends Models<RootModel> {
   drawer: typeof drawerState;
   menu: typeof menuState;
@@ -472,6 +484,7 @@ export interface RootModel extends Models<RootModel> {
   manager: typeof managerState;
   notifications: typeof notificationState;
   modal: typeof modalState;
+  actionButton: typeof actionButtonState;
 }
 
 export const models: RootModel = {
@@ -482,6 +495,7 @@ export const models: RootModel = {
   manager: managerState,
   notifications: notificationState,
   modal: modalState,
+  actionButton: actionButtonState,
 };
 
 export const store = init({

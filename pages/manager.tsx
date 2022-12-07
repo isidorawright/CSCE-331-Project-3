@@ -25,7 +25,6 @@ import { useTheme, CustomTheme, Fab } from "@mui/material";
 
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import SyncIcon from "@mui/icons-material/Sync";
 import { withIronSessionSsr } from "iron-session/next";
 import { IUser, User, UserRole } from "../models/user";
 import { InferGetServerSidePropsType } from "next";
@@ -195,12 +194,14 @@ export default function DataTables({
   const menuItems = useSelector((state: RootState) => state.manager.menuItems);
   const orders = useSelector((state: RootState) => state.manager.orders);
   const shipments = useSelector((state: RootState) => state.manager.shipments);
+  const dispatch = useDispatch<Dispatch>();
   const theme = useTheme<CustomTheme>();
   const router = useRouter();
 
+
+
   const apiRef = useGridApiRef();
 
-  const dispatch = useDispatch<Dispatch>();
   const addMenuRow = () => {
     // Add blank row to DB and refresh?
     const name = (
@@ -246,19 +247,6 @@ export default function DataTables({
         <title>Spin &apos;N Stone | Manage</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Fab
-        color="secondary"
-        aria-label="sync"
-        sx={{
-          position: "absolute",
-          right: 0,
-          bottom: 0,
-          transform: "translate(-50%, -50%)",
-        }}
-        onClick={() => dispatch.manager.fetch()}
-      >
-        <SyncIcon />
-      </Fab>
       <h1
         style={{
           paddingLeft: 40,
