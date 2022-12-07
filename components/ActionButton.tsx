@@ -13,7 +13,7 @@ function UpdateManagerButton() {
   const dispatch = useDispatch<Dispatch>();
 
   return <Fab
-  color="secondary"
+  color="primary"
   aria-label="sync"
   sx={{
     position: "fixed",
