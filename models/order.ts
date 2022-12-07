@@ -44,7 +44,7 @@ export namespace Order {
   export function calculateTotals(order: IOrder): IOrder {
     order.subTotal = order.orderItems
       .reduce(
-        (acc, o) => acc.add(o.menuItem.price).mul(o.quantity),
+        (acc, o) => acc.add(Money.of(o.menuItem.price).mul(o.quantity)),
         Money.of(0)
       )
       .toString();

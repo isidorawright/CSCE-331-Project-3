@@ -224,16 +224,21 @@ function Receipt({ order }: { order: IOrder }): JSX.Element {
                 <Grid item sx={{ cursor: "pointer" }} xs={12}>
                   <ul>
                     {item.products.map((product) => {
-                      return (
-                        <li
-                          key={product.id}
-                          style={{ paddingLeft: theme.spacing(2) }}
-                        >
-                          <Typography variant="subtitle1">
-                            - {product.productName}
-                          </Typography>
-                        </li>
-                      );
+                      if(!product.optional){
+                        return;
+                      }
+                      else {
+                        return (
+                          <li
+                            key={product.id}
+                            style={{ paddingLeft: theme.spacing(2) }}
+                          >
+                            <Typography variant="subtitle1">
+                              - {product.productName}
+                            </Typography>
+                          </li>
+                        );
+                      }
                     })}
                   </ul>
                 </Grid>
@@ -347,7 +352,7 @@ function Receipt({ order }: { order: IOrder }): JSX.Element {
 
 /**
  * This allows the customer to ba able to choose their options for the pizza. All sections are required except for sauce and cheese.
- * Also allows for selections to ge toggled as well as have restriction on the number of topping based on which pizza category was selected.
+ * Also allows for selections to be toggled as well as have restriction on the number of topping based on which pizza category was selected.
  * @returns the theme to display the selection of the menu items for the customer to choose from
  */
 function ConfigurePizza(): JSX.Element {
