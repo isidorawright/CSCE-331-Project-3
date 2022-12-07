@@ -165,7 +165,7 @@ export default function ResponsiveAppBar() {
               sx={{ width: "100%" }}
             >
               <Grid2>
-                <Link href="/">
+                <Link href="/" title="Home">
                   <Image
                     src="/logo.jpg"
                     alt="logo"
