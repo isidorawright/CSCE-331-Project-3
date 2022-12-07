@@ -143,12 +143,12 @@ export default function DataTables({
       >
         <TextField
         id="outlined-basic salesStartDate"
-        label="Start Date"
+        label="Start Date (MM-DD-YYYY)"
         sx={{ paddingRight: 2 }}
         />
         <TextField
         id="outlined-basic salesEndDate"
-        label="End Date"
+        label="End Date (MM-DD-YYYY)"
         sx={{ paddingRight: 2 }}
         />
         <div style={{ display: "inline-block", marginLeft: 20, marginTop: 10 }}>
@@ -214,12 +214,12 @@ export default function DataTables({
       >
         <TextField
         id="outlined-basic pairStartDate"
-        label="Start Date"
+        label="Start Date (MM-DD-YYYY)"
         sx={{ paddingRight: 2 }}
         />
         <TextField
         id="outlined-basic pairEndDate"
-        label="End Date"
+        label="End Date (MM-DD-YYYY)"
         sx={{ paddingRight: 2 }}
         />
         <div style={{ display: "inline-block", marginLeft: 20, marginTop: 10 }}>
@@ -264,7 +264,7 @@ export default function DataTables({
       >
         <TextField
         id="outlined-basic excessEndDate"
-        label="End Date"
+        label="End Date (MM-DD-YYYY)"
         sx={{ paddingRight: 2 }}
         />
         <div style={{ display: "inline-block", marginLeft: 20, marginTop: 10 }}>
