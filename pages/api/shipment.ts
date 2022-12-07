@@ -22,6 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 ).then((res) => res.rows);
             
               const result = _.chain(shipment)
+                .filter(shipment => shipment.shipment_id)
                 .groupBy("shipment_id")
                 .map((rows, shipment_id) => {
                     let firstRow = rows[0];
